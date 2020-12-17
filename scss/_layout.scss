@@ -1,0 +1,21 @@
+.page-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--spacer--md);
+    grid-template-areas:
+    "topten ui data"
+    ;
+}
+
+.page-section {
+    background: pink;
+    &--top-ten {
+        grid-area: topten;
+    }
+    &--ui {
+        grid-area: ui;
+    }
+    &--top-ten {
+        grid-area: data;
+    }
+}

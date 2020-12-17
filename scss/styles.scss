@@ -1,0 +1,11 @@
+// base
+@use 'normalize';
+@use 'variables';
+
+//global
+@use 'layout';
+
+//sections
+@use 'sections/game-data';
+@use 'sections/game-ui';
+@use 'sections/top-ten';
