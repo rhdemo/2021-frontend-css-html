@@ -1,11 +1,11 @@
 // base
-@use 'normalize';
-@use 'variables';
+@import 'normalize';
+@import 'variables';
 
 //global
-@use 'layout';
+@import 'layout';
 
 //sections
-@use 'sections/game-data';
-@use 'sections/game-ui';
-@use 'sections/top-ten';
+@import 'sections/game-data';
+@import 'sections/game-ui';
+@import 'sections/top-ten';

@@ -1,1 +1,7 @@
-# 2021-frontend-css-html
+# Battleship UI
+
+## Getting started
+
+```
+npm install && npm start
+```

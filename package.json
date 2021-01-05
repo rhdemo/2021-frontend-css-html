@@ -1,0 +1,28 @@
+{
+  "name": "Battleship UI",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp default",
+    "build": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rhdemo/2021-frontend-css-html.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rhdemo/2021-frontend-css-html/issues"
+  },
+  "homepage": "https://github.com/rhdemo/2021-frontend-css-html#readme",
+  "devDependencies": {
+    "browser-sync": "^2.26.13",
+    "compression": "^1.7.4",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "node-sass": "^5.0.0"
+  }
+}
