@@ -2,14 +2,13 @@
 <html class="no-js" lang="">
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Battleship</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="site.webmanifest">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="css/styles.css">
   <meta name="theme-color" content="#fafafa">
-  <script src="js/game.js" defer></script>
+  <script type="module" src="js/battleship.js" defer></script>
 </head>
 
 <body>
@@ -20,15 +19,13 @@
     <section class="page-section page-section--ui">
       <div>
         <h2>Enemy Board</h2>
-        <div class="unlock-message">
-    			<p>Disabled until ships are locked on the board</p>
-    		</div>
-        <div id="attack-grid" class="grid"></div>
+        <div id="attack-grid"></div>
+        <button id="attack-grid-fire-btn">Fire now!</button>
       </div>
       <div>
         <h2>Your Board</h2>
-        <div id="grid" class="grid"></div>
-        <button class="unlock-message" id="lock-btn">Lock the board</button>
+        <div id="ship-grid"></div>
+        <button class="unlock-message" id="ship-grid-lock-btn">Lock the board</button>
     		<div class="lock-message">
     			<h3>Board is locked</h3>
     			<p>Simulate an attack by clicking a box</p>

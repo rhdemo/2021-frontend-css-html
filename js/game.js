@@ -1,3 +1,7 @@
+import Ship from "./ship.js";
+import ShipGrid from "./shipgrid.js";
+import AttackGrid from "./attackgrid.js";
+
 // Battleship!!!
 // A lot of the drag and drop code was inspired
 // by https://www.kirupa.com/html5/drag.htm
@@ -5,695 +9,271 @@
 // work well on mobile and it seems silly to build two
 // completely different mechanisms for dragging and dropping
 
-const lockBtn = document.getElementById("lock-btn");
-const attackGridContainer = document.getElementById("attack-grid");
-const gridContainer = document.getElementById("grid");
-const gridRows = 5;
-const gridColumns = 5;
-const shipDefinitions = {
-  "carrier": {
-    length: 5
-  },
-  "battleship": {
-    length: 4
-  },
-  "destroyer": {
-    length: 3
-  },
-  "submarine": {
-    length: 2
-  },
-  "patrol-boat": {
-    length: 1
-  }
-};
-
-const initialState = {
-  "carrier": {
-    id: 0,
-    position: {
-      x: 0,
-      y: 0
-    }
-  },
-  "patrol-boat": {
-    id: 1,
-    position: {
-      x: 3,
-      y: 3
-    }
-  },
-  "battleship": {
-    id: 2,
-    position: {
-      x: 1,
-      y: 2
-    },
-    orientation: "horizontal"
-  }
-};
-
+// This will not be stored on the client. It's just here
+// for testing purposes.
 const opponentState = {
   "destroyer": {
     id: 0,
-    position: {
+    origin: {
       x: 1,
       y: 1
-    }
+    },
+    type: "destroyer",
+    state: [
+      { coordinates: { x: 1, y: 1 }, hit: false },
+      { coordinates: { x: 1, y: 2 }, hit: false },
+      { coordinates: { x: 1, y: 3 }, hit: false }
+    ]
   },
   "patrol-boat": {
     id: 1,
-    position: {
+    origin: {
       x: 0,
       y: 0
     },
-    orientation: "horizontal"
+    type: "patrol-boat",
+    orientation: "horizontal",
+    state: [
+      { coordinates: { x: 0, y: 0 }, hit: false }
+    ]
   },
   "battleship": {
     id: 2,
-    position: {
+    origin: {
       x: 1,
       y: 4
     },
-    orientation: "horizontal"
+    type: "battleship",
+    orientation: "horizontal",
+    state: [
+      { coordinates: { x: 1, y: 4 }, hit: false },
+      { coordinates: { x: 2, y: 4 }, hit: false },
+      { coordinates: { x: 3, y: 4 }, hit: false },
+      { coordinates: { x: 4, y: 4 }, hit: false }
+    ]
   }
-}
+};
 
-const plays = [];
-
-let activeItem = null;
-let activePiece = null;
-let initialX = null;
-let initialY = null;
-let currentX = null;
-let currentY = null;
-let offsetX = 0;
-let offsetY = 0;
-let currentBox = null;
-let currentBoxes = null;
-let gridDimensions = {};
-let playerTurn = true;
-
-// build a grid that looks like this
-// reference image:
-// https://techcommunity.microsoft.com/t5/image/serverpage/image-id/74120iEFB3B5B6BE577E0C
 /*
- * |   | 1 | 2 | 3 | 4 | 5 |
- * | A |   |   |   |   |   |
- * | B |   |   |   |   |   |
- * | C |   |   |   |   |   |
- * | D |   |   |   |   |   |
- * | E |   |   |   |   |   |
+ * [x, 0, 0, 0, 0] Patrol Boat
+ * [0, x, 0, 0, 0] Destroyer
+ * [0, x, 0, 0, 0] Destroyer
+ * [0, x, 0, 0, 0] Destroyer
+ * [0, x, x, x, x] Battleship
  */
-function buildGrid(container, rows = 4, columns = 4) {
-  const rowsAlpha = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const template = document.getElementById("box-tmpl");
-  const fragment = document.createDocumentFragment();
+const opponentGridPositions = [
+  [{ ship: "patrol-boat", hit: false, position: 0 }, null, null, null, null],
+  [null, { ship: "destroyer", hit: false, position: 0 }, null, null, null],
+  [null, { ship: "destroyer", hit: false, position: 1 }, null, null, null],
+  [null, { ship: "destroyer", hit: false, position: 2 }, null, null, null],
+  [null, { ship: "battleship", hit: false, position: 0 }, { ship: "battleship", hit: false, position: 1 }, { ship: "battleship", hit: false, position: 2 }, { ship: "battleship", hit: false, position: 3 }]
+];
 
-  let row = 0;
-  let column = 0;
+// When the ship grid is locked by the player, we'll get this
+// information from the "shipgrid:locked" event. It should be
+// in the same format at the opponentGridPositions array.
+let playerShipGridPositions;
+let randomAttacks;
 
-  for (let i = 0; i < rows * columns; i++) {
-    let clone = template.content.cloneNode(true);
-    let box = clone.querySelector(".box");
-
-    column = i % columns;
-    row = Math.floor(i / columns);
-
-    // each grid box will look like this
-    // <div class="box" row-alpha="LETTER" row="NUMBER" column="NUMBER">
-    box.setAttribute("row-alpha", rowsAlpha[row]);
-    box.setAttribute("row", row);
-    box.setAttribute("column", column);
-
-    fragment.appendChild(clone);
+class Game {
+  get playerTurn() {
+    return this.playerTurn;
   }
 
-  container.appendChild(fragment);
+  set playerTurn(bool) {
+    if (this.attackGrid) {
+      this.attackGrid.enabled = bool;
+    }
 
-  if (gridDimensions.width) {
-    return;
-  }
-
-  let boxDimensions = container.children[0].getBoundingClientRect();
-
-  gridDimensions = {
-    width: boxDimensions.width * columns,
-    height: boxDimensions.height * rows,
-    boxWidth: boxDimensions.width,
-    boxHeight: boxDimensions.height
-  };
-}
-
-function setBoxShipIds(box, shipId, remove) {
-  let shipIdsAttr = box.getAttribute("ship-ids");
-
-  if (shipIdsAttr) {
-    let shipIdsArr = shipIdsAttr.split(",");
-
-    if (remove) {
-      shipIdsArr = shipIdsArr.filter(id => id !== shipId);
+    if (bool) {
+      console.log(`${this.constructor.name} - Player's turn`);
     } else {
-      if (!shipIdsArr.includes(shipId)) {
-        shipIdsArr.push(shipId);
+      if (this.shipGrid && this.shipGrid.locked) {
+        console.log(`${this.constructor.name} - Opponents's turn`);
       }
     }
-
-    if (shipIdsArr.length === 0) {
-      box.removeAttribute("occupied");
-      box.removeAttribute("ship-ids");
-    } else {
-      box.setAttribute("occupied", "true");
-      box.setAttribute("ship-ids", shipIdsArr.join(","));
-    }
-  } else {
-    box.setAttribute("ship-ids", shipId);
-    box.setAttribute("occupied", "true");
   }
-}
 
-function positionShips() {
-  const shipTemplate = document.getElementById("ship-tmpl");
-  const shipPieceTemplate = document.getElementById("ship-piece-tmpl");
+  constructor(configuration) {
+    this.shipGridLockedHandler = this.shipGridLockedHandler.bind(this);
+    this.attackGridAttackHandler = this.attackGridAttackHandler.bind(this);
+    this.incomingAttackHandler = this.incomingAttackHandler.bind(this);
 
-  Object.keys(initialState).forEach(key => {
-    const shipDefinition = shipDefinitions[key];
-    const shipId = initialState[key].id;
-    const shipPosition = initialState[key].position;
-    const orientation = initialState[key].orientation;
+    this.rows = configuration.rows;
+    this.columns = configuration.columns;
+    this.initialState = configuration.initialState;
+    this.attackGridContainer = document.getElementById("attack-grid");
+    this.shipGridContainer = document.getElementById("ship-grid");
 
-    // create the ship
-    const shipClone = shipTemplate.content.cloneNode(true);
-    const shipElement = shipClone.querySelector(".ship");
-    shipElement.setAttribute("ship-id", shipId);
-    shipElement.setAttribute("type", key);
-    shipElement.setAttribute("orientation", "vertical");
+    // This should be handled by the web socket
+    this.playerTurn = false;
+  }
 
-    // create the pieces in the ship
-    for (let i = 0; i < shipDefinition.length; i++) {
-      const shipPieceClone = shipPieceTemplate.content.cloneNode(true);
-      const shipPieceElement = shipPieceClone.querySelector(".ship-piece");
-      shipPieceElement.setAttribute("ship-piece", i);
-      shipPieceElement.setAttribute("type", key)
-      shipPieceElement.setAttribute("ship-id", shipId);
-      shipPieceElement.textContent = i + 1;
-      shipElement.insertBefore(shipPieceElement, shipElement.querySelector(".rotate"));
-    }
-
-    // position the ship on the grid
-    // find the grid position first
-    const gridElement = document.querySelector(`.box[row="${shipPosition.y}"][column="${shipPosition.x}"]`);
-    shipElement.style.left = `${gridElement.offsetLeft}px`;
-    shipElement.style.top = `${gridElement.offsetTop}px`;
-
-    // rotate the ship if the orientation is horizontal
-    if (orientation && orientation === "horizontal") {
-      shipElement.setAttribute("orientation", "horizontal");
-      shipElement.style.transformOrigin = "32px 32px";
-      shipElement.style.transform = "rotate(-90deg)";
-    }
-
-    // add the ship to the grid
-    gridContainer.appendChild(shipElement);
-
-    // let the board know that the grid should be "occupied"
-    // underneath the ship
-    const gridBoxes = getGridBoxes(gridElement, shipElement.children[0], shipElement);
-    gridBoxes.forEach(gridBox => {
-      setBoxShipIds(gridBox, shipId);
+  render() {
+    this.attackGrid = new AttackGrid({
+      rows: this.rows,
+      columns: this.columns,
+      container: this.attackGridContainer,
+      initialState: this.initialState
     });
-  });
-}
 
-function getGridBoxes(box, shipPiece, shipContainer) {
-  if (!box || !shipPiece || !shipContainer) {
-    return;
-  }
-
-  const shipDefinition = shipDefinitions[shipContainer.getAttribute("type")];
-  const orientation = shipContainer.getAttribute("orientation");
-  // figure out if we are at the top, somewhere in the middle,
-  // or the bottom
-  const whichPiece = parseInt(shipPiece.getAttribute("ship-piece"), 10);
-
-  // how far do we need to go to get to the anchor point (box 1)
-  const distance = whichPiece % shipDefinition.length;
-
-  // if the orientation is vertical, get the row attribute
-  // if the orientation is horizontal, use the column attribute
-  const attribute = orientation === "vertical" ? "row" : "column";
-  const startingBox = parseInt(box.getAttribute(attribute), 10) - distance;
-  const gridBoxes = [];
-
-  for (let i = 0; i < shipDefinition.length; i++) {
-    let gridBox;
-    if (orientation === "vertical") {
-      gridBox = gridContainer.querySelector(`.box[row="${startingBox + i}"][column="${box.getAttribute("column")}"]`);
-    } else {
-      gridBox = gridContainer.querySelector(`.box[row="${box.getAttribute("row")}"][column="${startingBox + i}"]`);
-    }
-
-    if (gridBox) {
-      gridBoxes.push(gridBox);
-    }
-  }
-
-  return gridBoxes;
-}
-
-function highLightGrid(box) {
-  if (!currentBox || !activeItem) {
-    return;
-  }
-
-  const shipDefinition = shipDefinitions[activeItem.getAttribute("type")];
-  const gridBoxes = getGridBoxes(box, activePiece, activeItem);
-
-  // if we already have some grid boxes and they aren't
-  // the same as the gridBoxes we just identified, remove
-  // the "green" class from all of the current boxes
-  if (currentBoxes && currentBoxes !== gridBoxes) {
-    [...currentBoxes].forEach(currentBox => {
-      if (!currentBox) {
-        return;
-      }
-
-      currentBox.classList.remove("green", "red");
+    this.shipGrid = new ShipGrid({
+      rows: this.rows,
+      columns: this.columns,
+      container: this.shipGridContainer,
+      initialState: this.initialState
     });
   }
 
-  // if any of the gridBoxes are "occupied", they should
-  // get a "red" class, otherwise give them a "green"
-  // class
-  const isOneGridBoxOccupied = gridBoxes.find(gridBox => {
-    if (!gridBox) {
-      return false;
+  start() {
+    this.render();
+    this.addListeners();
+  }
+
+  addListeners() {
+    // Listener for when the ship grid is locked.
+    // We'll need to send this back to the server
+    // and when we're ready to start playing we'll
+    // enable the attack grid.
+    document.addEventListener("shipgrid:locked", this.shipGridLockedHandler, false);
+
+    // Listener for when an attack is made.
+    // The result of this will actually come from the server
+    document.addEventListener("attackgrid:attack", this.attackGridAttackHandler, false);
+
+    // Listener for an incoming attack from the web socket
+    document.addEventListener("incomingattack", this.incomingAttackHandler, false);
+  }
+
+  removeListeners() {
+    document.removeEventListener("shipgrid:locked", this.shipGridLockedHandler, false);
+    document.removeEventListener("attackgrid:attack", this.attackGridAttackHandler, false);
+    document.removeEventListener("incomingattack", this.incomingAttackHandler, false);
+  }
+
+  // This is a temporary function until we get a human
+  // or AI player
+  generateRandomAttack() {
+    const randomAttack = randomAttacks.splice(Math.floor(Math.random() * randomAttacks.length), 1)[0];
+    let hit = false;
+    let destroyed = false;
+    let ship = null;
+    let position = null;
+    let coordinates = randomAttack.coordinates;
+
+    // If we hit a ship, log the hit and check if the
+    // ship has been destroyed
+    if (randomAttack.ship) {
+      const shipFromState = this.initialState.ships[randomAttack.ship];
+      shipFromState.state[randomAttack.position].hit = true;
+      ship = shipFromState.type;
+
+      hit = true;
+      position = randomAttack.position;
+
+      // Check to see if the entire ship has been destroyed
+      const hitsRemaining = shipFromState.state.filter(shipPiece => shipPiece.hit === false).length;
+      if (hitsRemaining === 0) {
+        destroyed = true;
+      }
     }
 
-    return gridBox.hasAttribute("occupied");
-  });
+    return {
+      hit,
+      destroyed,
+      ship,
+      position,
+      coordinates
+    };
+  }
 
-  // if the number of gridBoxes does not equal the length
-  // of the ship, the class should be "red"
-  const equalBoxesAndShipLength = gridBoxes.length === shipDefinition.length;
+  simulateAttack() {
+    const delay = 1500;
+    console.log(`${this.constructor.name} - Simulating an attack in ${delay / 1000} seconds`);
 
-  const gridBoxClass = isOneGridBoxOccupied || !equalBoxesAndShipLength ? "red" : "green";
+    setTimeout(() => {
+      const message = this.generateRandomAttack();
+      const event = new CustomEvent("incomingattack", {
+        detail: message
+      });
 
-  // loop through all of the grid boxes and give them a
-  // "green" class or a "red" class if one is occupied
-  [...gridBoxes].forEach(gridBox => {
-    if (!gridBox) {
-      return;
+      document.dispatchEvent(event);
+    }, delay);
+  }
+
+  shipGridLockedHandler(event) {
+    playerShipGridPositions = event.detail.board;
+
+    // Create an array for some random attacks
+    // Take this out once we have a real player
+    let row = 0;
+    let column = 0;
+    randomAttacks = [];
+
+    playerShipGridPositions.flat().forEach((gridBox, index) => {
+      column = index % this.columns;
+      row = Math.floor(index / this.columns);
+      gridBox = Object.assign({}, gridBox, {
+        coordinates: {
+          x: column,
+          y: row
+        }
+      });
+
+      randomAttacks.push(gridBox);
+    });
+
+    this.playerTurn = true;
+  }
+
+  attackGridAttackHandler(event) {
+    const origin = event.detail.origin;
+    const returnMessage = {
+      hit: false,
+      destroyed: false,
+      ship: null,
+      position: origin
     };
 
-    gridBox.classList.add(gridBoxClass);
-  });
-
-  currentBoxes = gridBoxes;
-}
-
-function dragStart(event) {
-  const target = event.target;
-
-  if (!target.classList.contains("ship-piece")) {
-    return;
-  }
-
-  const shipContainer = target.parentElement;
-  const shipId = shipContainer.getAttribute("ship-id");
-  activePiece = target;
-  activeItem = shipContainer;
-
-  activeItem.classList.add("dragging");
-  gridContainer.classList.add("dragging");
-
-  let box;
-
-  [...document.querySelectorAll(".ship")].forEach(ship => ship.style.pointerEvents = "none");
-
-  if (event.type === "touchstart") {
-    initialX = event.touches[0].clientX - (parseInt(activeItem.style.left, 10) || offsetX);
-    initialY = event.touches[0].clientY - (parseInt(activeItem.style.top, 10) || offsetY);
-    gridContainer.classList.add("dragging-touch");
-
-    // find the grid item underneath
-    // event.target won't work on mobile
-    box = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
-  } else {
-    initialX = event.clientX - (parseInt(activeItem.style.left, 10) || offsetX);
-    initialY = event.clientY - (parseInt(activeItem.style.top, 10) || offsetY);
-
-    // get the grid item underneath
-    box = document.elementFromPoint(event.clientX, event.clientY);
-  }
-
-  // remove the "occupied" attributes from the boxes
-  // underneath the ship
-  const gridBoxes = getGridBoxes(box, activePiece, activeItem);
-  gridBoxes.forEach(gridBox => {
-    if (!gridBox) {
-      return;
-    }
-
-    setBoxShipIds(gridBox, shipId, true);
-  });
-
-  currentBox = box;
-  highLightGrid(currentBox);
-}
-
-function drag(event) {
-  if (!activeItem) {
-    return;
-  }
-
-  // this is super necessary on mobile devices
-  // it prevents the pull down to refresh functionality
-  event.preventDefault();
-
-  let box;
-  const shipDefinition = shipDefinitions[activeItem.getAttribute("type")];
-  const orientation = activeItem.getAttribute("orientation");
-  const yMultiplier = orientation === "vertical" ? shipDefinition.length : 1;
-  const xMultiplier = orientation === "vertical" ? 1 : shipDefinition.length;
-
-  if (event.type === "touchmove") {
-    currentX = event.touches[0].clientX - initialX;
-    currentY = event.touches[0].clientY - initialY;
-
-    // find the grid item underneath
-    // event.target won't work on mobile
-    box = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
-  } else {
-    currentX = event.clientX - initialX;
-    currentY = event.clientY - initialY;
-
-    // get the grid item underneath
-    box = event.target
-  }
-
-  // don't allow the ship to leave the grid
-  if (currentY < 0) {
-    currentY = 0;
-  }
-
-  if (currentY > gridDimensions.height - gridDimensions.boxHeight * yMultiplier) {
-    currentY = gridDimensions.height - gridDimensions.boxHeight * yMultiplier;
-  }
-
-  if (currentX < 0) {
-    currentX = 0;
-  }
-
-  if (currentX > gridDimensions.width - gridDimensions.boxWidth * xMultiplier) {
-    currentX = gridDimensions.width - gridDimensions.boxWidth * xMultiplier;
-  }
-
-  offsetX = currentX;
-  offsetY = currentY;
-
-  // move the ship
-  activeItem.style.left = `${currentX}px`;
-  activeItem.style.top = `${currentY}px`;
-
-  // if we have a box, let's highlight the landing
-  // zone boxes
-  if (box) {
-    // highlight the grid placement
-    highLightGrid(box);
-    currentBox = box;
-  } else {
-    highLightGrid(currentBox);
-  }
-}
-
-function dragEnd(event) {
-  gridContainer.classList.remove("dragging");
-  gridContainer.classList.remove("dragging-touch");
-  let shipId;
-
-  if (activeItem) {
-    shipId = activeItem.getAttribute("ship-id");
-    [...document.querySelectorAll(".ship")].forEach(ship => ship.style.pointerEvents = "initial");
-    activeItem.classList.remove("dragging");
-
-    // lock the activeItem into the grid
-    if (currentBox) {
-      // figure out if we are at the top, somewhere in the middle,
-      // or the bottom
-      const shipDefinition = shipDefinitions[activeItem.getAttribute("type")];
-      const shipPiece = activePiece.getAttribute("ship-piece");
-      const orientation = activeItem.getAttribute("orientation");
-
-      // how far do we need to go to get to the first piece
-      const distance = shipPiece % shipDefinition.length;
-
-      // if the orientation is vertical, get the row attribute
-      // if the orientation is horizontal, use the column attribute
-      const attribute = orientation === "vertical" ? "row" : "column";
-      const startingBox = parseInt(currentBox.getAttribute(attribute), 10) - distance;
-      let startingGridElement;
-
-      if (orientation === "vertical") {
-        startingGridElement = gridContainer.querySelector(`.box[row="${startingBox}"][column="${currentBox.getAttribute("column")}"]`)
-      } else {
-        startingGridElement = gridContainer.querySelector(`.box[row="${currentBox.getAttribute("row")}"][column="${startingBox}"]`);
-      }
-
-      if (startingGridElement) {
-        activeItem.style.left = `${startingGridElement.offsetLeft}px`;
-        activeItem.style.top = `${startingGridElement.offsetTop}px`;
-      }
-    }
-
-    activeItem = null;
-    activePiece = null;
-  }
-
-  if (currentBoxes) {
-    currentBoxes.forEach(box => {
-      if (!box) {
+    // check the fake opponent state to see if this was a hit
+    // go down (origin.y) and then over (origin.x)
+    const result = opponentGridPositions[origin.y][origin.x];
+    if (result) {
+      // If the ship was already hit at this position,
+      // do nothing.
+      if (result.hit) {
         return;
       }
 
-      box.classList.remove("green", "red");
-      setBoxShipIds(box, shipId);
-    });
-  }
+      const position = result.position;
+      let destroyed = false;
 
-  initialX = null;
-  initialY = null;
-  currentX = null;
-  currentY = null;
-  offsetX = 0;
-  offsetY = 0;
-  currentBox = null;
-  currentBoxes = null;
-}
+      result.hit = true;
+      opponentState[result.ship].state[position].hit = true;
 
-// logic for rotating a ship
-function shipClick(event) {
-  if (!event.target.classList.contains("rotate")) {
-    return;
-  }
+      // Check to see if the entire ship has been destroyed
+      const hitsRemaining = opponentState[result.ship].state.filter(shipPiece => shipPiece.hit === false).length;
+      if (hitsRemaining === 0) {
+        destroyed = true;
+      }
 
-  // let's rotate the ship 90 degrees with the anchor point
-  // at the "top" of the ship
-  const ship = event.target.parentElement;
-  const shipId = ship.getAttribute("ship-id");
-  const orientation = ship.getAttribute("orientation");
-  const rect = ship.getBoundingClientRect();
-  const box = document.elementsFromPoint(rect.left, rect.top).filter(element => element.classList.contains("box"))[0];
-
-  // get the original boxes and remove the "occupied" attribute
-  const originalGridBoxes = getGridBoxes(box, ship.children[0], ship);
-  originalGridBoxes.forEach(box => {
-    // box.removeAttribute("occupied");
-    setBoxShipIds(box, shipId, true);
-  });
-
-  if (orientation === "vertical") {
-    ship.style.transformOrigin = "32px 32px";
-    ship.style.transform = "rotate(-90deg)";
-  } else {
-    ship.style.transformOrigin = null;
-    ship.style.transform = null;
-  }
-
-  ship.setAttribute("orientation", orientation === "vertical" ? "horizontal" : "vertical");
-
-  // get the new grid boxes underneath the ship and set them
-  // to "occupied"
-  const gridBoxes = getGridBoxes(box, ship.children[0], ship);
-  gridBoxes.forEach(box => {
-    // box.setAttribute("occupied", "true");
-    setBoxShipIds(box, shipId);
-  });
-}
-
-// this is a super cheap way of validating the board.
-// just make sure the number of grid boxes that are
-// "occupied" equals the number of ship pieces
-function gridIsValid() {
-  const shipPieces = document.querySelectorAll(".ship-piece");
-  const occupiedGridBoxes = document.querySelectorAll(`.grid .box[occupied="true"]`);
-
-  return shipPieces.length === occupiedGridBoxes.length;
-}
-
-function lockShipsInBoard() {
-  const ships = document.querySelectorAll(".ship");
-  [...ships].forEach(ship => {
-    const shipId = ship.getAttribute("ship-id");
-    const shipPieces = [...ship.querySelectorAll(".ship-piece")];
-    const shipGridBoxes = [...gridContainer.querySelectorAll(`.box[occupied="true"][ship-ids="${shipId}"]`)];
-
-    shipGridBoxes.forEach((shipGridBox, index) => {
-      shipGridBox.appendChild(shipPieces[index]);
-    });
-  });
-}
-
-function lockBoard() {
-  if (!gridIsValid()) {
-    alert("The configuration of the ships is not valid");
-    return;
-  }
-
-  removeGridContainerListeners();
-  lockShipsInBoard();
-  addGridBoxClickListeners();
-  addAttackGridClickListeners();
-  document.body.classList.add("locked");
-  gridContainer.classList.add("locked");
-}
-
-function gridBoxRandomAttack() {
-
-}
-
-function gridBoxAttackHandler(event) {
-  // using currentTarget in case the box has a child of a
-  // ship in it
-  const gridBox = event.currentTarget;
-  const row = gridBox.getAttribute("row");
-  const column = gridBox.getAttribute("column");
-
-  checkAttack({ row, column });
-}
-
-// if it's a hit, add a "hit" class and a "miss"
-// class if not.
-// if we have a hit, check the whole ship to see if it
-// should sink
-function checkAttack(coords) {
-  let hit = false;
-  const gridBox = gridContainer.querySelector(`.box[row="${coords.row}"][column="${coords.column}"]`);
-
-  if (gridBox.children.length === 1) {
-    const shipPiece = gridBox.children[0];
-    const shipId = shipPiece.getAttribute("ship-id");
-
-    shipPiece.classList.add("hit");
-    gridBox.classList.add("hit");
-    hit = true;
-
-    if (isShipDestroyed(shipPiece)) {
-      destroyShip(shipId);
+      returnMessage.hit = true;
+      returnMessage.destroyed = destroyed;
+      returnMessage.ship = opponentState[result.ship];
     }
-  } else {
-    gridBox.classList.add("miss");
+
+    console.log(`${this.constructor.name} - Attack response`, returnMessage);
+    this.attackGrid.recordAttack(returnMessage);
+
+    this.playerTurn = false;
+    this.simulateAttack();
   }
 
-  return hit;
-}
-
-function checkOpponentAttack(coords) {
-  let hit = false;
-
-
-
-  return hit;
-}
-
-function isShipDestroyed(shipPiece) {
-  const shipId = shipPiece.getAttribute("ship-id");
-  const shipType = shipPiece.getAttribute("type");
-  const shipPiecesHit = gridContainer.querySelectorAll(`.ship-piece.hit[ship-id="${shipId}"]`);
-
-  return shipPiecesHit.length === shipDefinitions[shipType].length;
-}
-
-function destroyShip(shipId) {
-  const shipPieces = gridContainer.querySelectorAll(`.ship-piece[ship-id="${shipId}"]`);
-  [...shipPieces].forEach(shipPiece => shipPiece.classList.add("destroyed"));
-}
-
-function attackBoxHandler(event) {
-  if (!playerTurn) {
-    return;
+  incomingAttackHandler(event) {
+    console.log(`${this.constructor.name} - Incoming attack`);
+    this.shipGrid.incomingAttack(event.detail);
+    this.playerTurn = true;
   }
-
-  const attackBox = event.target;
-  const coords = {
-    x: attackBox.getAttribute("column"),
-    y: attackBox.getAttribute("row")
-  };
-
-  console.log(coords);
 }
 
-function recordTurn() {
-
-}
-
-function addGridContainerListeners() {
-  gridContainer.addEventListener("touchstart", dragStart, false);
-  gridContainer.addEventListener("touchmove", drag, false);
-  gridContainer.addEventListener("touchend", dragEnd, false);
-
-  gridContainer.addEventListener("mousedown", dragStart, false);
-  gridContainer.addEventListener("mousemove", drag, false);
-  gridContainer.addEventListener("mouseup", dragEnd, false);
-  gridContainer.addEventListener("click", shipClick, false);
-}
-
-function removeGridContainerListeners() {
-  gridContainer.removeEventListener("touchstart", dragStart, false);
-  gridContainer.removeEventListener("touchmove", drag, false);
-  gridContainer.removeEventListener("touchend", dragEnd, false);
-
-  gridContainer.removeEventListener("mousedown", dragStart, false);
-  gridContainer.removeEventListener("mousemove", drag, false);
-  gridContainer.removeEventListener("mouseup", dragEnd, false);
-  gridContainer.removeEventListener("click", shipClick);
-}
-
-function addBtnListeners() {
-  lockBtn.addEventListener("click", lockBoard);
-}
-
-function addGridBoxClickListeners() {
-  const gridBoxes = gridContainer.querySelectorAll(".box");
-  [...gridBoxes].forEach(gridBox => gridBox.addEventListener("click", gridBoxAttackHandler));
-}
-
-function addAttackGridClickListeners() {
-  const attackBoxes = attackGridContainer.querySelectorAll(".box");
-  [...attackBoxes].forEach(attackBox => attackBox.addEventListener("click", attackBoxHandler));
-}
-
-function attachListeners() {
-  addGridContainerListeners();
-  addAttackGridClickListeners();
-  addBtnListeners();
-}
-
-function init() {
-  buildGrid(attackGridContainer, gridRows, gridColumns);
-  buildGrid(gridContainer, gridRows, gridColumns);
-  positionShips();
-  attachListeners();
-}
-
-init();
+export default Game;

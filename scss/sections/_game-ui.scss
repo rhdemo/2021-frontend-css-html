@@ -76,12 +76,31 @@ body.locked .unlock-message {
   left: calc(50% - 12px);
 }
 
-.box.hit::after {
+.box.hit::after,
+.ship-piece.hit::after {
   content: "";
   display: block;
   position: absolute;
   border-radius: 50%;
   background-color: red;
+  border: 2px solid red;
+  width: 24px;
+  height: 24px;
+  top: calc(50% - 12px);
+  left: calc(50% - 12px);
+}
+
+.box.hit.destroyed::after,
+.ship-piece.destroyed::after {
+  content: "x";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  position: absolute;
+  border-radius: 50%;
+  background-color: red;
+  border: 2px solid red;
   width: 24px;
   height: 24px;
   top: calc(50% - 12px);
@@ -122,6 +141,7 @@ body.locked .unlock-message {
 .ship-piece {
   width: 64px;
   height: 64px;
+  position: relative;
   color: white;
   display: flex;
   justify-content: center;
@@ -156,4 +176,10 @@ body.locked .unlock-message {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+#attack-grid {
+  .attacking {
+    background-color: red;
+  }
 }
