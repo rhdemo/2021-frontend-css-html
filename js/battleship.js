@@ -11,6 +11,8 @@ import Game from "./game.js";
 // This will come from the server and ships will be randomly
 // positioned
 const initialState = {
+  rows: 5,
+  columns: 5,
   attacks: {
     "1x1": 5,
     "2x1": 5
