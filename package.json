@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "gulp default",
+    "start-socket": "node ./test-socket/socket.js",
     "build": ""
   },
   "repository": {
@@ -24,5 +25,9 @@
     "gulp-sass": "^4.1.0",
     "gulp-sourcemaps": "^3.0.0",
     "node-sass": "^5.0.0"
+  },
+  "dependencies": {
+    "redux": "^4.0.5",
+    "redux-subscriber": "^1.1.0"
   }
 }

@@ -6,7 +6,13 @@
 // 3. Pause
 // 4. Game over
 
+import socket from "./socket.js";
 import Game from "./game.js";
+import store from "./store.js";
+
+const screens = [...document.querySelectorAll(".screen")];
+let currentScreen = "splash";
+let game;
 
 // This will come from the server and ships will be randomly
 // positioned
@@ -55,5 +61,28 @@ const configuration = {
   initialState
 }
 
-const game = new Game(configuration);
-game.start();
+// const game = new Game(configuration);
+// game.start();
+
+function showScreen(screen) {
+  if (screen === currentScreen) {
+    return;
+  }
+
+  for (let i = 0; i < screens.length; i++) {
+    if (screens[i].id === screen) {
+      screens[i].removeAttribute("hidden");
+      currentScreen = screen;    
+    } else {
+      screens[i].setAttribute("hidden", "");
+    }
+  }
+}
+
+
+store.subscribe(() => {
+  showScreen(store.getState().game.state);
+  // console.log(proxy.getState());
+  // // console.log(store.getState());
+  // // console.log(proxy.game.state);
+});

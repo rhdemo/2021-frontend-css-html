@@ -31,6 +31,7 @@ function browserSyncReload(cb) {
 }
 
 function watchTask() {
+  watch("./js/**/*.js", browserSyncReload);
   watch("*.html", browserSyncReload);
   watch("./scss/**/*.scss", series(sassCompile, browserSyncReload));
 }

@@ -12,7 +12,15 @@
 </head>
 
 <body>
-  <div class="page-wrapper">
+  <div id="splash" class="screen">
+    <h1>Battleship</h1>
+    <h2>Splash screen</h2>
+  </div>
+  <div id="lobby" class="screen" hidden>
+    <h1>Battleship</h1>
+    <h2>Lobby</h2>
+  </div>
+  <div id="play" class="screen page-wrapper" hidden>
     <section class="page-section page-section--top-ten">
       <h1>top ten</h1>
     </section>
@@ -35,6 +43,9 @@
     <section class="page-section page-section--data">
       <h1>data</h1>
     </section>
+  </div>
+  <div id="game-over" class="screen" hidden>
+    <h1>Game Over</h1>
   </div>
   <template id="box-tmpl">
 		<div class="box"></div>

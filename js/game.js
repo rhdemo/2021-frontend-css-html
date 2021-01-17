@@ -197,6 +197,8 @@ class Game {
         detail: message
       });
 
+      console.log(event);
+
       document.dispatchEvent(event);
     }, delay);
   }
