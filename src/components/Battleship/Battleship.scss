@@ -1,0 +1,154 @@
+.Battleship {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(5, 64px);
+    position: relative;
+  }
+  
+  .grid.dragging:not(.dragging-touch) {
+    cursor: pointer;
+  }
+  
+  .grid.locked .ship {
+    cursor: initial;
+  }
+  
+  .grid.locked .ship .rotate {
+    display: none;
+  }
+
+  .box {
+    height: 64px;
+    width: 64px;
+    border: 1px solid #cccccc;
+    position: relative;
+  }
+  
+  .box.green {
+    background-color: mediumseagreen;
+  }
+  
+  .box.red {
+    background-color: red;
+  }
+  
+  .box.miss::after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid black;
+    width: 24px;
+    height: 24px;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+  }
+  
+  .box.hit::after,
+  .ship-piece.hit::after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 50%;
+    background-color: red;
+    border: 2px solid red;
+    width: 24px;
+    height: 24px;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+  }
+  
+  .box.hit.destroyed::after,
+  .ship-piece.destroyed::after {
+    content: "x";
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: absolute;
+    border-radius: 50%;
+    background-color: red;
+    border: 2px solid red;
+    width: 24px;
+    height: 24px;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+  }
+  
+  .ship {
+    position: absolute;
+    cursor: pointer;
+  }
+  
+  .ship.dragging {
+    z-index: 100;
+  }
+  
+  .ship.dragging .ship-piece {
+    cursor: pointer;
+  }
+  
+  .ship .rotate {
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ship .rotate svg {
+    height: 24px;
+    width: 24px;
+    pointer-events: none;
+  }
+  
+  .ship-piece {
+    width: 64px;
+    height: 64px;
+    position: relative;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ship-piece[type="destroyer"] {
+    background-color: purple;
+  }
+  
+  .ship-piece[type="submarine"] {
+    background-color: #0057a8;
+  }
+  
+  .ship-piece[type="battleship"] {
+    background-color: #a51759;
+  }
+  
+  .ship-piece[type="carrier"] {
+    background-color: green;
+  }
+  
+  .ship-piece.destroyed::after {
+    content: "x";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    color: white;
+    top: calc(50% - 12px);
+    left: calc(50% - 12px);
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  #attack-grid {
+    .attacking {
+      background-color: red;
+    }
+  }
+}
