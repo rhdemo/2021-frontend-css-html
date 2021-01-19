@@ -1,25 +1,25 @@
 import { useEffect, useRef } from "react";
 import { connect } from "react-redux";
-import AttackGrid from "./attackgrid";
-import ShipGrid from "./shipgrid";
+import AttackGrid from "./utilities/attackgrid";
+import ShipGrid from "./utilities/shipgrid";
 import { boardLocked, attack } from "./actions";
 import "./Battleship.scss";
 
-function Battleship({ player, boardLocked, attack }) {
+function Battleship({ board, player, boardLocked, attack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
 
   useEffect(() => {
     new AttackGrid({
-      rows: 5,
-      columns: 5,
+      rows: board.rows,
+      columns: board.columns,
       container: attackGridRef.current,
       initialState: {}
     });
 
     new ShipGrid({
-      rows: 5,
-      columns: 5,
+      rows: board.rows,
+      columns: board.columns,
       container: shipGridRef.current,
       initialState: {
         ships: player.shipPositions
@@ -32,7 +32,6 @@ function Battleship({ player, boardLocked, attack }) {
 
   return (
     <div className="Battleship">
-      <h1>Battleship</h1>
       <div>
         <h2>Enemy Grid</h2>
         <div id="attack-grid" ref={ attackGridRef }></div>

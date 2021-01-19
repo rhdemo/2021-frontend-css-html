@@ -1,6 +1,10 @@
 import { boardLocked, attack } from "./socket";
 
 const initialState = {
+  board: {
+    rows: 5,
+    columns: 5
+  },
   game: {
     state: "splash"
   },

@@ -1,0 +1,10 @@
+$width: 80px;
+$height: 80px;
+$backgroundColor: #333;
+
+.Avatar {
+  width: $width;
+  height: $height;
+  border-radius: 50%;
+  background-color: $backgroundColor;
+}

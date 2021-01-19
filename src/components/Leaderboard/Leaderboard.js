@@ -1,6 +1,8 @@
+import "./Leaderboard.scss";
+
 function Leaderboard() {
   return (
-    <div>
+    <div className="Leaderboard">
       <h1>Leaderboard</h1>
     </div>
   );

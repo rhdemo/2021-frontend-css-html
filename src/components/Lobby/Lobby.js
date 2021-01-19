@@ -1,19 +1,20 @@
 import { connect } from "react-redux";
+import Avatar from "../Avatar";
+import "./Lobby.scss";
 
 function Lobby({ player }) {
   return (
-    <div>
+    <div className="Lobby">
       <h1>Battleship</h1>
       <h2>Lobby</h2>
-      <p>Welcome { player.username }</p>
+      <Avatar />
+      <h3>{ player.username }</h3>
     </div>
   );
 }
 
 const mapStateToProps = state => {
-  return {
-    player: state.player
-  };
+  return state;
 }
 
 const mapDispatchToProps = {};

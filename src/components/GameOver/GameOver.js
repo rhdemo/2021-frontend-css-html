@@ -1,6 +1,8 @@
+import "./GameOver.scss";
+
 function GameOver() {
   return (
-    <div>
+    <div className="GameOver">
       <h1>Game Over</h1>
     </div>
   );
