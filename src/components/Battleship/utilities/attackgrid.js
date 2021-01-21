@@ -56,6 +56,36 @@ class AttackGrid extends Grid {
     this.enabled = false;
   }
 
+  getGridBoxes(origin, attackType) {
+    const boxes = [];
+
+    if (!origin || !attackType) {
+      return boxes;
+    }
+
+    const attackTypeArr = attackType.split("x");
+    const iterations = attackTypeArr.reduce((acc, current) => acc * current);
+    
+    let x = origin.x;
+    let y = origin.y;
+
+    for (let i = 0; i < iterations; i++) {
+      const box = this.element.querySelector(`.box[column="${x}"][row="${y}"]`);
+      if (box) {
+        boxes.push(box);
+      }
+
+      x++;
+
+      if (x >= origin.x + parseInt(attackTypeArr[0], 10)) {
+        x = origin.x;
+        y++;
+      }
+    }
+
+    return boxes;
+  }
+
   gridClickHandler(event) {
     if (this.attacking) {
       return;
@@ -63,8 +93,8 @@ class AttackGrid extends Grid {
 
     const box = event.target;
 
-    if (this.selectedGridBoxes && box !== this.selectedGridBoxes) {
-      this.selectedGridBoxes.classList.remove("attacking");
+    if (this.selectedGridBoxes) {
+      this.selectedGridBoxes.forEach(box => box.classList.remove("attacking"));
     }
 
     const row = parseInt(box.getAttribute("row"), 10);
@@ -75,8 +105,9 @@ class AttackGrid extends Grid {
       y: row
     };
 
-    box.classList.add("attacking");
-    this.selectedGridBoxes = box;
+    const gridBoxes = this.getGridBoxes(this.attackOrigin, this.attackType);
+    gridBoxes.forEach(box => box.classList.add("attacking"));
+    this.selectedGridBoxes = gridBoxes;
   }
 
   attack() {

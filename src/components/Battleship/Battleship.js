@@ -1,23 +1,27 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
 import { boardLocked, attack } from "./actions";
 import "./Battleship.scss";
 
+let attackGrid;
+let shipGrid;
+
 function Battleship({ board, player, boardLocked, attack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
-
+  const [ attackType, setAttackType ] = useState(null);
+  
   useEffect(() => {
-    new AttackGrid({
+    attackGrid = new AttackGrid({
       rows: board.rows,
       columns: board.columns,
       container: attackGridRef.current,
       initialState: {}
     });
 
-    new ShipGrid({
+    shipGrid = new ShipGrid({
       rows: board.rows,
       columns: board.columns,
       container: shipGridRef.current,
@@ -25,10 +29,31 @@ function Battleship({ board, player, boardLocked, attack }) {
         ships: player.shipPositions
       }
     });
-  }, [player.shipPositions]);
+  
+    document.addEventListener("shipgrid:locked", boardLockedHandler);
+    document.addEventListener("attackgrid:attack", attackGridAttackHandler);
+  }, []);
 
-  document.addEventListener("shipgrid:locked", event => boardLocked(event.detail.board));
-  document.addEventListener("attackgrid:attack", event => attack(event.detail));
+  useEffect(() => {
+    if (!attackGrid || !attackType) {
+      return;
+    }
+
+    attackGrid.attackType = attackType;
+  }, [attackType]);
+
+  function shotTypeChangeHandler(event) {
+    setAttackType(event.target.value);
+  }
+
+  function boardLockedHandler(event) {
+    attackGrid.enabled = true;
+    boardLocked(event.detail.board);
+  }
+
+  const attackGridAttackHandler = event => {
+    attack(event.detail);
+  }
 
   return (
     <div className="Battleship">
@@ -36,6 +61,24 @@ function Battleship({ board, player, boardLocked, attack }) {
         <h2>Enemy Grid</h2>
         <div id="attack-grid" ref={ attackGridRef }></div>
         <button id="attack-grid-fire-btn">Fire now!</button>
+        <div>
+          <label>
+            <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler }></input>
+            1x1
+          </label>
+          <label>
+            <input type="radio" name="shot-type" value="2x1" onChange={ shotTypeChangeHandler }></input>
+            2x1
+          </label>
+          <label>
+            <input type="radio" name="shot-type" value="4x1" onChange={ shotTypeChangeHandler }></input>
+            4x1
+          </label>
+          <label>
+            <input type="radio" name="shot-type" value="2x2" onChange={ shotTypeChangeHandler }></input>
+            2x2
+          </label>
+        </div>
       </div>
       <div>
         <h2>Your Board</h2>
