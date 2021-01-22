@@ -101,10 +101,11 @@ function attack(payload) {
     data: payload
   };
 
+  console.log("Socket-attack: sending attack frame");
   socket.send(JSON.stringify(message));
 }
 
 connect();
 
 export default socket;
-export { boardLocked };
+export { boardLocked, attack };

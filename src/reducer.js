@@ -34,7 +34,7 @@ function appReducer(state = initialState, action) {
       return state;
 
     case "ATTACK":
-
+      attack(action.payload);
       return state;
     
     default:

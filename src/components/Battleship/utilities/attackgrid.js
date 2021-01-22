@@ -119,7 +119,7 @@ class AttackGrid extends Grid {
       bubbles: true,
       detail: {
         type: this.attackType,
-        origin: this.attackOrigin,
+        origin: [this.attackOrigin.x, this.attackOrigin.y],
         orientation: this.attackOrientation
       }
     });
