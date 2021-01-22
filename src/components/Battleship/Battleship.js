@@ -5,6 +5,24 @@ import ShipGrid from "./utilities/shipgrid";
 import { boardLocked, attack } from "./actions";
 import "./Battleship.scss";
 
+// temporary fix. the initial configuration
+// for ships should be coming from the socket
+const ships = {
+  "Carrier": {
+    id: 0,
+    position: [0, 0]
+  },
+  "Submarine": {
+    id: 1,
+    position: [2, 2]
+  },
+  "Battleship": {
+    id: 2,
+    position: [1, 1],
+    orientation: "horizontal"
+  }
+}
+
 let attackGrid;
 let shipGrid;
 
@@ -26,7 +44,8 @@ function Battleship({ board, player, boardLocked, attack }) {
       columns: board.columns,
       container: shipGridRef.current,
       initialState: {
-        ships: player.shipPositions
+        // ships: player.shipPositions
+        ships: ships
       }
     });
   
