@@ -6,14 +6,19 @@ import Lobby from "../Lobby";
 import Main from "../Main";
 import GameOver from "../GameOver";
 
-function App({ game }) {
+function App({ game, match }) {
+  console.log('app component', { game, match });
+
+  if (match.ready) {
+    return <Main />;
+  }
+
   switch(game.state) {
     case "splash":
       return <Splash />
-    
+
     case "lobby":
-      // return <Lobby />;
-      return <Main />;
+      return <Lobby />;
 
     case "play":
       return <Main />;
