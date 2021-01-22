@@ -8,6 +8,9 @@ const initialState = {
   game: {
     state: "splash"
   },
+  match: {
+    ready: false
+  },
   player: {}
 };
 
@@ -16,17 +19,22 @@ function appReducer(state = initialState, action) {
     case "CONFIGURATION":
       const game = action.payload.game;
       const player = action.payload.player;
+      const match = action.payload.match;
 
       updateLocalStorage({
         gameId: game.uuid,
+        matchId: match.uuid,
         playerId: player.uuid,
         username: player.username
       });
 
+      console.log('ready', match.ready);
+
       return {
         ...state,
         game,
-        player
+        player,
+        match
       };
 
     case "BOARD_LOCKED":
@@ -36,7 +44,7 @@ function appReducer(state = initialState, action) {
     case "ATTACK":
 
       return state;
-    
+
     default:
       return state;
   }
@@ -45,14 +53,16 @@ function appReducer(state = initialState, action) {
 function getLocalStorage() {
   return {
     gameId: localStorage.getItem("gameId"),
+    matchId: localStorage.getItem("matchId"),
     playerId: localStorage.getItem("playerId"),
     username: localStorage.getItem("username")
   };
 }
 
-function updateLocalStorage({ gameId, playerId, username }) {
+function updateLocalStorage({ gameId, playerId, username, matchId }) {
   localStorage.setItem("gameId", gameId);
   localStorage.setItem("playerId", playerId);
+  localStorage.setItem("matchId", matchId);
   localStorage.setItem("username", username);
 }
 
