@@ -45,7 +45,7 @@ function connect() {
       case "attack":
 
         break;
-      
+
       default:
     }
   }
@@ -54,7 +54,7 @@ function connect() {
     numRetries = 0;
 
     retryInterval = setInterval(() => {
-      
+
     }, RETRY_DELAY);
   }
 
@@ -67,21 +67,6 @@ function boardLocked(payload) {
   if (!socket) {
     return;
   }
-
-  payload = {
-    "Submarine": {
-      "position": [0, 0],
-      "orientation": "horizontal"
-    },
-    "Destroyer": {
-      "position": [2, 1],
-      "orientation": "horizontal"
-    },
-    "Battleship": {
-      "position": [0, 1],
-      "orientation": "vertical"
-    }
-  };
 
   const message = {
     type: "ship-positions",
