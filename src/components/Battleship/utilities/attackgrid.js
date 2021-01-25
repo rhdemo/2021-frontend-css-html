@@ -49,11 +49,11 @@ class AttackGrid extends Grid {
 
     this.attackGridFireButton = document.getElementById("attack-grid-fire-btn");
     this.attacking = false;
-    this.attackType = "1x1"; // hardcoded for now
+    this.attackType = null;
     this.attackOrigin = {};
     this.attackOrientation = "horizontal"; // hardcoded for now
     this.selectedGridBoxes = null;
-    this.enabled = false;
+    this.enabled = configuration.initialState.enabled || false;
   }
 
   getGridBoxes(origin, attackType) {
