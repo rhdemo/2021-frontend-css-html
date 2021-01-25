@@ -6,6 +6,8 @@ body,
 .Main,
 .GameOver {
   height: 100%;
+  position: relative;
+  overflow-x: hidden;
 }
 
 body {
