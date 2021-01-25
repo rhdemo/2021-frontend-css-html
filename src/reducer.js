@@ -11,7 +11,6 @@ const initialState = {
   match: {
     ready: false
   },
-  player: {}
   player: {},
   error: {
     message: null
@@ -27,7 +26,6 @@ function appReducer(state = initialState, action) {
 
       updateLocalStorage({
         gameId: game.uuid,
-        matchId: match.uuid,
         playerId: player.uuid,
         username: player.username
       });
@@ -49,6 +47,22 @@ function appReducer(state = initialState, action) {
       attack(action.payload);
       return state;
 
+    case "SHOW_ERROR_MESSAGE":
+      return {
+        ...state,
+        error: {
+          message: action.payload
+        }
+      };
+
+    case "HIDE_ERROR_MESSAGE":
+      return {
+        ...state,
+        error: {
+          message: null
+        }
+      };
+
     default:
       return state;
   }
@@ -57,16 +71,14 @@ function appReducer(state = initialState, action) {
 function getLocalStorage() {
   return {
     gameId: localStorage.getItem("gameId"),
-    matchId: localStorage.getItem("matchId"),
     playerId: localStorage.getItem("playerId"),
     username: localStorage.getItem("username")
   };
 }
 
-function updateLocalStorage({ gameId, playerId, username, matchId }) {
+function updateLocalStorage({ gameId, playerId, username }) {
   localStorage.setItem("gameId", gameId);
   localStorage.setItem("playerId", playerId);
-  localStorage.setItem("matchId", matchId);
   localStorage.setItem("username", username);
 }
 
