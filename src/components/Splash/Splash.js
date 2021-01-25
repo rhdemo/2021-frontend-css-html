@@ -1,7 +1,9 @@
+import "./Splash.scss";
+
 function Splash() {
   return (
-    <div>
-      <h1>Splash</h1>
+    <div className="Splash">
+      <h1>Battleship</h1>
     </div>
   );
 }
