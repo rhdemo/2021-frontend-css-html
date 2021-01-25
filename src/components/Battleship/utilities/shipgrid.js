@@ -21,7 +21,7 @@ const shipDefinitions = {
 
 class ShipGrid extends Grid {
   get locked() {
-    this.element.classList.contains("locked");
+    return this.element.classList.contains("locked");
   }
 
   set locked(bool) {
@@ -67,11 +67,14 @@ class ShipGrid extends Grid {
     this.offsetY = 0;
     this.currentBox = null;
     this.currentBoxes = null;
-    this.locked = false;
+    this.locked = configuration.initialState.locked || false;
 
     this.buildShips();
     this.setShipPositions();
-    this.addListeners();
+
+    if (!this.locked) {
+      this.addListeners();
+    }
   }
 
   buildShips() {
@@ -499,6 +502,21 @@ class ShipGrid extends Grid {
       return;
     }
 
+    const ships = {};
+
+    Object.keys(this.state.ships).forEach(key => {
+      const ship = this.state.ships[key];
+      const firstShipElement = this.element.querySelector(`.box[ship-ids="${ship.id}"]`);
+      const shipPosition = [parseInt(firstShipElement.getAttribute("column"), 10), parseInt(firstShipElement.getAttribute("row"), 10)];
+      const shipElement = this.element.querySelector(`.ship[ship-id="${ship.id}"]`);
+      // ship.origin = shipPosition;
+      // ship.orientation = shipElement.getAttribute("orientation");
+      ships[key] = {
+        origin: shipPosition,
+        orientation: shipElement.getAttribute("orientation")
+      }
+    });
+
     console.log(`${this.constructor.name} - Ship grid locked. Ready to play.`);
     this.locked = true;
     this.removeListeners();
@@ -551,7 +569,8 @@ class ShipGrid extends Grid {
       bubbles: true,
       detail: {
         state: this.state,
-        board: board
+        board: board,
+        ships: ships
       }
     });
 

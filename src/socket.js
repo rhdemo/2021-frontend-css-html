@@ -81,10 +81,10 @@ function boardLocked(payload) {
   if (!socket) {
     return;
   }
-
+  
   const message = {
     type: "ship-positions",
-    data: payload
+    data: payload.board
   };
 
   socket.send(JSON.stringify(message));

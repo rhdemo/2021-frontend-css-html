@@ -8,11 +8,11 @@ import "./Battleship.scss";
 // temporary fix. the initial configuration
 // for ships should be coming from the socket
 const ships = {
-  "Carrier": {
+  "Submarine": {
     id: 0,
     position: [0, 0]
   },
-  "Submarine": {
+  "Destroyer": {
     id: 1,
     position: [2, 2]
   },
@@ -32,11 +32,16 @@ function Battleship({ board, player, boardLocked, attack }) {
   const [ attackType, setAttackType ] = useState(null);
   
   useEffect(() => {
+    const shipGridLocked = player.board && player.board.positions ? true : false;
+    const attackGridEnabled = shipGridLocked ? true : false;
+
     attackGrid = new AttackGrid({
       rows: board.rows,
       columns: board.columns,
       container: attackGridRef.current,
-      initialState: {}
+      initialState: {
+        enabled: attackGridEnabled
+      }
     });
 
     shipGrid = new ShipGrid({
@@ -45,7 +50,8 @@ function Battleship({ board, player, boardLocked, attack }) {
       container: shipGridRef.current,
       initialState: {
         // ships: player.shipPositions
-        ships: ships
+        ships: ships,
+        locked: shipGridLocked
       }
     });
   
@@ -67,7 +73,7 @@ function Battleship({ board, player, boardLocked, attack }) {
 
   function boardLockedHandler(event) {
     attackGrid.enabled = true;
-    boardLocked(event.detail.board);
+    boardLocked(event.detail.ships);
   }
 
   const attackGridAttackHandler = event => {
@@ -76,11 +82,11 @@ function Battleship({ board, player, boardLocked, attack }) {
 
   return (
     <div className="Battleship">
-      <div>
+      <div className="board push-bottom">
         <h2>Enemy Grid</h2>
         <div id="attack-grid" ref={ attackGridRef }></div>
-        <button id="attack-grid-fire-btn">Fire now!</button>
-        <div>
+        <div className="push-bottom">
+          <p>Choose an attack</p>
           <label>
             <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler }></input>
             1x1
@@ -98,15 +104,15 @@ function Battleship({ board, player, boardLocked, attack }) {
             2x2
           </label>
         </div>
+        <button id="attack-grid-fire-btn" className="push-bottom">Fire now!</button>
       </div>
-      <div>
+      <div className="board push-top">
         <h2>Your Board</h2>
-        <div id="ship-grid" ref={ shipGridRef }></div>
-        <button className="unlock-message" id="ship-grid-lock-btn">Lock the board</button>
-    		<div className="lock-message">
-    			<h3>Board is locked</h3>
-    			<p>Simulate an attack by clicking a box</p>
-    		</div>
+        <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
+        <button className="unlock-message push-bottom" id="ship-grid-lock-btn">Lock the board</button>
+        { player.board && player.board.positions &&
+          <h3>Board is locked</h3>
+        }
       </div>
     </div>
   );
@@ -118,8 +124,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    boardLocked: board => {
-      dispatch(boardLocked(board));
+    boardLocked: ships => {
+      dispatch(boardLocked(ships));
     },
     attack: data => {
       dispatch(attack(data));
