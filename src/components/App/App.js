@@ -5,30 +5,44 @@ import Splash from "../Splash";
 import Lobby from "../Lobby";
 import Main from "../Main";
 import GameOver from "../GameOver";
+import ErrorMessage from "../ErrorMessage";
 
 function App({ game, match }) {
   console.log('app component', { game, match });
 
-  if (match.ready) {
-    return <Main />;
-  }
+  let view;
 
   switch(game.state) {
     case "splash":
-      return <Splash />
+      view = <Splash />
+      break;
 
     case "lobby":
-      return <Lobby />;
+      view = <Lobby />;
+      break;
 
     case "play":
-      return <Main />;
+      view = <Main />;
+      break;
 
     case "gameover":
-      return <GameOver />;
+      view = <GameOver />;
+      break;
 
     default:
-      return <Splash />;
+      view = <Splash />;
   }
+
+  if (match.ready) {
+    view = <Main />;
+  }
+
+  return (
+    <>
+      { view }
+      <ErrorMessage />
+    </>
+  )
 }
 
 const mapStateToProps = state => {

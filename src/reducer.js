@@ -12,6 +12,10 @@ const initialState = {
     ready: false
   },
   player: {}
+  player: {},
+  error: {
+    message: null
+  }
 };
 
 function appReducer(state = initialState, action) {

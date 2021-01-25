@@ -46,6 +46,20 @@ function connect() {
 
         break;
 
+      case "invalid-payload":
+        store.dispatch({
+          type: "SHOW_ERROR_MESSAGE",
+          payload: data.info
+        });
+        break;
+
+      case "server-error":
+        store.dispatch({
+          type: "SHOW_ERROR_MESSAGE",
+          payload: "Server error"
+        });
+        break;
+
       default:
     }
   }
