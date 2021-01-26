@@ -12,30 +12,42 @@ function App({ game, match }) {
 
   let view;
 
-  switch(game.state) {
-    case "splash":
-      view = <Splash />
-      break;
-
-    case "lobby":
-      view = <Lobby />;
-      break;
-
-    case "play":
-      view = <Main />;
-      break;
-
-    case "gameover":
-      view = <GameOver />;
-      break;
-
-    default:
-      view = <Splash />;
+  if (!match.playerA || !match.playerB) {
+    view = <Lobby />;
   }
 
-  if (match.ready) {
+  if (match.playerA && match.playerB) {
     view = <Main />;
   }
+
+  // this will change when we start controlling the game
+  // from the admin panel
+  // switch(game.state) {
+  //   case "splash":
+  //     view = <Splash />
+  //     break;
+
+  //   case "lobby":
+  //     view = <Lobby />;
+  //     break;
+
+  //   case "active":
+  //     view = <Main />;
+  //     break;
+
+  //   case "gameover":
+  //     view = <GameOver />;
+  //     break;
+
+  //   default:
+  //     view = <Splash />;
+  // }
+
+  // if (match.ready) {
+  //   view = <Main />;
+  // }
+
+
 
   return (
     <>
