@@ -42,8 +42,11 @@ function connect() {
         });
         break;
 
-      case "attack":
-
+      case "attack-result":
+        store.dispatch({
+          type: "ATTACK_RESULT",
+          payload: data
+        });
         break;
 
       case "invalid-payload":

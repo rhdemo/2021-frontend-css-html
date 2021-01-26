@@ -47,6 +47,14 @@ function appReducer(state = initialState, action) {
       attack(action.payload);
       return state;
 
+    case "ATTACK_RESULT":
+      const result = action.payload.result;
+
+      return {
+        ...state,
+        result
+      };
+
     case "SHOW_ERROR_MESSAGE":
       return {
         ...state,
