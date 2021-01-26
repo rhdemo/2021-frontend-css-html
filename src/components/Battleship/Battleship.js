@@ -30,6 +30,8 @@ function Battleship({ board, player, boardLocked, attack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ attackType, setAttackType ] = useState(null);
+  const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
+  const [ turnModalText, setTurnModalText ] = useState("");
   
   useEffect(() => {
     const shipGridLocked = player.board && player.board.positions ? true : false;
@@ -114,6 +116,9 @@ function Battleship({ board, player, boardLocked, attack }) {
           <h3>Board is locked</h3>
         }
       </div>
+      <Modal { ...turnModalHidden }>
+        <h2>{ turnModalText }</h2>
+      </Modal>
     </div>
   );
 }

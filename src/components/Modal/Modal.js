@@ -1,7 +1,9 @@
-function Modal() {
+import "./Modal.scss";
+
+function Modal(props) {
   return (
-    <div className="Modal">
-      <div class="backdrop"></div>
+    <div className="Modal" {...props}>
+      { props.children }
     </div>
   );
 }
