@@ -71,6 +71,7 @@ class ShipGrid extends Grid {
 
     this.buildShips();
     this.setShipPositions();
+    this.setInitialIncomingAttacks();
 
     if (!this.locked) {
       this.addListeners();
@@ -81,13 +82,12 @@ class ShipGrid extends Grid {
     const ships = this.state.ships;
 
     Object.keys(ships).forEach((key, index) => {
-      const shipPosition = ships[key].position;
+      const shipPosition = ships[key].origin;
       const initialShipConfiguration = Object.assign(ships[key], shipDefinitions[key]);
       initialShipConfiguration.type = key;
       initialShipConfiguration.id = index;
       initialShipConfiguration.state = [];
       const ship = new Ship(initialShipConfiguration);
-
       this.ships[ship.id] = ship;
     });
   }
@@ -122,7 +122,7 @@ class ShipGrid extends Grid {
   setShipPositions() {
     Object.keys(this.ships).forEach(key => {
       const ship = this.ships[key];
-      const position = ship.configuration.position;
+      const position = ship.configuration.origin;
 
       // position the ship on the grid
       // find the grid position first
@@ -140,6 +140,28 @@ class ShipGrid extends Grid {
       // underneath the ship
       const gridBoxes = this.getGridBoxes(gridElement, ship.element.children[0], ship);
       gridBoxes.forEach(gridBox => this.setBoxShipIds(gridBox, ship.id));
+    });
+  }
+
+  setInitialIncomingAttacks() {
+    Object.keys(this.ships).forEach(key => {
+      const ship = this.ships[key];
+      
+      if (!ship.configuration.cells) {
+        return;
+      }
+
+      ship.configuration.cells.forEach((cell, index) => {
+        if (!cell.hit) {
+          return;
+        }
+
+        const shipPiece = this.element.querySelector(`.ship[type="${ship.type}"] .ship-piece[ship-piece="${index}"]`);
+        const gridBox = this.element.querySelector(`.box[row="${cell.origin[1]}"][column="${cell.origin[0]}"]`);
+        
+        shipPiece.classList.add("hit");
+        gridBox.classList.add("hit");
+      });
     });
   }
 
@@ -449,15 +471,15 @@ class ShipGrid extends Grid {
 
     // find the grid box
     const gridBox = this.element.querySelector(`.box[row="${coordinates.y}"][column="${coordinates.x}"]`);
-    const shipPiece = this.element.querySelector(`.ship-piece[type="${message.ship}"][ship-piece="${position}"]`);
+    const shipPiece = this.element.querySelector(`.ship-piece[type="${message.type}"][ship-piece="${position}"]`);
 
     if (message.hit) {
       gridBox.classList.add("hit");
       shipPiece.classList.add("hit");
 
       if (message.destroyed) {
-        [...this.element.querySelectorAll(`.ship-piece[type="${message.ship}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
-        alert(`Your ${message.ship} has been destroyed`);
+        [...this.element.querySelectorAll(`.ship-piece[type="${message.type}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
+        // alert(`Your ${message.type} has been destroyed`);
       }
     } else {
       gridBox.classList.add("miss");

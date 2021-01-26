@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
+import Modal from "../Modal";
 import { boardLocked, attack } from "./actions";
 import "./Battleship.scss";
 
@@ -10,15 +11,15 @@ import "./Battleship.scss";
 const ships = {
   "Submarine": {
     id: 0,
-    position: [0, 0]
+    origin: [0, 0]
   },
   "Destroyer": {
     id: 1,
-    position: [2, 2]
+    origin: [2, 2]
   },
   "Battleship": {
     id: 2,
-    position: [1, 1],
+    origin: [1, 1],
     orientation: "horizontal"
   }
 }
@@ -26,13 +27,15 @@ const ships = {
 let attackGrid;
 let shipGrid;
 
-function Battleship({ board, player, boardLocked, attack }) {
+function Battleship({ board, player, boardLocked, attack, match, result }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ attackType, setAttackType ] = useState(null);
+  const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
   const [ turnModalText, setTurnModalText ] = useState("");
   
+  // initial configuraton
   useEffect(() => {
     const shipGridLocked = player.board && player.board.positions ? true : false;
     const attackGridEnabled = shipGridLocked ? true : false;
@@ -42,7 +45,8 @@ function Battleship({ board, player, boardLocked, attack }) {
       columns: board.columns,
       container: attackGridRef.current,
       initialState: {
-        enabled: attackGridEnabled
+        enabled: attackGridEnabled,
+        attacks: player.attacks
       }
     });
 
@@ -51,8 +55,7 @@ function Battleship({ board, player, boardLocked, attack }) {
       columns: board.columns,
       container: shipGridRef.current,
       initialState: {
-        // ships: player.shipPositions
-        ships: ships,
+        ships: (player.board) ? player.board.positions : ships,
         locked: shipGridLocked
       }
     });
@@ -61,6 +64,9 @@ function Battleship({ board, player, boardLocked, attack }) {
     document.addEventListener("attackgrid:attack", attackGridAttackHandler);
   }, []);
 
+  // set the attackType on the attack grid
+  // so when the user clicks a box on the grid,
+  // we show the correct shot type
   useEffect(() => {
     if (!attackGrid || !attackType) {
       return;
@@ -68,6 +74,71 @@ function Battleship({ board, player, boardLocked, attack }) {
 
     attackGrid.attackType = attackType;
   }, [attackType]);
+
+  // show a modal to indicate who's turn it is
+  useEffect(() => {
+    if (!match.ready) {
+      return;
+    }
+
+    if (player.uuid === match.activePlayer) {
+      setTurnModalText("Your turn");
+      attackGrid.enabled = true;
+      setDisableAttacks(false);
+    } else {
+      setTurnModalText("Enemy's turn");
+      attackGrid.enabled = false;
+      setDisableAttacks(true);
+    }
+
+    setTurnModalHidden(null);
+
+    setTimeout(() => {
+      setTurnModalHidden({ hidden: true });
+    }, 3000);
+  }, [ player.uuid, match.activePlayer, match.ready ]);
+
+  // record the result of the last attack on
+  // the attack grid
+  useEffect(() => {
+    if (!result) {
+      return;
+    }
+
+    result.forEach(attack => {
+      attack.position = {
+        x: attack.origin[0],
+        y: attack.origin[1]
+      };
+
+      attackGrid.recordAttack(attack);
+    });
+  }, [ result ]);
+
+  // record an incoming attack on the ship grid
+  useEffect(() => {
+    if (!player.board || !player.board.positions) {
+      return;
+    }
+
+    Object.keys(player.board.positions).forEach(key => {
+      const ship = player.board.positions[key];
+      ship.cells.forEach((cell, index) => {
+        if (!cell.hit) {
+          return;
+        }
+
+        cell.type = key;
+        cell.position = index;
+        cell.coordinates = {
+          x: cell.origin[0],
+          y: cell.origin[1]
+        };
+        
+        shipGrid.incomingAttack(cell);
+      });
+    });
+  }, [ player.board ]);
 
   function shotTypeChangeHandler(event) {
     setAttackType(event.target.value);
@@ -90,19 +161,19 @@ function Battleship({ board, player, boardLocked, attack }) {
         <div className="push-bottom">
           <p>Choose an attack</p>
           <label>
-            <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler }></input>
+            <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
             1x1
           </label>
           <label>
-            <input type="radio" name="shot-type" value="2x1" onChange={ shotTypeChangeHandler }></input>
+            <input type="radio" name="shot-type" value="2x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
             2x1
           </label>
           <label>
-            <input type="radio" name="shot-type" value="4x1" onChange={ shotTypeChangeHandler }></input>
+            <input type="radio" name="shot-type" value="4x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
             4x1
           </label>
           <label>
-            <input type="radio" name="shot-type" value="2x2" onChange={ shotTypeChangeHandler }></input>
+            <input type="radio" name="shot-type" value="2x2" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
             2x2
           </label>
         </div>

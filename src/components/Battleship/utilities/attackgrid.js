@@ -54,6 +54,25 @@ class AttackGrid extends Grid {
     this.attackOrientation = "horizontal"; // hardcoded for now
     this.selectedGridBoxes = null;
     this.enabled = configuration.initialState.enabled || false;
+    this.initialAttacks = configuration.initialState.attacks;
+
+    this.setInitialAttacks();
+  }
+
+  setInitialAttacks() {
+    this.initialAttacks.forEach(attack => {
+      attack.results.forEach(result => {
+        // get the box
+        const box = this.element.querySelector(`.box[row="${result.origin[1]}"][column="${result.origin[0]}"]`);
+        if (box) {
+          if (result.hit) {
+            box.classList.add("hit");
+          } else {
+            box.classList.add("miss");
+          }
+        }
+      });
+    });
   }
 
   getGridBoxes(origin, attackType) {
@@ -150,13 +169,13 @@ class AttackGrid extends Grid {
 
       // if the ship has been destroyed, add a destroyed class to its pieces
       if (message.destroyed) {
-        message.ship.state.forEach(piece => {
-          const coordinates = piece.coordinates;
-          const box = this.element.querySelector(`.box[row="${coordinates.y}"][column="${coordinates.x}"]`);
-          box.classList.add("destroyed");
-        });
+        // message.ship.state.forEach(piece => {
+        //   const coordinates = piece.coordinates;
+        //   const box = this.element.querySelector(`.box[row="${coordinates.y}"][column="${coordinates.x}"]`);
+        //   box.classList.add("destroyed");
+        // });
 
-        alert(`You destroyed the ${message.ship.type}`);
+        alert(`You destroyed the ${message.type}`);
       }
     } else {
       gridBox.classList.add("miss");
