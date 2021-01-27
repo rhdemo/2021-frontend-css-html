@@ -22,7 +22,9 @@ const ships = {
     origin: [1, 1],
     orientation: "horizontal"
   }
-}
+};
+
+const modalTimeout = 3000;
 
 let attackGrid;
 let shipGrid;
@@ -34,6 +36,7 @@ function Battleship({ board, player, boardLocked, attack, match, result }) {
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
   const [ turnModalText, setTurnModalText ] = useState("");
+  const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
   
   // initial configuraton
   useEffect(() => {
@@ -95,7 +98,7 @@ function Battleship({ board, player, boardLocked, attack, match, result }) {
 
     setTimeout(() => {
       setTurnModalHidden({ hidden: true });
-    }, 3000);
+    }, modalTimeout);
   }, [ player.uuid, match.activePlayer, match.ready ]);
 
   // record the result of the last attack on
@@ -140,6 +143,20 @@ function Battleship({ board, player, boardLocked, attack, match, result }) {
     });
   }, [ player.board ]);
 
+  // show a modal if the player has not set up
+  // their board yet
+  useEffect(() => {
+    if (player.board) {
+      setPositionModalHidden({ hidden: true });
+    } else {
+      setPositionModalHidden(null);
+
+      setTimeout(() => {
+        setPositionModalHidden({ hidden: true });
+      }, modalTimeout);
+    }
+  }, [ player.board ]);
+
   function shotTypeChangeHandler(event) {
     setAttackType(event.target.value);
   }
@@ -155,40 +172,53 @@ function Battleship({ board, player, boardLocked, attack, match, result }) {
 
   return (
     <div className="Battleship">
-      <div className="board push-bottom">
-        <h2>Enemy Grid</h2>
-        <div id="attack-grid" ref={ attackGridRef }></div>
-        <div className="push-bottom">
-          <p>Choose an attack</p>
-          <label>
-            <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
-            1x1
-          </label>
-          <label>
-            <input type="radio" name="shot-type" value="2x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
-            2x1
-          </label>
-          <label>
-            <input type="radio" name="shot-type" value="4x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
-            4x1
-          </label>
-          <label>
-            <input type="radio" name="shot-type" value="2x2" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
-            2x2
-          </label>
+      <div className={ !match.ready || match.activePlayer !== player.uuid ? "hide" : "" }>
+        <div className="board push-bottom">
+          <h2>Enemy Grid</h2>
+          <div id="attack-grid" ref={ attackGridRef }></div>
+          <div className="push-bottom">
+            <p>Choose an attack</p>
+            <label>
+              <input type="radio" name="shot-type" value="1x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
+              1x1
+            </label>
+            <label>
+              <input type="radio" name="shot-type" value="2x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
+              2x1
+            </label>
+            <label>
+              <input type="radio" name="shot-type" value="4x1" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
+              4x1
+            </label>
+            <label>
+              <input type="radio" name="shot-type" value="2x2" onChange={ shotTypeChangeHandler } disabled={ disableAttacks ? "disabled" : null }></input>
+              2x2
+            </label>
+          </div>
+          <button id="attack-grid-fire-btn" className="push-bottom">Fire now!</button>
         </div>
-        <button id="attack-grid-fire-btn" className="push-bottom">Fire now!</button>
       </div>
-      <div className="board push-top">
-        <h2>Your Board</h2>
-        <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
-        <button className="unlock-message push-bottom" id="ship-grid-lock-btn">Lock the board</button>
-        { player.board && player.board.positions &&
-          <h3>Board is locked</h3>
-        }
+      <div className={ match.activePlayer === player.uuid ? "hide" : "" }>
+        <div className="board push-top">
+          <h2>Your Board</h2>
+          <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
+          <button className="unlock-message push-bottom" id="ship-grid-lock-btn">Lock the board</button>
+          { player.board && player.board.positions &&
+            <h3>Board is locked</h3>
+          }
+          { player.board && !match.ready &&
+            <p>Waiting for your opponent to position their ships</p>
+          }
+          { match.ready && match.activePlayer !== player.uuid &&
+            <p>Waiting for your opponent to attack</p>
+          }
+        </div>
       </div>
       <Modal { ...turnModalHidden }>
         <h2>{ turnModalText }</h2>
+      </Modal>
+      <Modal { ...positionModalHidden }>
+        <h2>Position your ships</h2>
       </Modal>
     </div>
   );
