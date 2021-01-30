@@ -198,7 +198,7 @@ function Battleship({ board, player, boardLocked, attack, match, result }) {
           <button id="attack-grid-fire-btn" className="push-bottom">Fire now!</button>
         </div>
       </div>
-      <div className={ match.activePlayer === player.uuid ? "hide" : "" }>
+      <div className={ match.ready && match.activePlayer === player.uuid ? "hide" : "" }>
         <div className="board push-top">
           <h2>Your Board</h2>
           <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
