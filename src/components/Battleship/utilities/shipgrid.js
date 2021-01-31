@@ -68,13 +68,15 @@ class ShipGrid extends Grid {
     this.currentBox = null;
     this.currentBoxes = null;
     this.locked = configuration.initialState.locked || false;
+    this.initialAttacks = configuration.initialState.attacks;
 
     this.buildShips();
     this.setShipPositions();
-    this.setInitialIncomingAttacks();
 
     if (!this.locked) {
       this.addListeners();
+    } else {
+      this.setInitialIncomingAttacks();
     }
   }
 
@@ -139,11 +141,30 @@ class ShipGrid extends Grid {
       // let the board know that the grid should be "occupied"
       // underneath the ship
       const gridBoxes = this.getGridBoxes(gridElement, ship.element.children[0], ship);
-      gridBoxes.forEach(gridBox => this.setBoxShipIds(gridBox, ship.id));
+      gridBoxes.forEach((gridBox, index) => {
+        this.setBoxShipIds(gridBox, ship.id)
+        gridBox.setAttribute("ship-piece", index);
+      });
     });
   }
 
   setInitialIncomingAttacks() {
+    this.initialAttacks.forEach(initialAttack => {
+      const attack = initialAttack.attack;
+      const gridBox = this.element.querySelector(`.box[row="${attack.origin[1]}"][column="${attack.origin[0]}"]`);
+      
+      if (!gridBox.hasAttribute("ship-ids")) {
+        gridBox.classList.add("miss");
+      } else {
+        const shipId = gridBox.getAttribute("ship-ids");
+        const shipPieceIndex = gridBox.getAttribute("ship-piece");
+        const shipPiece = this.element.querySelector(`.ship-piece[ship-id="${shipId}"][ship-piece="${shipPieceIndex}"]`);
+
+        shipPiece.classList.add("hit");
+        gridBox.classList.add("hit");
+      }
+    });
+
     Object.keys(this.ships).forEach(key => {
       const ship = this.ships[key];
       
@@ -159,8 +180,8 @@ class ShipGrid extends Grid {
         const shipPiece = this.element.querySelector(`.ship[type="${ship.type}"] .ship-piece[ship-piece="${index}"]`);
         const gridBox = this.element.querySelector(`.box[row="${cell.origin[1]}"][column="${cell.origin[0]}"]`);
         
-        shipPiece.classList.add("hit");
-        gridBox.classList.add("hit");
+        // shipPiece.classList.add("hit");
+        // gridBox.classList.add("hit");
       });
     });
   }
@@ -287,7 +308,10 @@ class ShipGrid extends Grid {
     // remove the "occupied" attributes from the grid boxes
     // underneath the ship
     const gridBoxes = this.getGridBoxes(box, this.activeShipPiece, this.activeItem);
-    gridBoxes.forEach(gridBox => this.setBoxShipIds(gridBox, shipId, true));
+    gridBoxes.forEach(gridBox => {
+      this.setBoxShipIds(gridBox, shipId, true)
+      gridBox.removeAttribute("ship-piece");
+    });
 
     this.currentBox = box;
     this.highLightGrid(this.currentBox);
@@ -405,12 +429,13 @@ class ShipGrid extends Grid {
     }
 
     if (this.currentBoxes) {
-      this.currentBoxes.forEach(box => {
+      this.currentBoxes.forEach((box, index) => {
         if (!box) {
           return;
         }
 
         box.classList.remove("green", "red");
+        box.setAttribute("ship-piece", index);
         this.setBoxShipIds(box, shipId);
       });
     }
@@ -436,6 +461,7 @@ class ShipGrid extends Grid {
     const originalGridBoxes = this.getGridBoxes(box, ship.element.children[0], ship);
     originalGridBoxes.forEach(box => {
       this.setBoxShipIds(box, shipId, true);
+      box.removeAttribute("ship-piece");
     });
   }
 
@@ -449,8 +475,9 @@ class ShipGrid extends Grid {
     // get the new grid boxes underneath the ship and set them
     // to "occupied"
     const gridBoxes = this.getGridBoxes(box, ship.element.children[0], ship);
-    gridBoxes.forEach(box => {
+    gridBoxes.forEach((box, index) => {
       this.setBoxShipIds(box, shipId);
+      box.setAttribute("ship-piece", index);
     });
   }
 
@@ -467,19 +494,21 @@ class ShipGrid extends Grid {
   incomingAttack(message) {
     console.log(`${this.constructor.name} - Incoming attack`, message);
     const position = message.position;
-    const coordinates = message.coordinates;
 
     // find the grid box
-    const gridBox = this.element.querySelector(`.box[row="${coordinates.y}"][column="${coordinates.x}"]`);
-    const shipPiece = this.element.querySelector(`.ship-piece[type="${message.type}"][ship-piece="${position}"]`);
+    const gridBox = this.element.querySelector(`.box[row="${position.y}"][column="${position.x}"]`);
 
     if (message.hit) {
-      gridBox.classList.add("hit");
+      const shipId = gridBox.getAttribute("ship-ids");
+      const shipPieceIndex = gridBox.getAttribute("ship-piece");
+      const shipPiece = this.element.querySelector(`.ship-piece[ship-id="${shipId}"][ship-piece="${shipPieceIndex}"]`);
+
       shipPiece.classList.add("hit");
+      gridBox.classList.add("hit");
 
       if (message.destroyed) {
-        [...this.element.querySelectorAll(`.ship-piece[type="${message.type}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
-        // alert(`Your ${message.type} has been destroyed`);
+        [...this.element.querySelectorAll(`.ship-piece[ship-id="${shipId}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
+        alert(`Your ${message.type} has been destroyed`);
       }
     } else {
       gridBox.classList.add("miss");

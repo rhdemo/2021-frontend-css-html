@@ -31,11 +31,9 @@ class AttackGrid extends Grid {
   set enabled(bool) {
     if (bool) {
       console.log(`${this.constructor.name} - Attack grid enabled`);
-      this.attackGridFireButton.disabled = false;
       this.addListeners();
     } else {
       console.log(`${this.constructor.name} - Attack grid disabled`);
-      this.attackGridFireButton.disabled = true;
       this.removeListeners();
     }
   }
@@ -47,9 +45,8 @@ class AttackGrid extends Grid {
     this.attack = this.attack.bind(this);
     this.recordAttack = this.recordAttack.bind(this);
 
-    this.attackGridFireButton = document.getElementById("attack-grid-fire-btn");
     this.attacking = false;
-    this.attackType = null;
+    this.attackType = "1x1";
     this.attackOrigin = {};
     this.attackOrientation = "horizontal"; // hardcoded for now
     this.selectedGridBoxes = null;
@@ -127,6 +124,9 @@ class AttackGrid extends Grid {
     const gridBoxes = this.getGridBoxes(this.attackOrigin, this.attackType);
     gridBoxes.forEach(box => box.classList.add("attacking"));
     this.selectedGridBoxes = gridBoxes;
+
+    // bypassing the shot selection
+    this.attack();
   }
 
   attack() {
@@ -150,12 +150,10 @@ class AttackGrid extends Grid {
 
   addListeners() {
     this.element.addEventListener("click", this.gridClickHandler, false);
-    this.attackGridFireButton.addEventListener("click", this.attack, false);
   }
 
   removeListeners() {
     this.element.removeEventListener("click", this.gridClickHandler, false);
-    this.attackGridFireButton.removeEventListener("click", this.attack, false);
   }
 
   recordAttack(message) {

@@ -18,11 +18,19 @@ const initialState = {
 };
 
 function appReducer(state = initialState, action) {
+  let game;
+  let player;
+  let opponent;
+  let match;
+  let result;
+  let attacker;
+  
   switch (action.type) {
     case "CONFIGURATION":
-      const game = action.payload.game;
-      const player = action.payload.player;
-      const match = action.payload.match;
+      game = action.payload.game;
+      player = action.payload.player;
+      opponent = action.payload.opponent;
+      match = action.payload.match;
 
       updateLocalStorage({
         gameId: game.uuid,
@@ -36,6 +44,7 @@ function appReducer(state = initialState, action) {
         ...state,
         game,
         player,
+        opponent,
         match
       };
 
@@ -48,11 +57,17 @@ function appReducer(state = initialState, action) {
       return state;
 
     case "ATTACK_RESULT":
-      const result = action.payload.result;
+      match = action.payload.match;
+      player = action.payload.player;
+      result = action.payload.result;
+      attacker = action.payload.attacker;
 
       return {
         ...state,
-        result
+        player,
+        match,
+        result,
+        attacker
       };
 
     case "SHOW_ERROR_MESSAGE":
