@@ -20,6 +20,10 @@ function App({ game, match }) {
     view = <Main />;
   }
 
+  if (match.winner) {
+    view = <GameOver />;
+  }
+
   // this will change when we start controlling the game
   // from the admin panel
   // switch(game.state) {

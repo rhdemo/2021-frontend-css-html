@@ -12,22 +12,8 @@ function connect() {
   socket = new WebSocket("ws://localhost:3000/game");
 
   socket.onopen = event => {
-    let data = {};
-
-    // get a previously connected player
-    const previousPlayer = getLocalStorage();
-    if (previousPlayer.gameId && previousPlayer.playerId && previousPlayer.username) {
-      data = previousPlayer;
-    }
-
-    // send a connection frame
-    const message = {
-      type: "connection",
-      data
-    };
-
     numRetries = 0;
-    socket.send(JSON.stringify(message));
+    sendConfigurationFrame();
   }
 
   socket.onmessage = event => {
@@ -80,6 +66,28 @@ function connect() {
   }
 }
 
+function sendConfigurationFrame() {
+  if (!socket) {
+    return;
+  }
+
+  let data = {};
+
+    // get a previously connected player
+    const previousPlayer = getLocalStorage();
+    if (previousPlayer.gameId && previousPlayer.playerId && previousPlayer.username) {
+      data = previousPlayer;
+    }
+
+    // send a connection frame
+    const message = {
+      type: "connection",
+      data
+    };
+
+    socket.send(JSON.stringify(message));
+}
+
 function boardLocked(payload) {
   if (!socket) {
     return;
@@ -107,7 +115,11 @@ function attack(payload) {
   socket.send(JSON.stringify(message));
 }
 
+function playAgain() {
+  sendConfigurationFrame();
+}
+
 connect();
 
 export default socket;
-export { boardLocked, attack };
+export { boardLocked, attack, playAgain };

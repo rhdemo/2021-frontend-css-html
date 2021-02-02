@@ -24,7 +24,7 @@ const ships = {
   }
 };
 
-const modalTimeout = 3000;
+const modalTimeout = 1500;
 
 let attackGrid;
 let shipGrid;

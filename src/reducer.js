@@ -1,4 +1,5 @@
-import { boardLocked, attack } from "./socket";
+import { combineReducers } from "react-redux";
+import { boardLocked, attack, playAgain } from "./socket";
 
 const initialState = {
   board: {
@@ -70,6 +71,12 @@ function appReducer(state = initialState, action) {
         attacker
       };
 
+    case "PLAY_AGAIN":
+      clearLocalStorage();
+      state = undefined;
+      playAgain();
+      return appReducer(state, { type: null });
+
     case "SHOW_ERROR_MESSAGE":
       return {
         ...state,
@@ -103,6 +110,10 @@ function updateLocalStorage({ gameId, playerId, username }) {
   localStorage.setItem("gameId", gameId);
   localStorage.setItem("playerId", playerId);
   localStorage.setItem("username", username);
+}
+
+function clearLocalStorage() {
+  localStorage.clear();
 }
 
 export { appReducer, getLocalStorage };
