@@ -15,4 +15,4 @@ yarn install
 yarn build
 
 # Use the local build/ folder as the source
-s2i build ./build centos/nginx-116-centos7 ${IMAGE_REPOSITORY}
+s2i build ./build registry.access.redhat.com/ubi8/nginx-118 ${IMAGE_REPOSITORY}
