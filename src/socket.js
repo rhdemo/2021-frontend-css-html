@@ -9,7 +9,12 @@ let numRetries = 0;
 let retryInterval;
 
 function connect() {
-  socket = new WebSocket("ws://localhost:3000/game");
+  if (window.location.hostname.includes('localhost')) {
+    socket = new WebSocket("ws://localhost:3000/game");
+  } else {
+    const host = window.location.hostname.replace('game-frontend', 'game-server-frontend')
+    socket = new WebSocket(`ws://${host}/game`);
+  }
 
   socket.onopen = event => {
     numRetries = 0;
@@ -92,7 +97,7 @@ function boardLocked(payload) {
   if (!socket) {
     return;
   }
-  
+
   const message = {
     type: "ship-positions",
     data: payload.board
