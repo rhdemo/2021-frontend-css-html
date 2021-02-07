@@ -6,7 +6,7 @@ function Lobby({ match, player }) {
   // @TODO remove waiting message when we move away
   // from player vs. player.
   return (
-    <div className="Lobby">
+    <div className="Lobby screen">
       <h1>Battleship</h1>
       <h2>Lobby</h2>
       <Avatar />

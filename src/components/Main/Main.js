@@ -4,7 +4,7 @@ import "./Main.scss";
 
 function Main() {
   return (
-    <div className="Main">
+    <div className="Main screen">
       <Header />
       <div>
         <Battleship />

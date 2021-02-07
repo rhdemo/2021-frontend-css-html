@@ -2,7 +2,7 @@ import "./Splash.scss";
 
 function Splash() {
   return (
-    <div className="Splash">
+    <div className="Splash screen">
       <h1>Battleship</h1>
     </div>
   );

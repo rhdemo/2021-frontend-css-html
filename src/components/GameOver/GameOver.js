@@ -4,7 +4,7 @@ import "./GameOver.scss";
 
 function GameOver({ player, match, playAgain }) {
   return (
-    <div className="GameOver">
+    <div className="GameOver screen">
       <h1>Game Over</h1>
       { match.winner === player.uuid
         ? <h2>You won!</h2>
