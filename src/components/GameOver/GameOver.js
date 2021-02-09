@@ -2,13 +2,19 @@ import { connect } from "react-redux";
 import { playAgain } from "./actions";
 import "./GameOver.scss";
 
-function GameOver({ player, match, playAgain }) {
+function GameOver({ player, opponent, match, playAgain }) {
   return (
     <div className="GameOver screen">
       <h1>Game Over</h1>
       { match.winner === player.uuid
-        ? <h2>You won!</h2>
-        : <h2>You lost!</h2>
+        ? <>
+            <h2>Congratulations, { player.username }!</h2>
+            <p>You beat { opponent.username }!</p>
+          </>
+        : <>
+            <h2>Oh no, { player.username }!</h2>
+            <p>You lost to { opponent.username }!</p>
+          </>
       }
       <button onClick={ playAgain }>Play again?</button>
     </div>

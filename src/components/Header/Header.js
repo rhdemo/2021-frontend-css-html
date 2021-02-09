@@ -17,7 +17,7 @@ function Header({ player }) {
       <Avatar />
       <div>
         <h2>{ player.username }</h2>
-        <div>{ player.score } { pointsText }</div>
+        {/* <div>{ player.score } { pointsText }</div> */}
       </div>
     </header>
   );

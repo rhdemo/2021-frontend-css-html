@@ -161,7 +161,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       {/* <div className={ !match.ready || match.activePlayer !== player.uuid ? "hide" : "" }> */}
       <div>
         <div className="board push-bottom">
-          <h2>Enemy Grid</h2>
+          <h2>Enemy's Board</h2>
           <div id="attack-grid" ref={ attackGridRef }></div>
         </div>
       </div>
@@ -170,15 +170,18 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
         <div className="board push-top">
           <h2>Your Board</h2>
           <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
-          <button className="unlock-message push-bottom" id="ship-grid-lock-btn">Lock the board</button>
+          <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Lock the board</button>
           { player.board && player.board.positions &&
             <h3>Board is locked</h3>
           }
           { player.board && !match.ready &&
-            <p>Waiting for your opponent to position their ships</p>
+            <p>Waiting for your enemy to position their ships</p>
           }
           { match.ready && match.activePlayer !== player.uuid &&
-            <p>Waiting for your opponent to attack</p>
+            <p>Waiting for your enemy to attack</p>
+          }
+          { match.ready && match.activePlayer === player.uuid &&
+            <p>Your turn</p>
           }
         </div>
       </div>
