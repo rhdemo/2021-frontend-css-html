@@ -84,6 +84,9 @@ function sendConfigurationFrame() {
       data = previousPlayer;
     }
 
+    // inject the ai parameter if forced using the querystring
+    data.useAiOpponent = window.location.search.includes('useAiOpponent=true')
+
     // send a connection frame
     const message = {
       type: "connection",
