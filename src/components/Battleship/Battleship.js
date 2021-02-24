@@ -21,6 +21,11 @@ const ships = {
     id: 2,
     origin: [1, 1],
     orientation: "horizontal"
+  },
+  "Carrier": {
+    id: 3,
+    origin: [0, 4],
+    orientation: "horizontal"
   }
 };
 
