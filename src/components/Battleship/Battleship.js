@@ -139,19 +139,18 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       return;
     }
 
-    result.forEach(attack => {
-      attack.position = {
-        x: attack.origin[0],
-        y: attack.origin[1]
+      result.position = {
+        x: result.origin[0],
+        y: result.origin[1]
       };
 
       // if the player is the attacker, record the result
       // on the attack grid. otherwise, record the incoming
       // attack on the shipgrid
       if (attacker === player.uuid) {
-        attackGrid.recordAttack(attack);
+        attackGrid.recordAttack(result);
       } else {
-        shipGrid.incomingAttack(attack);
+        shipGrid.incomingAttack(result);
       }
 
       // if the attack destroyed a ship, record it.
@@ -184,7 +183,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           setTurnModalHidden({ hidden: true });
         }, modalTimeout);
       }, 1000);
-    });
+
   }, [ result, attacker, player, match ]);
 
   // show a modal if the player has not set up
