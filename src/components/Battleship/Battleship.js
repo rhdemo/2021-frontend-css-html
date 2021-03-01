@@ -79,7 +79,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
 
   // initial configuraton
   useEffect(() => {
-    const shipGridLocked = player.board && player.board.positions && player.board.positions.valid;
+    const shipGridLocked = player.board && player.board.positions && player.board.valid;
     const attackGridEnabled = shipGridLocked ? true : false;
 
     attackGrid = new AttackGrid({
@@ -217,7 +217,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           <h2>Enemy's Board</h2>
           <div className="opponent-ships-list push-bottom">
           { Object.keys(enemyShips).map((enemyShipKey, index) => 
-            <div><input type="checkbox" disabled="true" checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</div>
+            <div key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</div>
           )}
           </div>
           <div id="attack-grid" ref={ attackGridRef }></div>

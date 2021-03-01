@@ -8,10 +8,10 @@ const shipDefinitions = {
   "Battleship": {
     length: 4
   },
-  "Destroyer": {
+  "Submarine": {
     length: 3
   },
-  "Submarine": {
+  "Destroyer": {
     length: 2
   },
   "Patrol-boat": {
