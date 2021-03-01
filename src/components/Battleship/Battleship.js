@@ -76,11 +76,10 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
   const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
   const [ activeBoard, setActiveBoard ] = useState(null);
   const [ enemyShips, setEnemyShips ] = useState(initialEnemyShips);
-  
+
   // initial configuraton
   useEffect(() => {
-    // const shipGridLocked = player.board && player.board.positions ? true : false;
-    const shipGridLocked = player.board && player.board.valid;
+    const shipGridLocked = player.board && player.board.positions && player.board.positions.valid;
     const attackGridEnabled = shipGridLocked ? true : false;
 
     attackGrid = new AttackGrid({
@@ -103,7 +102,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
         locked: shipGridLocked,
       }
     });
-  
+
     document.addEventListener("shipgrid:locked", boardLockedHandler);
     document.addEventListener("attackgrid:attack", attackGridAttackHandler);
   }, []);
@@ -178,9 +177,9 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           setDisableAttacks(true);
           setActiveBoard("ship");
         }
-  
+
         setTurnModalHidden(null);
-  
+
         setTimeout(() => {
           setTurnModalHidden({ hidden: true });
         }, modalTimeout);
