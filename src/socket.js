@@ -85,7 +85,9 @@ function sendConfigurationFrame() {
     }
 
     // inject the ai parameter if forced using the querystring
-    data.useAiOpponent = window.location.search.includes('useAiOpponent=true')
+    if (window.location.search.includes('useAiOpponent')) {
+      data.useAiOpponent = window.location.search.includes('useAiOpponent=true') ? true : false
+    }
 
     // send a connection frame
     const message = {

@@ -58,17 +58,16 @@ class AttackGrid extends Grid {
 
   setInitialAttacks() {
     this.initialAttacks.forEach(attack => {
-      attack.results.forEach(result => {
-        // get the box
-        const box = this.element.querySelector(`.box[row="${result.origin[1]}"][column="${result.origin[0]}"]`);
-        if (box) {
-          if (result.hit) {
-            box.classList.add("hit");
-          } else {
-            box.classList.add("miss");
-          }
+      const {result} =  attack
+      // get the box
+      const box = this.element.querySelector(`.box[row="${result.origin[1]}"][column="${result.origin[0]}"]`);
+      if (box) {
+        if (result.hit) {
+          box.classList.add("hit");
+        } else {
+          box.classList.add("miss");
         }
-      });
+      }
     });
   }
 
@@ -81,7 +80,7 @@ class AttackGrid extends Grid {
 
     const attackTypeArr = attackType.split("x");
     const iterations = attackTypeArr.reduce((acc, current) => acc * current);
-    
+
     let x = origin.x;
     let y = origin.y;
 
