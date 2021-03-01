@@ -1,4 +1,16 @@
 .Battleship {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  .board-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
   .grid {
     display: grid;
     grid-template-columns: repeat(5, 64px);
@@ -163,6 +175,14 @@
     text-align: center;
   }
 
+  .opponent-ships-list {
+    display: flex;
+
+    > div {
+      margin-right: 0.5rem;
+    }
+  }
+
   .push-top {
     margin-top: 1rem;
   }
@@ -172,6 +192,7 @@
   }
 
   .hide {
-    display: none;
+    opacity: 0;
+    z-index: -1;
   }
 }

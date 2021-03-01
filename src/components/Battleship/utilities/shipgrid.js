@@ -508,7 +508,7 @@ class ShipGrid extends Grid {
 
       if (message.destroyed) {
         [...this.element.querySelectorAll(`.ship-piece[ship-id="${shipId}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
-        alert(`Your ${message.type} has been destroyed`);
+        // alert(`Your ${message.type} has been destroyed`);
       }
     } else {
       gridBox.classList.add("miss");

@@ -173,7 +173,7 @@ class AttackGrid extends Grid {
         //   box.classList.add("destroyed");
         // });
 
-        alert(`You destroyed the ${message.type}`);
+        // alert(`You destroyed the ${message.type}`);
       }
     } else {
       gridBox.classList.add("miss");

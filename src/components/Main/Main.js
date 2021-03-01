@@ -6,9 +6,7 @@ function Main() {
   return (
     <div className="Main screen">
       <Header />
-      <div>
-        <Battleship />
-      </div>
+      <Battleship />
     </div>
   );
 }

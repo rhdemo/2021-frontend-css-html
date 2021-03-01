@@ -6,6 +6,24 @@ import Modal from "../Modal";
 import { boardLocked, attack } from "./actions";
 import "./Battleship.scss";
 
+/*
+ * Ships not positioned:
+ * - Show ship grid
+ * - Hide enemy grid
+ * 
+ * Ships positioned, waiting on enemy
+ * - Show ship grid
+ * - Hide enemy grid
+ * 
+ * Ships positioned, your turn
+ * - Show enemy grid
+ * - Hide ship grid
+ * 
+ * Ships positioned, enemy's turn
+ * - Show ship grid
+ * - Hide enemy grid
+ */
+
 // temporary fix. the initial configuration
 // for ships should be coming from the socket
 const ships = {
@@ -29,6 +47,21 @@ const ships = {
   }
 };
 
+const initialEnemyShips = {
+  "Submarine": {
+    destroyed: false
+  },
+  "Destroyer": {
+    destroyed: false
+  },
+  "Battleship": {
+    destroyed: false
+  },
+  "Carrier": {
+    destroyed: false
+  }
+}
+
 const modalTimeout = 1500;
 
 let attackGrid;
@@ -41,10 +74,13 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
   const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
   const [ turnModalText, setTurnModalText ] = useState("");
   const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
+  const [ activeBoard, setActiveBoard ] = useState(null);
+  const [ enemyShips, setEnemyShips ] = useState(initialEnemyShips);
   
   // initial configuraton
   useEffect(() => {
-    const shipGridLocked = player.board && player.board.positions ? true : false;
+    // const shipGridLocked = player.board && player.board.positions ? true : false;
+    const shipGridLocked = player.board && player.board.valid;
     const attackGridEnabled = shipGridLocked ? true : false;
 
     attackGrid = new AttackGrid({
@@ -79,6 +115,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       // there wasn't an attack, we just need to
       // indicate who's turn it is.
       if (!match.ready) {
+        setActiveBoard("ship");
         return;
       }
 
@@ -86,10 +123,12 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
         setTurnModalText("Your turn");
         attackGrid.enabled = true;
         setDisableAttacks(false);
+        setActiveBoard("attack");
       } else {
         setTurnModalText("Enemy's turn");
         attackGrid.enabled = false;
         setDisableAttacks(true);
+        setActiveBoard("ship");
       }
 
       setTurnModalHidden(null);
@@ -116,6 +155,15 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
         shipGrid.incomingAttack(attack);
       }
 
+      // if the attack destroyed a ship, record it.
+      // @TODO: show interstitial animation
+      if (attack.destroyed) {
+        // const ship = {...enemyShips[attack.type]};
+        // ship.destroyed = true;
+
+        // setEnemyShips({ship});
+      }
+
       // wait for a short period before showing the
       // turn modal
       setTimeout(() => {
@@ -123,10 +171,12 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           setTurnModalText("Your turn");
           attackGrid.enabled = true;
           setDisableAttacks(false);
+          setActiveBoard("attack");
         } else {
           setTurnModalText("Enemy's turn");
           attackGrid.enabled = false;
           setDisableAttacks(true);
+          setActiveBoard("ship");
         }
   
         setTurnModalHidden(null);
@@ -163,20 +213,24 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
 
   return (
     <div className="Battleship">
-      {/* <div className={ !match.ready || match.activePlayer !== player.uuid ? "hide" : "" }> */}
-      <div>
+      <div className={ activeBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
           <h2>Enemy's Board</h2>
+          <div className="opponent-ships-list push-bottom">
+          { Object.keys(enemyShips).map((enemyShipKey, index) => 
+            <div><input type="checkbox" disabled="true" checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</div>
+          )}
+          </div>
           <div id="attack-grid" ref={ attackGridRef }></div>
+          <p>Choose a cell to attack</p>
         </div>
       </div>
-      {/* <div className={ match.ready && match.activePlayer === player.uuid ? "hide" : "" }> */}
-      <div>
+      <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board push-top">
           <h2>Your Board</h2>
           <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
           <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Lock the board</button>
-          { player.board && player.board.positions &&
+          { player.board && player.board.valid && !match.ready &&
             <h3>Board is locked</h3>
           }
           { player.board && !match.ready &&
