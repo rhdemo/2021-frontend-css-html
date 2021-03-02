@@ -155,11 +155,14 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
 
       // if the attack destroyed a ship, record it.
       // @TODO: show interstitial animation
-      if (attack.destroyed) {
-        // const ship = {...enemyShips[attack.type]};
-        // ship.destroyed = true;
-
-        // setEnemyShips({ship});
+      if (result.destroyed) {
+        if (player.uuid !== match.activePlayer) {
+          enemyShips[result.type].destroyed = true;
+          setEnemyShips({...enemyShips});
+          alert(`You destroyed the ${result.type}`);
+        } else {
+          alert(`Your ${result.type} was destroyed`);
+        }
       }
 
       // wait for a short period before showing the
@@ -189,7 +192,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
   // show a modal if the player has not set up
   // their board yet
   useEffect(() => {
-    if (player.board) {
+    if (player.board && player.board.valid) {
       setPositionModalHidden({ hidden: true });
     } else {
       setPositionModalHidden(null);
@@ -199,6 +202,18 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       }, modalTimeout);
     }
   }, [ player.board ]);
+
+  useEffect(() => {
+    if (!opponent || !opponent.board) {
+      return;
+    }
+
+    Object.keys(opponent.board).forEach(key => {
+      enemyShips[key].destroyed = true;
+    });
+
+    setEnemyShips({...enemyShips});
+  }, [ opponent ]);
 
   function boardLockedHandler(event) {
     attackGrid.enabled = true;
@@ -231,7 +246,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           { player.board && player.board.valid && !match.ready &&
             <h3>Board is locked</h3>
           }
-          { player.board && !match.ready &&
+          { player.board && player.board.valid && !match.ready &&
             <p>Waiting for your enemy to position their ships</p>
           }
           { match.ready && match.activePlayer !== player.uuid &&
