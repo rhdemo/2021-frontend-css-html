@@ -1,12 +1,16 @@
-import Battleship from "../Battleship";
-import Header from "../Header";
+import Leaderboard from "../Leaderboard";
+import UI from "../UI";
+import GameData from "../GameData";
 import "./Main.scss";
 
 function Main() {
   return (
-    <div className="Main screen">
-      <Header />
-      <Battleship />
+    
+    
+    <div className="body-wrap">
+      <Leaderboard />
+      <UI />
+      <GameData />
     </div>
   );
 }

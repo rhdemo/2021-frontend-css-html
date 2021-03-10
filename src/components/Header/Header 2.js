@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import Avatar from "../Avatar";
 import "./Header.scss";
 
 function Header({ player }) {
@@ -12,15 +13,12 @@ function Header({ player }) {
   }, [ player.score ]);
 
   return (
-    <header className="ui-header">
-        <div className="ui-header-main">
-            <img className="ui-header-main__badge" src="images/badges/badge-1.svg" alt="" />
-        <span className="ui-header-main__title">{ player.username }</span>
-        <span className="ui-header-main__points">{/*{ player.score } { pointsText }*/}</span>
-        </div>
-        <div className="ui-header-sub">
-            <span className="ui-header-sub__text ui-screen-text">**** Your Board ****</span>
-        </div>
+    <header className="Header">
+      <Avatar />
+      <div>
+        <h2>{ player.username }</h2>
+        <div>{ player.score } { pointsText }</div>
+      </div>
     </header>
   );
 }

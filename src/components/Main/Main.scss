@@ -1,9 +1,74 @@
-.Main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+// @font-face{ 
+// 	font-family: 'dogica';
+// 	src: url('/public/fonts/dogica.eot');
+// 	src: url('/public/fonts/dogica.woff') format('woff'),
+// 	     url('/public/fonts/dogica.ttf') format('truetype'),
+// 	     url('/public/fonts/dogica.svg#webfont') format('svg');
+// }
 
-  .Header {
-    margin-bottom: 1rem;
+// @font-face{ 
+// 	font-family: 'dogica-bold';
+// 	src: url('/public/fonts/dogicabold.eot');
+// 	src: url('/public/fonts/dogicabold.woff') format('woff'),
+// 	     url('/public/fonts/dogicabold.ttf') format('truetype'),
+// 	     url('/public/fonts/dogicabold.svg#webfont') format('svg');
+// }
+
+:root {
+  --green : #7ac49e;
+  --dark-green: #161c01;
+  --ocean: #2795f5;
+  --gold: #efc100;
+  --silver: #939393;
+  --bronze: #c1947a;
+  --grid-bg: #14281d;
+}
+
+body {
+  font-family: 'dogica', sans-serif;
+  display: grid;
+  background: var(--ocean);
+}
+
+.dashboard-section {
+    
+  position: absolute;
+  padding-top: 64px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 412px;
+  height: 685px;
+  color: #fff;
+  text-shadow: 2px 2px 0 var(--dark-green);
+  h1 {
+      margin: 0 0 32px; 
+      font-size: 16px;
+      text-align: center;
   }
+  h2 {
+      font-size: 14px;
+  }
+  ul {
+      list-style: none;
+      padding: 0;
+      font-size: 12px;
+  }
+  li {
+      margin-bottom: 16px;
+      color: var(--green);
+      text-shadow: 2px 2px 0 var(--dark-green);
+      display: flex;
+      
+  }
+  &::after {
+      content:''; 
+      background-size: contain; 
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+  }
+  
 }

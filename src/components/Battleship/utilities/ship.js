@@ -27,7 +27,7 @@ class Ship {
     this.element.setAttribute("orientation", orientationString);
 
     if (orientationString === "horizontal") {
-      this.element.style.transformOrigin = "32px 32px";
+      this.element.style.transformOrigin = "50px 50px";
       this.element.style.transform = "rotate(-90deg)";
     } else {
       this.element.style.transformOrigin = null;
@@ -78,7 +78,6 @@ class Ship {
       shipPieceElement.setAttribute("ship-piece", i);
       shipPieceElement.setAttribute("type", this.type)
       shipPieceElement.setAttribute("ship-id", this.id);
-      shipPieceElement.textContent = i + 1;
       shipElement.insertBefore(shipPieceElement, shipElement.querySelector(".rotate"));
     }
 

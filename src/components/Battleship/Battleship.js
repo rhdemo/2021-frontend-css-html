@@ -240,29 +240,24 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
     <div className="Battleship">
       <div className={ activeBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
-          <h2>Enemy's Board</h2>
           <div className="opponent-ships-list push-bottom">
           { Object.keys(enemyShips).map((enemyShipKey, index) => 
             <div key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</div>
           )}
           </div>
           <div id="attack-grid" ref={ attackGridRef }></div>
-          <p>Choose a cell to attack</p>
+          <p>Take a shot!</p>
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board push-top">
-          <h2>Your Board</h2>
           <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
           <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Lock the board</button>
           { player.board && player.board.valid && !match.ready &&
-            <h3>Board is locked</h3>
-          }
-          { player.board && player.board.valid && !match.ready &&
-            <p>Waiting for your enemy to position their ships</p>
+            <p>Waiting for enemy</p>
           }
           { match.ready && match.activePlayer !== player.uuid &&
-            <p>Waiting for your enemy to attack</p>
+            <p>Enemy attack</p>
           }
           { match.ready && match.activePlayer === player.uuid &&
             <p>Your turn</p>

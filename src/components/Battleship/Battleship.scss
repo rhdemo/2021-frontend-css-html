@@ -13,7 +13,7 @@
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(5, 64px);
+    grid-template-columns: repeat(5, 100px);
     position: relative;
   }
   
@@ -30,8 +30,8 @@
   }
 
   .box {
-    height: 64px;
-    width: 64px;
+    height: 100px;
+    width: 100px;
     border: 1px solid #cccccc;
     position: relative;
   }
@@ -91,6 +91,23 @@
     position: absolute;
     cursor: pointer;
   }
+
+  .ship[type="carrier"]{
+    background: url("./images/aircraft-carrier.svg") no-repeat;
+  }
+
+  .ship[type="destroyer"] {
+    background: url("./images/destroyer.svg") no-repeat;
+  }
+  
+  .ship[type="submarine"] {
+    background: url("./images/submarine.svg") no-repeat;
+  }
+  
+  .ship[type="battleship"] {
+    background: url("./images/battleship.svg") no-repeat;
+  }
+
   
   .ship.dragging {
     z-index: 100;
@@ -119,8 +136,8 @@
   }
   
   .ship-piece {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     position: relative;
     color: white;
     display: flex;
@@ -128,21 +145,21 @@
     align-items: center;
   }
   
-  .ship-piece[type="destroyer"] {
-    background-color: purple;
-  }
+  // .ship-piece[type="destroyer"] {
+  //   background-color: purple;
+  // }
   
-  .ship-piece[type="submarine"] {
-    background-color: #0057a8;
-  }
+  // .ship-piece[type="submarine"] {
+  //   background-color: #0057a8;
+  // }
   
-  .ship-piece[type="battleship"] {
-    background-color: #a51759;
-  }
+  // .ship-piece[type="battleship"] {
+  //   background-color: #a51759;
+  // }
   
-  .ship-piece[type="carrier"] {
-    background-color: green;
-  }
+  // .ship-piece[type="carrier"] {
+  //   background-color: green;
+  // }
   
   .ship-piece.destroyed::after {
     content: "x";
@@ -173,6 +190,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
   .opponent-ships-list {

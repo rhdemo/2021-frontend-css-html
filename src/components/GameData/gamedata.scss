@@ -1,0 +1,26 @@
+.game-data {
+    transition: right .25s linear;
+    @media screen and (max-width:1400px) {
+        right: -420px;
+    }
+    right: 0;
+    &.collapsed {
+        right: -370px;
+    }
+        &::after {
+            background:url("/images/dashboard-right.svg") left 0 no-repeat, url("/images/grid-new.png") repeat, var(--grid-bg);
+        }
+    ul, h2 {
+        margin-left: 64px;
+        margin-right: 24px;
+    }
+    h2 {
+        margin-top: 24px;
+        margin-bottom: 24px;
+    }
+
+    li {
+        justify-content: space-between;
+    }
+
+}
