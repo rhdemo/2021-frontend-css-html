@@ -250,18 +250,24 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
-        <div className="board push-top">
-          <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
-          <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Lock the board</button>
-          { player.board && player.board.valid && !match.ready &&
-            <p>Waiting for enemy</p>
-          }
-          { match.ready && match.activePlayer !== player.uuid &&
-            <p>Enemy attack</p>
-          }
-          { match.ready && match.activePlayer === player.uuid &&
-            <p>Your turn</p>
-          }
+        <div className="board">
+          <div id="ship-grid" ref={ shipGridRef }></div>
+         
+          <footer className="ui-actions ">
+          <span className="ui-actions__screen-text ui-screen-text">** Position your ships **</span>
+                  { player.board && player.board.valid && !match.ready &&
+                    <span className="ui-actions__screen-text ui-screen-text">** Waiting for enemy **</span>
+                  }
+                  { match.ready && match.activePlayer !== player.uuid &&
+                    <span className="ui-actions__screen-text ui-screen-text">** Enemy attack **</span>
+                  }
+                  { match.ready && match.activePlayer === player.uuid &&
+                    <span className="ui-actions__screen-text ui-screen-text">** Your turn **</span>
+                  }
+              <button className="ui-actions__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
+          </footer>
+
+          
         </div>
       </div>
       <Modal { ...turnModalHidden }>
