@@ -240,32 +240,42 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
     <div className="Battleship">
       <div className={ activeBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
-          <div className="opponent-ships-list push-bottom">
+          <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) => 
-            <div key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</div>
+            <li key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</li>
           )}
-          </div>
+          </ul>
           <div id="attack-grid" ref={ attackGridRef }></div>
-          <p>Take a shot!</p>
+          <footer className="ui-footer ui-footer__min">
+          <div class="ui-footer-overlay"></div>
+          <span className="ui-footer__screen-text ui-screen-text">** Take a shot **</span>
+          </footer>
+          
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
           <div id="ship-grid" ref={ shipGridRef }></div>
-         
-          <footer className="ui-actions ">
-          <span className="ui-actions__screen-text ui-screen-text">** Position your ships **</span>
+          <footer class="ui-footer ui-footer__bonus">
+        <div class="ui-footer-overlay"></div>
                   { player.board && player.board.valid && !match.ready &&
-                    <span className="ui-actions__screen-text ui-screen-text">** Waiting for enemy **</span>
+                    <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
                   }
                   { match.ready && match.activePlayer !== player.uuid &&
-                    <span className="ui-actions__screen-text ui-screen-text">** Enemy attack **</span>
+                    <span className="ui-footer__screen-text ui-screen-text">** Enemy attack **</span>
                   }
                   { match.ready && match.activePlayer === player.uuid &&
-                    <span className="ui-actions__screen-text ui-screen-text">** Your turn **</span>
+                    <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
                   }
-              <button className="ui-actions__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
-          </footer>
+        <button class="ui-footer__btn">Ready!</button>
+        <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
+        <div class="ui-footer__bonus__sky"></div>
+        <img src="images/ship-1.svg" class="ui-footer__bonus__ship" alt="" />
+        <img src="images/target.svg" class="ui-footer__bonus__target" alt="" />
+        <div class="ui-footer__bonus__water"></div>
+        <button class="ui-footer__bonus__action" aria-label="fire"></button>
+    </footer>
+        
 
           
         </div>

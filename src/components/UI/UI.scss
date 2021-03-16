@@ -1,4 +1,14 @@
+.body-wrap {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
 
+.bonus-round {
+    #attack-grid,  .ui-progress{
+        display: none;
+    }
+}
 
 .ui {
   max-width: 500px;
@@ -109,40 +119,184 @@
       margin: auto;
   }
 
-  &-actions {
-      background: url("/images/action-bg.svg") no-repeat;
-      background-size: contain;
-      width: 100%;
-      height: 124px;
-      margin-top: auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
+  &-footer {
+    width: 485px;
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    &-overlay {
+        width: inherit;
+        height: inherit;
+        background: url("/images/footer-bg.svg") no-repeat;
+        background-size: cover;
+    }
+    
+    &__action{
+        height: 120px;
+        &:after {
+            content: "";
+            background:var(--dark-purple);
+            width: 422px;
+            height: 70px;
+            bottom: 0;
+            z-index: -100;
+            position: absolute;
+        }
+        .ui-footer__btn {
+            display: block;
+        }
+    } 
+    &:not(.ui-footer__bonus) {
+        [class*="bonus"] {
+            display: none;
+        }
+    }  
+        
+    &__min {
+        height: 70px;
+        background-size: cover;
+    }
+
+    &__bonus {
+        height: calc(100vh - 200px);
+        max-height: 625px;
+        position: relative;
+        z-index: 2000;
+        left: 50%;
+        transform: translateX( -50%);
+    
+        &__sky {
+            width:95%;
+            height:500px;
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: -1000;
+            background:url("/images/clouds.svg") center 60px no-repeat, var(--sky);
+            background-size: 90% auto;
+        }
+        &__target {
+            width: 150px;
+            position: absolute;
+            left:50%;
+            top: 190px;
+            transform: translateX(-50%);
+            height: 150px;
+            z-index: 1000;
+        }
+        &__water {
+            width:100%;
+            height: 55%;
+            bottom: 0;
+            position: absolute;
+            background:url("/images/waves.svg") center top no-repeat, var(--ocean);
+            background-size: 90% auto;
+            z-index: -1;
+        }
+        &__ship {
+            position: absolute;
+            left: 50%;
+            top: 235px;
+            transform: translateX(-50%);
+            z-index: -2;
+        }
+
+        &__action {
+            position: absolute;
+            width: 135px;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: none;
+            height: 135px;
+            background: url("/images/fire-btn.png") center center no-repeat;
+            background-size: cover;
+            z-index: 2000;
+            cursor: pointer;
+            &:active {
+                outline-style: none;
+box-shadow: none;
+border-color: transparent;
+                background: url("/images/fire-btn-pressed.png") center center no-repeat;
+                background-size: cover;
+            }
+        }
+    }
 
 
-      &__screen-text {
-          text-align: center;
-          width: 100%;
-          display: block;
-          margin-top: 16px;
-      }
-      &__btn {
-          cursor: pointer;
-          background: url("/images/button-bg.svg") no-repeat;
-          background-size: contain;
-          border: none;
-          width: 405px;
-          height: 60px;
-          color: #fff;
-          position: relative;
-          font-family: "dogica", sans-serif;
-          text-shadow: 2px 2px 0 var(--dark-green);
-          &:hover, &:focus {
-              top: 2px;
-          }
-          
-      }
-  }
+
+    &__screen-text {
+        text-align: center;
+        width: 100%;
+        display: block;
+        margin-top: 16px;
+        position: absolute;
+    }
+    &__btn {
+        display: none;
+        cursor: pointer;
+        background: url("/images/button-bg.svg") no-repeat;
+        background-size: contain;
+        border: none;
+        width: 405px;
+        height: 60px;
+        color: #fff;
+        position: absolute;
+        bottom: -5px;
+        font-family: "dogica-bold", sans-serif;
+        text-shadow: 2px 2px 0 var(--dark-green);
+        &:hover, &:focus {
+            bottom: -7px;
+        }
+        
+    }
+}
 
 }
+
+//   &-actions {
+//       background: url("/images/action-bg.svg") no-repeat;
+//       background-size: contain;
+//       width: 100%;
+//       height: 124px;
+//       margin-top: auto;
+//       display: flex;
+//       flex-direction: column;
+//       align-items: center;
+//       justify-content: space-between;
+
+//       &__min {
+//           height: 80px;
+//           background-size: cover;
+//       }
+
+
+//       &__screen-text {
+//           text-align: center;
+//           width: 100%;
+//           display: block;
+//           margin-top: 16px;
+//       }
+//       &__btn {
+//           cursor: pointer;
+//           background: url("/images/button-bg.svg") no-repeat;
+//           background-size: contain;
+//           border: none;
+//           width: 405px;
+//           height: 60px;
+//           color: #fff;
+//           position: relative;
+//           font-family: "dogica", sans-serif;
+//           text-shadow: 2px 2px 0 var(--dark-green);
+//           &:hover, &:focus {
+//               top: 2px;
+//           }
+          
+//       }
+//   }
+
+// }
