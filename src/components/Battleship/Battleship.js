@@ -256,7 +256,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
           <div id="ship-grid" ref={ shipGridRef }></div>
-          <footer class="ui-footer ui-footer__bonus">
+          <footer class="ui-footer ui-footer__action">
         <div class="ui-footer-overlay"></div>
                   { player.board && player.board.valid && !match.ready &&
                     <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
