@@ -40,6 +40,13 @@ function connect() {
         });
         break;
 
+      case "bonus-result":
+        store.dispatch({
+          type: "ATTACK_RESULT",
+          payload: data
+        });
+        break;
+
       case "invalid-payload":
         store.dispatch({
           type: "SHOW_ERROR_MESSAGE",
@@ -125,6 +132,20 @@ function attack(payload) {
   socket.send(JSON.stringify(message));
 }
 
+function bonus(payload) {
+  if (!socket) {
+    return;
+  }
+
+  const message = {
+    type: "bonus",
+    data: payload
+  };
+
+  console.log("Socket-bonus: sending bonus frame");
+  socket.send(JSON.stringify(message));
+}
+
 function playAgain() {
   sendConfigurationFrame();
 }
@@ -132,4 +153,4 @@ function playAgain() {
 connect();
 
 export default socket;
-export { boardLocked, attack, playAgain };
+export { boardLocked, attack,bonus, playAgain };
