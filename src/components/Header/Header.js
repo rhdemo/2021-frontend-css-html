@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import "./Header.scss";
+import { ReactComponent as Badge } from "./images/badges/badge-1.svg";
 
-function Header({ player }) {
+function Header({ player, match }) {
   const [ pointsText, setPointsText ] = useState("points");
+  const [ screenText, setScreenText ] = useState("");
 
   useEffect(() => {
     if (player.score === 1) {
@@ -11,16 +13,24 @@ function Header({ player }) {
     }
   }, [ player.score ]);
 
+  useEffect(() => {
+    if (player.uuid === match.state.activePlayer) {
+      setScreenText("Enemy Board");
+    } else {
+      setScreenText("Your Board");
+    }
+  }, [ player, match ]);
+
   return (
     <header className="ui-header">
-        <div className="ui-header-main">
-            <img className="ui-header-main__badge" src="images/badges/badge-1.svg" alt="" />
+      <div className="ui-header-main">
+        <Badge className="ui-header-main__badge" title="Badge" />
         <span className="ui-header-main__title">{ player.username }</span>
         <span className="ui-header-main__points">{/*{ player.score } { pointsText }*/}</span>
-        </div>
-        <div className="ui-header-sub">
-            <span className="ui-header-sub__text ui-screen-text">**** Your Board ****</span>
-        </div>
+      </div>
+      <div className="ui-header-sub">
+        <span className="ui-header-sub__text ui-screen-text">**** { screenText } ****</span>
+      </div>
     </header>
   );
 }
