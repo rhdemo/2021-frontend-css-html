@@ -247,37 +247,33 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           </ul>
           <div id="attack-grid" ref={ attackGridRef }></div>
           <footer className="ui-footer ui-footer__min">
-          <div class="ui-footer-overlay"></div>
-          <span className="ui-footer__screen-text ui-screen-text">** Take a shot **</span>
-          </footer>
-          
+            <div className="ui-footer-overlay"></div>
+            <span className="ui-footer__screen-text ui-screen-text">** Take a shot **</span>
+          </footer> 
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
           <div id="ship-grid" ref={ shipGridRef }></div>
-          <footer class="ui-footer ui-footer__action">
-        <div class="ui-footer-overlay"></div>
-                  { player.board && player.board.valid && !match.ready &&
-                    <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
-                  }
-                  { match.ready && match.activePlayer !== player.uuid &&
-                    <span className="ui-footer__screen-text ui-screen-text">** Enemy attack **</span>
-                  }
-                  { match.ready && match.activePlayer === player.uuid &&
-                    <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
-                  }
-        <button class="ui-footer__btn">Ready!</button>
-        <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
-        <div class="ui-footer__bonus__sky"></div>
-        <img src="images/ship-1.svg" class="ui-footer__bonus__ship" alt="" />
-        <img src="images/target.svg" class="ui-footer__bonus__target" alt="" />
-        <div class="ui-footer__bonus__water"></div>
-        <button class="ui-footer__bonus__action" aria-label="fire"></button>
-    </footer>
-        
-
-          
+          <footer className="ui-footer ui-footer__action">
+            <div className="ui-footer-overlay"></div>
+              { player.board && player.board.valid && !match.ready &&
+                <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
+              }
+              { match.ready && match.activePlayer !== player.uuid &&
+                <span className="ui-footer__screen-text ui-screen-text">** Enemy attack **</span>
+              }
+              { match.ready && match.activePlayer === player.uuid &&
+                <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
+              }
+            <button className="ui-footer__btn">Ready!</button>
+            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
+            <div className="ui-footer__bonus__sky"></div>
+            <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
+            <img src="images/target.svg" className="ui-footer__bonus__target" alt="" />
+            <div className="ui-footer__bonus__water"></div>
+            <button className="ui-footer__bonus__action" aria-label="fire"></button>
+          </footer>
         </div>
       </div>
       <Modal { ...turnModalHidden }>
