@@ -11,7 +11,7 @@ function Lobby({ match, player }) {
       <h2>Lobby</h2>
       <Avatar />
       <h3>{ player.username }</h3>
-      { !match.ready && 
+      { match.state.phase==="not-ready" &&
         <p>Waiting for another player to join</p>
       }
     </div>

@@ -3,22 +3,22 @@ import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
 import Modal from "../Modal";
-import { boardLocked, attack } from "./actions";
+import { boardLocked, attack, bonus } from "./actions";
 import "./Battleship.scss";
 
 /*
  * Ships not positioned:
  * - Show ship grid
  * - Hide enemy grid
- * 
+ *
  * Ships positioned, waiting on enemy
  * - Show ship grid
  * - Hide enemy grid
- * 
+ *
  * Ships positioned, your turn
  * - Show enemy grid
  * - Hide ship grid
- * 
+ *
  * Ships positioned, enemy's turn
  * - Show ship grid
  * - Hide enemy grid
@@ -47,18 +47,21 @@ const ships = {
   }
 };
 
-const modalTimeout = 1500;
+let modalTimeout;
 
 let attackGrid;
 let shipGrid;
 
-function Battleship({ board, player, opponent, boardLocked, attack, match, result, attacker }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
   const [ turnModalText, setTurnModalText ] = useState("");
   const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
+  const [ bonusModalHidden, setBonusModalHidden ] = useState({ hidden: true });
+  const [ bonusHits, setBonusHits ] = useState(0);
+  const bonusHitsRef = useRef(bonusHits);
   const [ activeBoard, setActiveBoard ] = useState(null);
   const [ enemyShips, setEnemyShips ] = useState({
     "Submarine": {
@@ -125,27 +128,49 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
     if (!result) {
       // there wasn't an attack, we just need to
       // indicate who's turn it is.
-      if (!match.ready) {
+      if (match.state.phase === 'not-ready') {
         setActiveBoard("ship");
         return;
       }
 
-      if (player.uuid === match.activePlayer) {
+      modalTimeout = 1500;
+      let activeModal;
+      let isBonusRound = false;
+      bonusHitsRef.current = bonusHits;
+
+      if (player.uuid === match.state.activePlayer && match.state.phase === "attack") {
         setTurnModalText("Your turn");
         attackGrid.enabled = true;
         setDisableAttacks(false);
+        setActiveBoard("attack");
+        activeModal = setTurnModalHidden;
+      } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
+        setTurnModalText("Sending bonus");
+        // setBonusHits(0);
+        modalTimeout = game.bonusDuration;
+        activeModal = setBonusModalHidden;
+        isBonusRound = true;
+        attackGrid.enabled = false;
+        setDisableAttacks(true);
         setActiveBoard("attack");
       } else {
         setTurnModalText("Enemy's turn");
         attackGrid.enabled = false;
         setDisableAttacks(true);
         setActiveBoard("ship");
+        activeModal = setTurnModalHidden;
       }
 
-      setTurnModalHidden(null);
+      activeModal(null);
 
       setTimeout(() => {
-        setTurnModalHidden({ hidden: true });
+        activeModal({ hidden: true });
+        if (isBonusRound) {
+          bonus(0);
+          setBonusHits(0);
+        }
+
+        isBonusRound = false;
       }, modalTimeout);
 
       return;
@@ -168,34 +193,53 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       // if the attack destroyed a ship, record it.
       // @TODO: show interstitial animation
       if (result.destroyed) {
-        if (player.uuid !== match.activePlayer) {
+        if (player.uuid === match.state.activePlayer) {
           enemyShips[result.type].destroyed = true;
           setEnemyShips({...enemyShips});
-          alert(`You destroyed the ${result.type}`);
+          // alert(`You destroyed the ${result.type}`);
         } else {
-          alert(`Your ${result.type} was destroyed`);
+          // alert(`Your ${result.type} was destroyed`);
         }
       }
 
       // wait for a short period before showing the
       // turn modal
+      let activeModal;
+      let isBonusRound = false;
+      bonusHitsRef.current = bonusHits;
+
       setTimeout(() => {
-        if (player.uuid === match.activePlayer) {
+        if (player.uuid === match.state.activePlayer && match.state.phase === "attack") {
           setTurnModalText("Your turn");
           attackGrid.enabled = true;
           setDisableAttacks(false);
           setActiveBoard("attack");
+          activeModal = setTurnModalHidden;
+        } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
+          setTurnModalText("Sending default bonus value");
+          // setBonusHits(0);
+          modalTimeout = game.bonusDuration;
+          activeModal = setBonusModalHidden;
+          isBonusRound = true;
         } else {
           setTurnModalText("Enemy's turn");
           attackGrid.enabled = false;
           setDisableAttacks(true);
           setActiveBoard("ship");
+          activeModal = setTurnModalHidden;
         }
 
-        setTurnModalHidden(null);
+        activeModal(null);
 
         setTimeout(() => {
-          setTurnModalHidden({ hidden: true });
+          activeModal({ hidden: true });
+
+          if (isBonusRound) {
+            bonus(0);
+            setBonusHits(0);
+          }
+
+          isBonusRound = false;
         }, modalTimeout);
       }, 1000);
 
@@ -233,6 +277,7 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
   }
 
   const attackGridAttackHandler = event => {
+    console.log('attack event detail', event.detail)
     attack(event.detail);
   }
 
@@ -257,6 +302,9 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
           <div id="ship-grid" ref={ shipGridRef }></div>
           <footer className="ui-footer ui-footer__action">
             <div className="ui-footer-overlay"></div>
+              { player.board && !player.board.valid && !match.ready &&
+                <span className="ui-footer__screen-text ui-screen-text">** Position your ships **</span>
+              }
               { player.board && player.board.valid && !match.ready &&
                 <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
               }
@@ -267,13 +315,30 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
                 <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
               }
             <button className="ui-footer__btn">Ready!</button>
-            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.ready ? "none" : "block" }}>Ready!</button>
+            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.state.phase !== "not-ready" ? "none" : "block" }}>Ready!</button>
             <div className="ui-footer__bonus__sky"></div>
             <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
             <img src="images/target.svg" className="ui-footer__bonus__target" alt="" />
             <div className="ui-footer__bonus__water"></div>
             <button className="ui-footer__bonus__action" aria-label="fire"></button>
           </footer>
+        {/* <div className="board push-top">
+          <h2>Your Board</h2>
+          <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
+          <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.state.phase !== "not-ready" ? "none" : "block" }}>Lock the board</button>
+          { player.board && player.board.valid && match.state.phase === "not-ready" &&
+            <h3>Board is locked</h3>
+          }
+          { player.board && player.board.valid && match.state.phase === "not-ready" &&
+            <p>Waiting for your enemy to position their ships</p>
+          }
+          { match.state.phase !== "not-ready" && match.state.activePlayer !== player.uuid &&
+            <p>Waiting for your enemy to attack</p>
+          }
+          { match.state.phase !== "not-ready" && match.state.activePlayer === player.uuid &&
+            <p>Your turn</p>
+          }
+        </div> */}
         </div>
       </div>
       <Modal { ...turnModalHidden }>
@@ -281,6 +346,13 @@ function Battleship({ board, player, opponent, boardLocked, attack, match, resul
       </Modal>
       <Modal { ...positionModalHidden }>
         <h2>Position your ships</h2>
+      </Modal>
+      <Modal { ...bonusModalHidden }>
+        <div>
+          <h2>Bonus Round</h2>
+          <button onClick={() => setBonusHits(bonusHits + 1)}>Click!!!</button>
+          <div>{ bonusHits }</div>
+        </div>
       </Modal>
     </div>
   );
@@ -297,6 +369,10 @@ const mapDispatchToProps = dispatch => {
     },
     attack: data => {
       dispatch(attack(data));
+    },
+    bonus: data => {
+      console.log('sending bonus', data)
+      dispatch(bonus(data));
     }
   }
 };

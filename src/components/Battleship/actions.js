@@ -7,3 +7,8 @@ export const attack = coordinates => ({
   type: "ATTACK",
   payload: coordinates
 });
+
+export const bonus = hits => ({
+  type: 'BONUS',
+  payload: { hits }
+})

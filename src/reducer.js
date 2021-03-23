@@ -1,5 +1,5 @@
 import { combineReducers } from "react-redux";
-import { boardLocked, attack, playAgain } from "./socket";
+import { boardLocked, attack, bonus, playAgain } from "./socket";
 
 const initialState = {
   board: {
@@ -10,7 +10,9 @@ const initialState = {
     state: "splash"
   },
   match: {
-    ready: false
+    state: {
+      phase: "not-ready"
+    }
   },
   player: {},
   error: {
@@ -25,7 +27,7 @@ function appReducer(state = initialState, action) {
   let match;
   let result;
   let attacker;
-  
+
   switch (action.type) {
     case "CONFIGURATION":
       game = action.payload.game;
@@ -39,7 +41,7 @@ function appReducer(state = initialState, action) {
         username: player.username
       });
 
-      console.log('ready', match.ready);
+      console.log('match phase', match.state.phase);
 
       return {
         ...state,
@@ -57,7 +59,12 @@ function appReducer(state = initialState, action) {
       attack(action.payload);
       return state;
 
+    case "BONUS":
+      bonus(action.payload);
+      return state;
+
     case "ATTACK_RESULT":
+      console.log('processing attack result', action)
       match = action.payload.match;
       player = action.payload.player;
       result = action.payload.result;
