@@ -47,18 +47,19 @@ const ships = {
   }
 };
 
-const modalTimeout = 1500;
+let modalTimeout;
 
 let attackGrid;
 let shipGrid;
 
-function Battleship({ board, player, opponent, boardLocked, attack, bonus, match, result, attacker }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
   const [ turnModalText, setTurnModalText ] = useState("");
   const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
+  const [ bonusModalHidden, setBonusModalHidden ] = useState({ hidden: true });
   const [ activeBoard, setActiveBoard ] = useState(null);
   const [ enemyShips, setEnemyShips ] = useState({
     "Submarine": {
@@ -130,25 +131,42 @@ function Battleship({ board, player, opponent, boardLocked, attack, bonus, match
         return;
       }
 
+      modalTimeout = 1500;
+      let activeModal;
+      let isBonusRound = false;
+
       if (player.uuid === match.state.activePlayer && match.state.phase === "attack") {
         setTurnModalText("Your turn");
         attackGrid.enabled = true;
         setDisableAttacks(false);
         setActiveBoard("attack");
+        activeModal = setTurnModalHidden;
       } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
         setTurnModalText("Sending bonus");
-        bonus(0)
+        modalTimeout = game.bonusDuration;
+        activeModal = setBonusModalHidden;
+        isBonusRound = true;
+        attackGrid.enabled = false;
+        setDisableAttacks(true);
+        setActiveBoard("attack");
+        bonus(0);
       } else {
         setTurnModalText("Enemy's turn");
         attackGrid.enabled = false;
         setDisableAttacks(true);
         setActiveBoard("ship");
+        activeModal = setTurnModalHidden;
       }
 
-      setTurnModalHidden(null);
+      activeModal(null);
 
       setTimeout(() => {
-        setTurnModalHidden({ hidden: true });
+        activeModal({ hidden: true });
+        if (isBonusRound) {
+          // bonus(0);
+        }
+
+        isBonusRound = false;
       }, modalTimeout);
 
       return;
@@ -174,34 +192,48 @@ function Battleship({ board, player, opponent, boardLocked, attack, bonus, match
         if (player.uuid === match.state.activePlayer) {
           enemyShips[result.type].destroyed = true;
           setEnemyShips({...enemyShips});
-          alert(`You destroyed the ${result.type}`);
+          // alert(`You destroyed the ${result.type}`);
         } else {
-          alert(`Your ${result.type} was destroyed`);
+          // alert(`Your ${result.type} was destroyed`);
         }
       }
 
       // wait for a short period before showing the
       // turn modal
+      let activeModal;
+      let isBonusRound = false;
+
       setTimeout(() => {
         if (player.uuid === match.state.activePlayer && match.state.phase === "attack") {
           setTurnModalText("Your turn");
           attackGrid.enabled = true;
           setDisableAttacks(false);
           setActiveBoard("attack");
+          activeModal = setTurnModalHidden;
         } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
           setTurnModalText("Sending default bonus value");
-          bonus(0)
+          modalTimeout = game.bonusDuration;
+          activeModal = setBonusModalHidden;
+          isBonusRound = true;
+          // bonus(0)
         } else {
           setTurnModalText("Enemy's turn");
           attackGrid.enabled = false;
           setDisableAttacks(true);
           setActiveBoard("ship");
+          activeModal = setTurnModalHidden;
         }
 
-        setTurnModalHidden(null);
+        activeModal(null);
 
         setTimeout(() => {
-          setTurnModalHidden({ hidden: true });
+          activeModal({ hidden: true });
+
+          if (isBonusRound) {
+            bonus(0);
+          }
+
+          isBonusRound = false;
         }, modalTimeout);
       }, 1000);
 
@@ -281,6 +313,10 @@ function Battleship({ board, player, opponent, boardLocked, attack, bonus, match
       </Modal>
       <Modal { ...positionModalHidden }>
         <h2>Position your ships</h2>
+      </Modal>
+      <Modal { ...bonusModalHidden }>
+        <h2>Bonus Round</h2>
+        <button>Click!!!</button>
       </Modal>
     </div>
   );
