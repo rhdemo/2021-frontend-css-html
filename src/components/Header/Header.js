@@ -14,6 +14,7 @@ function Header({ player, match }) {
   }, [ player.score ]);
 
   useEffect(() => {
+    // need bonus round
     if (player.uuid === match.state.activePlayer) {
       setScreenText("Enemy Board");
     } else {

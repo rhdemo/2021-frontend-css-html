@@ -300,6 +300,8 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
           <div id="ship-grid" ref={ shipGridRef }></div>
+          {/* Replace __action with __min */}
+          {/* Replace __action with __bonus */}
           <footer className="ui-footer ui-footer__action">
             <div className="ui-footer-overlay"></div>
               { player.board && !player.board.valid && !match.ready &&

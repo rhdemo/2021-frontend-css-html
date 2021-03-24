@@ -1,3 +1,4 @@
+import { getByPlaceholderText } from "@testing-library/dom";
 import Grid from "./grid.js";
 import Ship from "./ship.js";
 
@@ -111,13 +112,16 @@ class ShipGrid extends Grid {
       if (shipIdsArr.length === 0) {
         box.removeAttribute("occupied");
         box.removeAttribute("ship-ids");
+        box.classList.remove("peg-hole");
       } else {
         box.setAttribute("occupied", "true");
         box.setAttribute("ship-ids", shipIdsArr.join(","));
+        box.classList.add("peg-hole");
       }
     } else {
       box.setAttribute("ship-ids", shipId);
       box.setAttribute("occupied", "true");
+      box.classList.add("peg-hole");
     }
   }
 
