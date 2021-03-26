@@ -1,12 +1,6 @@
 .top-ten {
     left: 0;
     transition: left .25s linear;
-    @media screen and (max-width:1400px) {
-        left: -420px;
-    }
-    &.collapsed {
-        left: -370px;
-    }
     &::after {
         background:url("/images/dashboard-left.svg") left 0 no-repeat, url("/images/grid-new.png") repeat, var(--grid-bg);  
     }

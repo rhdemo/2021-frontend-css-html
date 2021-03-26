@@ -290,32 +290,46 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <li key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</li>
           )}
           </ul>
-          <div id="attack-grid" ref={ attackGridRef }></div>
+          <div id="attack-grid" ref={ attackGridRef }>
+          <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+          </div>
           <footer className="ui-footer ui-footer__min">
             <div className="ui-footer-overlay"></div>
-            <span className="ui-footer__screen-text ui-screen-text">** Take a shot **</span>
+            <div class="ui-footer__screen-text-wrap">
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** </span>
+            </div>
           </footer> 
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
-          <div id="ship-grid" ref={ shipGridRef }></div>
+          <div id="ship-grid" className="ship-grid" ref={ shipGridRef }>
+          <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+          </div>
           {/* Replace __action with __min */}
           {/* Replace __action with __bonus */}
           <footer className="ui-footer ui-footer__action">
             <div className="ui-footer-overlay"></div>
+            <div class="ui-footer__screen-text-wrap">
               { player.board && !player.board.valid && !match.ready &&
-                <span className="ui-footer__screen-text ui-screen-text">** Position your ships **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** </span>
               }
               { player.board && player.board.valid && !match.ready &&
-                <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** </span>
               }
               { match.ready && match.activePlayer !== player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Enemy attack **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Enemy attack ** ** Enemy attack ** ** Enemy attack ** ** Enemy attack ** ** Enemy attack ** ** Enemy attack ** ** Enemy attack ** ** Enemy attack ** </span>
               }
               { match.ready && match.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** ** Your turn ** </span>
               }
+              </div>
             <button className="ui-footer__btn">Ready!</button>
             <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.state.phase !== "not-ready" ? "none" : "block" }}>Ready!</button>
             <div className="ui-footer__bonus__sky"></div>
