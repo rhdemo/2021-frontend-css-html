@@ -63,6 +63,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   const [ bonusModalHidden, setBonusModalHidden ] = useState({ hidden: true });
   const [ bonusHits, setBonusHits ] = useState(0);
   const bonusHitsRef = useRef(bonusHits);
+  bonusHitsRef.current = bonusHits;
   const [ activeBoard, setActiveBoard ] = useState(null);
   const [ enemyShips, setEnemyShips ] = useState({
     "Submarine": {
@@ -146,11 +147,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         setActiveBoard("attack");
         activeModal = setTurnModalHidden;
       } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
-        setTurnModalText("Sending bonus");
-        // setBonusHits(0);
-        modalTimeout = game.bonusDuration;
-        activeModal = setBonusModalHidden;
-        isBonusRound = true;
         attackGrid.enabled = false;
         setDisableAttacks(true);
         setActiveBoard("attack");
@@ -162,16 +158,14 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         activeModal = setTurnModalHidden;
       }
 
-      activeModal(null);
+      if (activeModal) {
+        activeModal(null);
+      }
 
       setTimeout(() => {
-        activeModal({ hidden: true });
-        if (isBonusRound) {
-          bonus(0);
-          // setBonusHits(0);
+        if (activeModal) {
+          activeModal({ hidden: true });
         }
-
-        isBonusRound = false;
       }, modalTimeout);
 
       return;
@@ -217,11 +211,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
           setActiveBoard("attack");
           activeModal = setTurnModalHidden;
         } else if (player.uuid === match.state.activePlayer && match.state.phase === "bonus") {
-          setTurnModalText("Sending default bonus value");
-          // setBonusHits(0);
-          modalTimeout = game.bonusDuration;
-          activeModal = setBonusModalHidden;
-          isBonusRound = true;
+          // need to clean this up
         } else {
           setTurnModalText("Enemy's turn");
           attackGrid.enabled = false;
@@ -230,17 +220,14 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
           activeModal = setTurnModalHidden;
         }
 
-        activeModal(null);
+        if (activeModal) {
+          activeModal(null);
+        }
 
         setTimeout(() => {
-          activeModal({ hidden: true });
-
-          if (isBonusRound) {
-            bonus(0);
-            // setBonusHits(0);
+          if (activeModal) {
+            activeModal({ hidden: true });
           }
-
-          isBonusRound = false;
         }, modalTimeout);
       }, 1000);
 
@@ -271,6 +258,20 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
 
     setEnemyShips({...enemyShips});
   }, [ opponent ]);
+
+  // bonus round logic
+  useEffect(() => {
+    if (match.state.phase !== "bonus") {
+      return;
+    }
+
+    setTimeout(() => {
+      if (player.uuid === match.state.activePlayer) {
+        bonus(bonusHitsRef.current);
+        setBonusHits(0);
+      }
+    }, game.bonusDuration);
+  }, [ game, match, player ]);
 
   function boardLockedHandler(event) {
     attackGrid.enabled = true;
@@ -333,7 +334,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer__bonus__sky"></div>
             <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
             <img src={ target } className="ui-footer__bonus__target" alt="" />
-            <div className="ui-footer__bonus__water"></div>
+            <div className="ui-footer__bonus__water">{ bonusHits }</div>
             <button className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></button>
           </footer>
         </div>
@@ -359,9 +360,9 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       <Modal { ...turnModalHidden }>
         <h2>{ turnModalText }</h2>
       </Modal>
-      <Modal { ...positionModalHidden }>
+      {/* <Modal { ...positionModalHidden }>
         <h2>Position your ships</h2>
-      </Modal>
+      </Modal> */}
       {/* <Modal { ...bonusModalHidden }>
         <div>
           <h2>Bonus Round</h2>
