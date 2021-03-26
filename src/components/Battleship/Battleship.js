@@ -4,6 +4,7 @@ import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
 import Modal from "../Modal";
 import { boardLocked, attack, bonus } from "./actions";
+import target from "./images/target.svg";
 import "./Battleship.scss";
 
 /*
@@ -167,7 +168,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         activeModal({ hidden: true });
         if (isBonusRound) {
           bonus(0);
-          setBonusHits(0);
+          // setBonusHits(0);
         }
 
         isBonusRound = false;
@@ -236,7 +237,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
 
           if (isBonusRound) {
             bonus(0);
-            setBonusHits(0);
+            // setBonusHits(0);
           }
 
           isBonusRound = false;
@@ -276,13 +277,43 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     boardLocked(event.detail.ships);
   }
 
+  function getFooterActionClasses() {
+    let str = "ui-footer";
+
+    if (match.state.phase === "not-ready") {
+      if (!player.board.valid) {
+        return `${str} ui-footer__action`;
+      } else {
+        return `${str} ui-footer__min`;
+      }
+    }
+
+    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+      return `${str} ui-footer__bonus`;
+    }
+
+    return `${str} ui-footer__min`;
+  }
+
+  function getActionButtonDisplay() {
+    let display = "block";
+
+    if (match.state.phase !== "not-ready" || (match.state.phase === "not-ready" && player.board.valid)) {
+      display = "none";
+    }
+
+    return {
+      display: display
+    };
+  }
+
   const attackGridAttackHandler = event => {
     console.log('attack event detail', event.detail)
     attack(event.detail);
   }
 
   return (
-    <div className="Battleship">
+    <div className={ match.state.phase === "bonus" ? "Battleship bonus-round" : "Battleship"}>
       <div className={ activeBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
           <ul className="ui-progress">
@@ -291,56 +322,38 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
           )}
           </ul>
           <div id="attack-grid" ref={ attackGridRef }></div>
-          <footer className="ui-footer ui-footer__min">
+          <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
-            <span className="ui-footer__screen-text ui-screen-text">** Take a shot **</span>
-          </footer> 
+              { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
+                <span className="ui-footer__screen-text ui-screen-text">** Your turn. Take a shot. **</span>
+              }
+              { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
+                <span className="ui-footer__screen-text ui-screen-text">** Bonus round!!! **</span>
+              }
+            <div className="ui-footer__bonus__sky"></div>
+            <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
+            <img src={ target } className="ui-footer__bonus__target" alt="" />
+            <div className="ui-footer__bonus__water"></div>
+            <button className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></button>
+          </footer>
         </div>
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
           <div id="ship-grid" ref={ shipGridRef }></div>
-          {/* Replace __action with __min */}
-          {/* Replace __action with __bonus */}
-          <footer className="ui-footer ui-footer__action">
+          <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
-              { player.board && !player.board.valid && !match.ready &&
+              { player.board && !player.board.valid && match.state.phase === "not-ready" &&
                 <span className="ui-footer__screen-text ui-screen-text">** Position your ships **</span>
               }
-              { player.board && player.board.valid && !match.ready &&
+              { player.board && player.board.valid && match.state.phase === "not-ready" &&
                 <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
               }
-              { match.ready && match.activePlayer !== player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Enemy attack **</span>
+              { match.state.phase === "attack" && match.state.activePlayer !== player.uuid &&
+                <span className="ui-footer__screen-text ui-screen-text">** Incoming enemy attack **</span>
               }
-              { match.ready && match.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Your turn **</span>
-              }
-            <button className="ui-footer__btn">Ready!</button>
-            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.state.phase !== "not-ready" ? "none" : "block" }}>Ready!</button>
-            <div className="ui-footer__bonus__sky"></div>
-            <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
-            <img src="images/target.svg" className="ui-footer__bonus__target" alt="" />
-            <div className="ui-footer__bonus__water"></div>
-            <button className="ui-footer__bonus__action" aria-label="fire"></button>
+            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={ getActionButtonDisplay() }>Ready!</button>
           </footer>
-        {/* <div className="board push-top">
-          <h2>Your Board</h2>
-          <div id="ship-grid" ref={ shipGridRef } className="push-bottom"></div>
-          <button className="unlock-message push-bottom" id="ship-grid-lock-btn" style={{ display: match.state.phase !== "not-ready" ? "none" : "block" }}>Lock the board</button>
-          { player.board && player.board.valid && match.state.phase === "not-ready" &&
-            <h3>Board is locked</h3>
-          }
-          { player.board && player.board.valid && match.state.phase === "not-ready" &&
-            <p>Waiting for your enemy to position their ships</p>
-          }
-          { match.state.phase !== "not-ready" && match.state.activePlayer !== player.uuid &&
-            <p>Waiting for your enemy to attack</p>
-          }
-          { match.state.phase !== "not-ready" && match.state.activePlayer === player.uuid &&
-            <p>Your turn</p>
-          }
-        </div> */}
         </div>
       </div>
       <Modal { ...turnModalHidden }>
@@ -349,13 +362,13 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       <Modal { ...positionModalHidden }>
         <h2>Position your ships</h2>
       </Modal>
-      <Modal { ...bonusModalHidden }>
+      {/* <Modal { ...bonusModalHidden }>
         <div>
           <h2>Bonus Round</h2>
           <button onClick={() => setBonusHits(bonusHits + 1)}>Click!!!</button>
           <div>{ bonusHits }</div>
         </div>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

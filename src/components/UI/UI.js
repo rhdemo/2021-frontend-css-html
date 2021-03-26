@@ -9,7 +9,6 @@ function Main() {
     <div className="ui">
       <Header />
       <Battleship />
-      
     </div>
   );
 }

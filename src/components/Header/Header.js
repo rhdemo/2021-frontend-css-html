@@ -15,7 +15,7 @@ function Header({ player, match }) {
 
   useEffect(() => {
     // need bonus round
-    if (player.uuid === match.state.activePlayer) {
+    if (match.state.phase === "attack" && player.uuid === match.state.activePlayer) {
       setScreenText("Enemy Board");
     } else {
       setScreenText("Your Board");
