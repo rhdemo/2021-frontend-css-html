@@ -1,12 +1,7 @@
 .game-data {
     transition: right .25s linear;
-    @media screen and (max-width:1400px) {
-        right: -420px;
-    }
     right: 0;
-    &.collapsed {
-        right: -370px;
-    }
+
         &::after {
             background:url("/images/dashboard-right.svg") left 0 no-repeat,  var(--grid-bg);
         }

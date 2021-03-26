@@ -322,15 +322,22 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <li key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</li>
           )}
           </ul>
-          <div id="attack-grid" ref={ attackGridRef }></div>
+          <div id="attack-grid" className="ship-grid" ref={ attackGridRef }>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+          </div>
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
+            <div className="ui-footer__screen-text-wrap">
               { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Your turn. Take a shot. **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** </span>
               }
               { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Bonus round!!! **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** </span>
               }
+            </div>
             <div className="ui-footer__bonus__sky"></div>
             <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
             <img src={ target } className="ui-footer__bonus__target" alt="" />
@@ -341,18 +348,25 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       </div>
       <div className={ activeBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
-          <div id="ship-grid" ref={ shipGridRef }></div>
+          <div id="ship-grid" className="ship-grid" ref={ shipGridRef }>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+            <div className="bouy"></div>
+          </div>
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
+            <div className="ui-footer__screen-text-wrap">
               { player.board && !player.board.valid && match.state.phase === "not-ready" &&
-                <span className="ui-footer__screen-text ui-screen-text">** Position your ships **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** </span>
               }
               { player.board && player.board.valid && match.state.phase === "not-ready" &&
-                <span className="ui-footer__screen-text ui-screen-text">** Waiting for enemy **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** </span>
               }
               { match.state.phase === "attack" && match.state.activePlayer !== player.uuid &&
-                <span className="ui-footer__screen-text ui-screen-text">** Incoming enemy attack **</span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** </span>
               }
+            </div>
             <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={ getActionButtonDisplay() }>Ready!</button>
           </footer>
         </div>
