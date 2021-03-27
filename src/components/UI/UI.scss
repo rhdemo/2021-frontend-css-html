@@ -330,6 +330,25 @@
             top: 235px;
             transform: translateX(-50%);
             z-index: -2;
+            width: 50%;
+            &:after, &:before {
+                position: absolute;
+                z-index: 15;
+                content:"";
+                width: 32px;
+                height: 32px;
+                background: url("../images/fire-animation.svg") no-repeat;
+                animation: fire .9s steps(4) infinite;
+            }
+            &:after {
+                top: -18px;
+                left: 25px;
+            }
+            &:before {
+                top:20%;
+                right: 3%;
+                animation-delay: .2s;
+            }
         }
 
         &__action {
