@@ -339,7 +339,9 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
               }
             </div>
             <div className="ui-footer__bonus__sky"></div>
-            <img src="images/ship-1.svg" className="ui-footer__bonus__ship" alt="" />
+            <div className="ui-footer__bonus__ship">
+              <img src="images/ship-1.svg"  alt="" />
+            </div>            
             <img src={ target } className="ui-footer__bonus__target" alt="" />
             <div className="ui-footer__bonus__water">{ bonusHits }</div>
             <button className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></button>
