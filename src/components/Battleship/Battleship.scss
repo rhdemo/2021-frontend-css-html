@@ -37,6 +37,12 @@
   }
 }
 
+@keyframes fire {  
+  100% {
+      background-position: center -131px;
+  }
+}
+
 
 .body-wrap {
   &:not(.paused) {
@@ -329,7 +335,7 @@
   }
 
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
-    top: -19%;
+    top: -12%;
     transform: translateX(-50%);
   }
 

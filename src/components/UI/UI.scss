@@ -203,7 +203,7 @@
       width: 100%;
       height: 32px;
       padding: 0;
-      margin:24px 0 0 0;
+      margin:0 0 6vh;
       li {
           height: 25px;
       }
@@ -337,7 +337,7 @@
                 content:"";
                 width: 32px;
                 height: 32px;
-                background: url("../images/fire-animation.svg") no-repeat;
+                background: url("./images/fire-animation.svg") no-repeat;
                 animation: fire .9s steps(4) infinite;
             }
             &:after {
