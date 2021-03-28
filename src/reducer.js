@@ -27,6 +27,8 @@ function appReducer(state = initialState, action) {
   let match;
   let result;
   let attacker;
+  let _activeBoard;
+  let theActiveBoard;
 
   switch (action.type) {
     case "CONFIGURATION":
@@ -34,6 +36,9 @@ function appReducer(state = initialState, action) {
       player = action.payload.player;
       opponent = action.payload.opponent;
       match = action.payload.match;
+
+      _activeBoard = determineBoard(game, match, player);
+      theActiveBoard = _activeBoard
 
       updateLocalStorage({
         gameId: game.uuid,
@@ -48,7 +53,9 @@ function appReducer(state = initialState, action) {
         game,
         player,
         opponent,
-        match
+        match,
+        _activeBoard,
+        theActiveBoard
       };
 
     case "BOARD_LOCKED":
@@ -64,18 +71,30 @@ function appReducer(state = initialState, action) {
       return state;
 
     case "ATTACK_RESULT":
-      console.log('processing attack result', action)
+      console.log('processing attack result', action);
+      game = action.payload.game;
       match = action.payload.match;
       player = action.payload.player;
       result = action.payload.result;
       attacker = action.payload.attacker;
+
+      _activeBoard = determineBoard(game, match, player);
 
       return {
         ...state,
         player,
         match,
         result,
-        attacker
+        attacker,
+        _activeBoard
+      };
+
+    case "CHANGE_BOARD":
+      theActiveBoard = determineBoard(state.game, state.match, state.player);
+      
+      return {
+        ...state,
+        theActiveBoard
       };
 
     case "PLAY_AGAIN":
@@ -121,6 +140,24 @@ function updateLocalStorage({ gameId, playerId, username }) {
 
 function clearLocalStorage() {
   localStorage.clear();
+}
+
+function determineBoard(game, match, player) {
+  if (!game || !match || !player) {
+    return "ship";
+  }
+
+  if (game.state === "active" && match.state.phase === "not-ready") {
+    return "ship";
+  }
+
+  if (game.state === "active" && (match.state.phase === "attack" || match.state.phase === "bonus")) {
+    if (player.uuid === match.state.activePlayer) {
+      return "attack";
+    } else {
+      return "ship";
+    }
+  }
 }
 
 export { appReducer, getLocalStorage };

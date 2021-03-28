@@ -11,4 +11,4 @@ export const attack = coordinates => ({
 export const bonus = hits => ({
   type: 'BONUS',
   payload: { hits }
-})
+});
