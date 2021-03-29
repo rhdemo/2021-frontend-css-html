@@ -1,3 +1,13 @@
+@font-face{ 
+	font-family: 'dogica';
+	src: url('./fonts/dogica.woff') format('woff');
+}
+
+@font-face{ 
+	font-family: 'dogica-bold';
+	src: url('./fonts/dogicabold.woff') format('woff');
+}
+
 * {
   box-sizing: border-box;
 }
