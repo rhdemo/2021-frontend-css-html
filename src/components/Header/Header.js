@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./Header.scss";
 import { ReactComponent as Badge } from "./images/badges/badge-1.svg";
 
-function Header({ player, match }) {
+function Header({ theActiveBoard, player }) {
   const [ pointsText, setPointsText ] = useState("points");
   const [ screenText, setScreenText ] = useState("");
 
@@ -15,12 +15,12 @@ function Header({ player, match }) {
 
   useEffect(() => {
     // need bonus round
-    if (match.state.phase === "attack" && player.uuid === match.state.activePlayer) {
+    if (theActiveBoard === "attack") {
       setScreenText("Enemy Board");
     } else {
       setScreenText("Your Board");
     }
-  }, [ player, match ]);
+  }, [ theActiveBoard ]);
 
   return (
     <header className="ui-header">
