@@ -156,9 +156,6 @@
     display: grid;
     margin: auto;
     grid-template-columns: repeat(5, 80px);
-    @media screen and (min-width:1600px) {
-      grid-template-columns: repeat(5, 100px);
-    }
     
     position: relative;
     .box {
@@ -278,10 +275,6 @@
   .box {
     height: 80px;
     width: 80px;
-    @media screen and (min-width:1600px) {
-      height: 100px;
-      width: 100px;
-    }
     position: relative;
   }
   
@@ -395,10 +388,6 @@
   .ship-piece {
     width: 80px;
     height: 80px;
-    @media screen and (min-width:1600px) {
-      width: 50px;
-      height: 50px;
-    }
     position: relative;
     color: white;
     display: flex;
