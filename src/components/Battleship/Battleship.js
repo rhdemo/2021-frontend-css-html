@@ -270,7 +270,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       </div>
       <div className={ theActiveBoard === "ship" ? "board-container" : "board-container hide" }>
         <div className="board">
-          <div id="ship-grid" className="ship-grid" ref={ shipGridRef }>
+          <div id="ship-grid" className={ match.state.phase === "not-ready" ? "not-ready ship-grid" : "ship-grid" } ref={ shipGridRef }>
             <div className="bouy"></div>
             <div className="bouy"></div>
             <div className="bouy"></div>

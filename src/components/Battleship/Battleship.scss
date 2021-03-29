@@ -324,6 +324,10 @@
     background: url("./images/hit-shot.svg") no-repeat;
   }
 
+  .ship-grid.not-ready .box.peg-hole:after {
+    display: none;
+  }
+
   .box.peg-hole:after {
     content:"";
     display: block;
