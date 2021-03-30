@@ -344,7 +344,7 @@
     display: none;
   }
 
-  .box.peg-hole:after {
+  .box.peg-hole:not(.hit):after {
 
     content:"";
     display: block;
@@ -454,9 +454,9 @@
   
   
   #attack-grid {
-    .attacking {
-      background: url(./images/miss-shot.svg) no-repeat;
-    }
+    // .attacking {
+    //   background: url(./images/miss-shot.svg) no-repeat;
+    // }
   }
 
   label {
