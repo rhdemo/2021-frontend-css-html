@@ -16,14 +16,17 @@ body {
   background: var(--ocean);
 }
 
-.dashboard-section {
-    
+.dashboard-section {  
+   @media screen and (max-width:850px) {
+       display: none;
+  }
   position: absolute;
   padding-top: 64px;
   top: 50%;
   transform: translateY(-50%);
   width: 412px;
   height: 685px;
+  z-index: 2000;
   color: #fff;
   text-shadow: 2px 2px 0 var(--dark-green);
   h1 {

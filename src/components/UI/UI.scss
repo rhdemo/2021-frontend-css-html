@@ -138,14 +138,23 @@
       
       display: grid;
       grid-template-columns: 1fr;
-      grid-template-rows: 3fr 1fr;
+      @media screen and (min-width:545px) {
+        grid-template-rows: 3fr 1fr;
+      } 
       position: relative;
       
      
       &-main {
           background: url("/images/header-bg.svg") no-repeat;
-          min-width: 540px;
-          min-height: 125px;
+          width: 100vw;
+          @media screen and (min-width:540px) {
+            width: 540px;
+       }
+        height: 100vh;
+          max-height: 87px;
+            @media screen and (min-width:400px) {
+                max-height: 125px;
+            }
           background-size: contain;
           display: grid;
           position: relative;
@@ -157,14 +166,18 @@
           "badge points";
 
           &__badge {
-              width:42px;
+              width:7.2vw;
+              max-width: 42px;
               margin-block-start: 3px;
               justify-self: end;
               grid-area: badge;
           }
           &__title {
               grid-area: title;
-              margin-block-start: 24px;
+              @media screen and (min-width:540px) {
+                margin-block-start: 24px;
+           }
+              margin-block-start: 16px;
           }
           &__points {
               grid-area: points;
@@ -173,20 +186,24 @@
           &__title, &__points {
               color: #fff;
               margin-inline-start: 16px;
+              
               text-shadow: 2px 2px 0 var(--dark-green);
               
           }
       }
 
       &-sub {
+
           width: 445px;
           background: url("/images/header-text-bg.svg") no-repeat;
           margin-block-start: -4px;
           margin-inline-start: auto;
           margin-inline-end: 24px;
-          display: flex;
+          display: none;
           justify-content: center;
-          
+          @media screen and (min-width:545px) {
+            display: flex;
+          }        
           
           &__text {
               margin-top: 6px;
@@ -197,7 +214,10 @@
   }
 
   &-progress {
-      display: flex;
+    @media screen and (min-height:800px) {
+        display: flex;
+      }
+      display: none;
       list-style: none;
       justify-content: space-around;
       width: 100%;
