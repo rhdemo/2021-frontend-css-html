@@ -43,6 +43,25 @@
   }
 }
 
+@keyframes ship-hit {
+  0%   {top: -12%}
+  100% {top: -8%;}
+}
+
+@keyframes ship-hit-horiz {
+  0%  {
+    left: 18%;
+      }
+  100% {
+    left: 10%;
+  }
+}
+
+@keyframes peg {
+  0%   { background-position: center 0px; } 
+  100% { background-position: center 15px; }
+}
+
 
 .body-wrap {
   &:not(.paused) {
@@ -204,62 +223,62 @@
       z-index: 1;
       &:before {
         content: '';
-        width: 16px;
-        height: 28px;
+        width: 25px;
+        height: 35px;
         position: absolute;
         background: url("./images/bouy.svg") no-repeat;
       }
 
       &:after {
           content: '';
-          width:22px;
+          width:32px;
           height:10px;
           background-color: #2795f5ab;
           position: absolute;
       }
   
   &:nth-child(1) {
-      left: -4px;
-      top: -16px;   
+      left: -9px;
+      top: -26px;   
        &:before {
          animation:bob 5s linear 0s infinite;
        }
        &:after {
-           top:20px;
+           top:30px;
            left: -3px;
        }
    }
    &:nth-child(2) {
-        right: 9px;
-        top: -16px;
+        right: 12px;
+        top: -22px;
         &:before {
           animation:bob 5s linear .5s infinite;
         }
        &:after {
-           top:22px;
-           right: -16px;
+           top:30px;
+           right: -19px;
        }
    }
    &:nth-child(3) {
-        left: -7px;
-        bottom: 16px;
+        left: -10px;
+        bottom: 24px;
         &:before {
           animation:bob 3s linear 1s infinite; 
         }
        &:after {
-           bottom: -32px;
+           bottom: -40px;
            left: -6px;
        }
    }
    &:nth-child(4) {
         right: 9px;
-        bottom: 16px;
+        bottom: 26px;
         &:before {
           animation:bob 5s linear -1s infinite;
         }
        &:after {
-           bottom: -32px;
-           right: -17px;
+           bottom: -40px;
+           right: -26px;
        }
    }
   }
@@ -282,8 +301,38 @@
     height: 80px;
     width: 80px;
     position: relative;
+    &:after, &:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      // left: 50%;
+      // top: 50%;
+      // transform: translate(-50%, -50%);
+    }
+
+    &:before {
+      transition: opacity .1s .2s linear;
+      opacity: 0;
+      background: url("./images/shot-water.svg") 20px 23px no-repeat;
+    }
+    &.miss, &.hit {
+      &:before {
+        opacity: 1;
+      }
+      &:after {
+        animation: peg .1s linear;
+      }
+    }
   }
   
+  
+  .box.miss::after {
+    background: url("./images/miss-shot.svg") center 15px no-repeat;   
+  }
+
+
   .box.green {
     background-color: mediumseagreen;
   }
@@ -292,19 +341,6 @@
     background-color: red;
   }
   
-  .box.miss::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    background: url("./images/miss-shot.svg") no-repeat;
-  }
-  
-  .box.hit::after,
   .ship-piece.hit::after {
     content: "";
     display: block;
@@ -319,16 +355,18 @@
       left: 10%;
       top: -4%;
       transform: rotate(90deg);
+      animation: ship-hit-horiz .1s linear;
     }
   } 
 
-  .box.hit:after,.box.hit.destroyed::after {
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
+  // .box.hit:after,.box.hit.destroyed::after {
+  //   top: 50%;
+  //   transform: translate(-50%, -50%);
+  // }
+  
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
-    top: -12%;
     transform: translateX(-50%);
+    animation: ship-hit .1s linear;
   }
 
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
@@ -336,7 +374,7 @@
   }
 
   .box.hit:after,.box.hit.destroyed::after {
-    background: url("./images/hit-shot.svg") center center no-repeat;
+    background: url("./images/hit-shot.svg") center 15px no-repeat;
   }
   
 
