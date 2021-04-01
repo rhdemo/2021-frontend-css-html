@@ -61,6 +61,13 @@ function connect() {
         });
         break;
 
+      case "bad-attack":
+        store.dispatch({
+          type: "BAD_ATTACK",
+          payload: data
+        });
+        break;
+
       default:
     }
   }

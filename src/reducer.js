@@ -119,6 +119,12 @@ function appReducer(state = initialState, action) {
         }
       };
 
+    case "BAD_ATTACK":
+      return {
+        ...state,
+        badAttack: action.payload
+      };
+
     default:
       return state;
   }

@@ -108,6 +108,10 @@ class AttackGrid extends Grid {
 
     const box = event.target;
 
+    if (box.classList.contains("miss") || box.classList.contains("hit")) {
+      return;
+    }
+
     if (this.selectedGridBoxes) {
       this.selectedGridBoxes.forEach(box => box.classList.remove("attacking"));
     }
@@ -178,6 +182,19 @@ class AttackGrid extends Grid {
       gridBox.classList.add("miss");
     }
 
+    gridBox.classList.remove("attacking");
+
+    this.attackOrigin = {};
+    this.attacking = false;
+  }
+
+  clearBadAttack() {
+    // find the grid box
+    const gridBox = this.element.querySelector(`.box[row="${this.attackOrigin.y}"][column="${this.attackOrigin.x}"]`);
+    if (!gridBox) {
+      return;
+    }
+    
     gridBox.classList.remove("attacking");
 
     this.attackOrigin = {};

@@ -53,7 +53,7 @@ let modalTimeout;
 let attackGrid;
 let shipGrid;
 
-function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ disableAttacks, setDisableAttacks ] = useState(false);
@@ -194,6 +194,13 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       }
     }, game.bonusDuration);
   }, [ game, match, player ]);
+
+  useEffect(() => {
+    if (badAttack) {
+      debugger;
+      attackGrid.clearBadAttack();
+    }
+  }, [ badAttack ]);
 
   function boardLockedHandler(event) {
     attackGrid.enabled = true;
