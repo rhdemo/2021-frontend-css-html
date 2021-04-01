@@ -170,7 +170,7 @@ function determineBoard(game, match, player) {
     return "ship";
   }
 
-  if (game.state === "active" && (match.state.phase === "attack" || match.state.phase === "bonus")) {
+  if ((game.state === "active" || game.state === "paused") && (match.state.phase === "attack" || match.state.phase === "bonus")) {
     if (player.uuid === match.state.activePlayer) {
       return "attack";
     } else {
