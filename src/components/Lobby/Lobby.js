@@ -1,16 +1,13 @@
 import { connect } from "react-redux";
-import Avatar from "../Avatar";
+import { ReactComponent as Logo } from "./images/logo.svg";
 import "./Lobby.scss";
-
 function Lobby({ match, player }) {
   // @TODO remove waiting message when we move away
   // from player vs. player.
   return (
-    <div className="Lobby screen">
-      <h1>Battleship</h1>
-      <h2>Lobby</h2>
-      <Avatar />
-      <h3>{ player.username }</h3>
+    <div className="lobby screen">
+      <Logo className="lobby-logo" title="shipwars" />
+      <h2 className="lobby-text">Game starting soon</h2>
       { match.state.phase==="not-ready" &&
         <p>Waiting for another player to join</p>
       }

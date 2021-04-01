@@ -1,11 +1,34 @@
-.Lobby {
+@keyframes fade {
+  0%{opacity: 0;}
+50%{opacity: .5;}
+100%{opacity: 1;}
+}
+
+.lobby {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  background:#6cdffb url("./images/lobby.svg") center bottom no-repeat;
+  background-size: 200%;
+  @media screen and (min-width:750px) {
+    background-size: contain;
+  }
 
-  .Avatar {
-    margin-bottom: 0.83rem;
+  height: 100vh;
+  &-logo {
+    width: 60vw;
+    min-width: 300px;
+    margin-block-start: 10vh;
+    margin-block-end: 3vh;
+  }
+
+  &-text {
+    color: var(--light-purple);
+    font-size: 2vw;
+    &:before, &:after {
+      content: "**";
+      opacity: 1;
+      animation: fade  3s infinite linear;
+    }
   }
 }
