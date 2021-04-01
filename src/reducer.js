@@ -58,6 +58,19 @@ function appReducer(state = initialState, action) {
         theActiveBoard
       };
 
+    case "GAME_STATE":
+      game = action.payload.game;
+
+      _activeBoard = determineBoard(game, state.match, state.player);
+      theActiveBoard = _activeBoard
+
+      return {
+        ...state,
+        game,
+        _activeBoard,
+        theActiveBoard 
+      };
+
     case "BOARD_LOCKED":
       boardLocked(action.payload);
       return state;
