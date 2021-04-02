@@ -332,13 +332,21 @@
     background: url("./images/miss-shot.svg") center 15px no-repeat;   
   }
 
+  .box.green,.box.red {
+    &:after {
+      content: "";
+      width:100%;
+      height:100%;
+      display:block;
+    }
+  }
 
-  .box.green {
-    background-color: mediumseagreen;
+  .box.green:after {
+    background-color: rgba(60, 179, 114, 0.658);
   }
   
-  .box.red {
-    background-color: red;
+  .box.red:after {
+    background-color: rgba(255, 0, 0, 0.616);
   }
   
   .ship-piece.hit::after {
@@ -405,19 +413,19 @@
   }
 
   .ship[type="carrier"]{
-    background: url("./images/Carrier.svg") no-repeat;
+    background: url("./images/carrier.svg") no-repeat;
   }
 
   .ship[type="destroyer"] {
-    background: url("./images/Destroyer.svg") no-repeat;
+    background: url("./images/destroyer.svg") no-repeat;
   }
   
   .ship[type="submarine"] {
-    background: url("./images/Submarine.svg") no-repeat;
+    background: url("./images/submarine.svg") no-repeat;
   }
   
   .ship[type="battleship"] {
-    background: url("./images/Battleship.svg") no-repeat;
+    background: url("./images/battleship.svg") no-repeat;
   }
 
   
