@@ -261,10 +261,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">
               { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** ** Take a shot ** </span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
               }
               { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** ** Bonus round!!! ** </span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
               }
             </div>
             <div className="ui-footer__bonus__sky"></div>
@@ -272,8 +272,9 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
               <img src="images/ship-1.svg"  alt="" />
             </div>            
             <img src={ target } className="ui-footer__bonus__target" alt="" />
-            <div className="ui-footer__bonus__water">{ bonusHits }</div>
-            <button className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></button>
+            <div className="ui-footer__bonus__water"></div>
+            <div className="ui-footer__bonus__points">+{ bonusHits }</div>
+            <a href="#" className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></a>
           </footer>
         </div>
       </div>
