@@ -91,7 +91,7 @@ function appReducer(state = initialState, action) {
 
     case "CHANGE_BOARD":
       theActiveBoard = determineBoard(state.game, state.match, state.player);
-      
+
       return {
         ...state,
         theActiveBoard

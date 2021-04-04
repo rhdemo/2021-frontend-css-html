@@ -174,7 +174,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       return;
     }
 
-    Object.keys(opponent.board).forEach(key => {
+    Object.keys(opponent.board.positions).forEach(key => {
       enemyShips[key].destroyed = true;
     });
 
@@ -247,7 +247,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       <div className={ theActiveBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
           <ul className="ui-progress">
-          { Object.keys(enemyShips).map((enemyShipKey, index) => 
+          { Object.keys(enemyShips).map((enemyShipKey, index) =>
             <li key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</li>
           )}
           </ul>
@@ -270,7 +270,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer__bonus__sky"></div>
             <div className="ui-footer__bonus__ship">
               <img src="images/ship-1.svg"  alt="" />
-            </div>            
+            </div>
             <img src={ target } className="ui-footer__bonus__target" alt="" />
             <div className="ui-footer__bonus__water">{ bonusHits }</div>
             <button className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></button>
