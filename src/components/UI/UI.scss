@@ -5,7 +5,7 @@
 }
 
 .bonus-round {
-    #attack-grid,  .ui-progress {
+    #attack-grid,  .ui-progress, .ui-header {
         display: none;
     }
 }
@@ -36,19 +36,24 @@
             .box {
                 position: relative;
                 &:after {
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
+                    display: flex;
+                    align-items: center;
+                    z-index: 1000;
+                    justify-content: center;
                     color: #fff;
                     font-size: 2rem;
-                    line-height: 1rem;
+                    line-height: 0;
                 }
             }
         }
     }
 
     &.paused .grid .box {
+        &:nth-child(1), &:nth-child(7), &:nth-child(13), &:nth-child(19), &:nth-child(25) {
+            &:after {
+                background: rgba(132, 188, 252, 0.842);
+            }
+        }
         &:nth-child(1) {
             &:after {
                 content: 'P';
@@ -310,11 +315,11 @@
     }
 
     &__bonus {
-        height: calc(100vh - 200px);
-        max-height: 625px;
-        position: relative;
+        height: 625px;
+        position: absolute;
         z-index: 2000;
         left: 50%;
+        bottom: 0;
         transform: translateX( -50%);
     
         &__sky {
@@ -371,6 +376,13 @@
                 right: 3%;
                 animation-delay: .2s;
             }
+        }
+
+        &__points {
+            color: #fff;
+            position: absolute;
+            top: 20%;
+            font-size: 2rem;
         }
 
         &__action {

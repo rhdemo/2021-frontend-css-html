@@ -58,6 +58,19 @@ function appReducer(state = initialState, action) {
         theActiveBoard
       };
 
+    case "GAME_STATE":
+      game = action.payload.game;
+
+      _activeBoard = determineBoard(game, state.match, state.player);
+      theActiveBoard = _activeBoard
+
+      return {
+        ...state,
+        game,
+        _activeBoard,
+        theActiveBoard 
+      };
+
     case "BOARD_LOCKED":
       boardLocked(action.payload);
       return state;
@@ -157,7 +170,7 @@ function determineBoard(game, match, player) {
     return "ship";
   }
 
-  if (game.state === "active" && (match.state.phase === "attack" || match.state.phase === "bonus")) {
+  if ((game.state === "active" || game.state === "paused") && (match.state.phase === "attack" || match.state.phase === "bonus")) {
     if (player.uuid === match.state.activePlayer) {
       return "attack";
     } else {

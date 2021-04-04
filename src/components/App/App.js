@@ -12,11 +12,11 @@ function App({ game, match }) {
 
   let view;
 
-  if (game.state === 'lobby') {
+  if (game.state === "lobby") {
     view = <Lobby />;
   }
 
-  if (game.state === 'active') {
+  if (game.state === "active" || game.state === "paused") {
     view = <Main />;
   }
 

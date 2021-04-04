@@ -33,6 +33,13 @@ function connect() {
         });
         break;
 
+      case "game-state":
+        store.dispatch({
+          type: "GAME_STATE",
+          payload: data
+        });
+        break;
+
       case "attack-result":
         store.dispatch({
           type: "ATTACK_RESULT",

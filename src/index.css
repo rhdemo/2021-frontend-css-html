@@ -51,3 +51,7 @@ h6 {
 .screen {
   padding: 1rem;
 }
+
+.text-center {
+  text-align: center;
+}
