@@ -5,6 +5,14 @@ import ShipGrid from "./utilities/shipgrid";
 import Modal from "../Modal";
 import { boardLocked, attack, bonus } from "./actions";
 import target from "./images/target.svg";
+import destroyer from "./images/2.svg";
+import destroyerHit from "./images/2-hit.svg";
+import submarine from "./images/3.svg";
+import submarineHit from "./images/3-hit.svg";
+import battleship from "./images/4.svg";
+import battleshipHit from "./images/4-hit.svg";
+import carrier from "./images/5.svg";
+import carrierHit from "./images/5-hit.svg";
 import "./Battleship.scss";
 
 /*
@@ -237,6 +245,35 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     };
   }
 
+  function getShipTracker(enemyShipKey) {
+    let ship;
+    const destroyed = enemyShips[enemyShipKey].destroyed;
+
+    switch (enemyShipKey) {
+      case "Destroyer":
+        ship = destroyed ? destroyerHit : destroyer;
+        break;
+
+      case "Submarine":
+        ship = destroyed ? submarineHit : submarine;
+        break;
+
+      case "Battleship":
+        ship = destroyed ? battleshipHit : battleship;
+        break;
+
+      case "Carrier":
+        ship = destroyed ? carrierHit : carrier;
+        break;
+    
+      default:
+        break;
+    }
+    return (
+      <img src={ ship } />
+    );
+  }
+
   const attackGridAttackHandler = event => {
     console.log('attack event detail', event.detail)
     attack(event.detail);
@@ -248,7 +285,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         <div className="board push-bottom">
           <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) =>
-            <li key={ index }><input type="checkbox" disabled checked={ !!enemyShips[enemyShipKey].destroyed } />{ enemyShipKey }</li>
+            <li key={ index }>
+              { getShipTracker(enemyShipKey) }
+              { enemyShipKey }
+            </li>
           )}
           </ul>
           <div id="attack-grid" className="ship-grid" ref={ attackGridRef }>
