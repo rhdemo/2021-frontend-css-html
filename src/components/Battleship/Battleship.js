@@ -170,7 +170,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   }, [ result, attacker, player, match ]);
 
   useEffect(() => {
-    if (!opponent || !opponent.board) {
+    if (!opponent || !opponent.board || !opponent.board.positions) {
       return;
     }
 
