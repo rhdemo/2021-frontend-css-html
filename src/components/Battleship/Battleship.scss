@@ -1,12 +1,15 @@
 @keyframes bob {
   0%  {
       transform: rotate(10deg) translateY(2px);
+    transform: rotate(10deg) translateY(2px);
   }
   50%  {
       transform: rotate(-10deg) translateY(0px);
+    transform: rotate(-10deg) translateY(0px);
   }
   100%  {
       transform: rotate(10deg) translateY(2px); 
+    transform: rotate(10deg) translateY(2px); 
   } 
 }
 
@@ -241,6 +244,7 @@
       left: -9px;
       top: -26px;   
        &:before {
+         will-change: transform;
          animation:bob 5s linear 0s infinite;
        }
        &:after {
@@ -252,6 +256,7 @@
         right: 12px;
         top: -22px;
         &:before {
+          will-change: transform;
           animation:bob 5s linear .5s infinite;
         }
        &:after {
@@ -263,6 +268,7 @@
         left: -10px;
         bottom: 24px;
         &:before {
+          will-change: transform;
           animation:bob 3s linear 1s infinite; 
         }
        &:after {
@@ -274,6 +280,7 @@
         right: 9px;
         bottom: 26px;
         &:before {
+          will-change: transform;
           animation:bob 5s linear -1s infinite;
         }
        &:after {
