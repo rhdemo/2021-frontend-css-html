@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
-import Modal from "../Modal";
 import { boardLocked, attack, bonus } from "./actions";
 import target from "./images/target.svg";
 import destroyer from "./images/2.svg";
@@ -13,6 +12,10 @@ import battleship from "./images/4.svg";
 import battleshipHit from "./images/4-hit.svg";
 import carrier from "./images/5.svg";
 import carrierHit from "./images/5-hit.svg";
+import bonusDestroyer from "./images/ship-1.svg";
+import bonusSubmarine from "./images/ship-1.svg";
+import bonusBattleship from "./images/ship-1.svg";
+import bonusCarrier from "./images/ship-1.svg";
 import "./Battleship.scss";
 
 /*
@@ -56,8 +59,6 @@ const ships = {
   }
 };
 
-let modalTimeout;
-
 let attackGrid;
 let shipGrid;
 
@@ -65,14 +66,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ disableAttacks, setDisableAttacks ] = useState(false);
-  const [ turnModalHidden, setTurnModalHidden ] = useState({ hidden: true });
-  const [ turnModalText, setTurnModalText ] = useState("");
-  const [ positionModalHidden, setPositionModalHidden ] = useState({ hidden: true });
-  const [ bonusModalHidden, setBonusModalHidden ] = useState({ hidden: true });
   const [ bonusHits, setBonusHits ] = useState(0);
+  const [ bonusShip, setBonusShip ] = useState();
   const bonusHitsRef = useRef(bonusHits);
   bonusHitsRef.current = bonusHits;
-  const [ activeBoard, setActiveBoard ] = useState(null);
   const [ enemyShips, setEnemyShips ] = useState({
     "Submarine": {
       destroyed: false
@@ -195,13 +192,34 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       return;
     }
 
+    switch (result.type) {
+      case "Destroyer":
+        setBonusShip(bonusDestroyer);
+        break;
+
+      case "Submarine":
+        setBonusShip(bonusSubmarine);
+        break;
+
+      case "Battleship":
+        setBonusShip(bonusBattleship);
+        break;
+
+      case "Carrier":
+        setBonusShip(bonusCarrier);
+        break;
+    
+      default:
+        break;
+    }
+
     setTimeout(() => {
       if (player.uuid === match.state.activePlayer) {
         bonus(bonusHitsRef.current);
         setBonusHits(0);
       }
     }, game.bonusDuration);
-  }, [ game, match, player ]);
+  }, [ game, match, player, result ]);
 
   useEffect(() => {
     if (badAttack) {
@@ -309,7 +327,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             </div>
             <div className="ui-footer__bonus__sky"></div>
             <div className="ui-footer__bonus__ship">
-              <img src="images/ship-1.svg"  alt="" />
+              <img src={ bonusShip }  alt="" />
             </div>
             <img src={ target } className="ui-footer__bonus__target" alt="" />
             <div className="ui-footer__bonus__water"></div>
