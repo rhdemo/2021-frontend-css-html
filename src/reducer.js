@@ -85,6 +85,10 @@ function appReducer(state = initialState, action) {
 
     case "ATTACK_RESULT":
       console.log('processing attack result', action);
+      
+      // store the attack result for replay
+      storeGameAttackResults(action);
+      
       game = action.payload.game;
       match = action.payload.match;
       player = action.payload.player;
@@ -157,8 +161,50 @@ function updateLocalStorage({ gameId, playerId, username }) {
   localStorage.setItem("username", username);
 }
 
+function getGameAttackResults() {
+  return JSON.parse(localStorage.getItem("gameAttackResults")) || [];
+}
+
+function storeGameAttackResults(attack) {
+  /*
+  record each attack result for replay 
+  structure
+  [
+    {
+      "gameUUID": "soemthing",
+      "date": "fjkldas",
+      "attacks": []
+    }
+  ]
+  */
+  
+  const gameAttacks = getGameAttackResults();
+  const gameId = attack.payload.game.uuid;
+
+  // search for the game in the array
+  let game = gameAttacks.find(game => game.gameUUID === gameId);
+
+  // if we don't have a game yet, create it and push it to the
+  // gameAttacks array
+  if (!game) {
+    game = {
+      gameUUID: gameId,
+      date: attack.payload.game.date,
+      attacks: []
+    }
+
+    gameAttacks.push(game);
+  }
+
+  // push the attack to the game
+  game.attacks.push(attack);
+
+  localStorage.setItem("gameAttackResults", JSON.stringify(gameAttacks));
+}
+
 function clearLocalStorage() {
-  localStorage.clear();
+  localStorage.removeItem("gameId");
+  // localStorage.clear();
 }
 
 function determineBoard(game, match, player) {
@@ -178,5 +224,15 @@ function determineBoard(game, match, player) {
     }
   }
 }
+
+// record each attack result for replay
+// structure
+// [
+//   {
+//     "gameUUID": "soemthing",
+//     "date": "fjkldas",
+//     "attacks": []
+//   }
+// ]
 
 export { appReducer, getLocalStorage };
