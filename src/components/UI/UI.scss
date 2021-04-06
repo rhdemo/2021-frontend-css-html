@@ -285,7 +285,8 @@
 
     &__screen-text-scroll {
         position: relative;
-        animation: scroll 20s infinite linear;
+        // will-change: left;
+        // animation: scroll 20s infinite linear;
     }
     
     &__action{
