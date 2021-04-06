@@ -61,6 +61,7 @@ const ships = {
 
 let attackGrid;
 let shipGrid;
+let bonusTargetShakeTimeout;
 
 function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack }) {
   const attackGridRef = useRef();
@@ -68,6 +69,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ bonusHits, setBonusHits ] = useState(0);
   const [ bonusShip, setBonusShip ] = useState();
+  const [ bonusTargetShakeClass, setBonusTargetShakeClass ] = useState("");
   const bonusHitsRef = useRef(bonusHits);
   bonusHitsRef.current = bonusHits;
   const [ enemyShips, setEnemyShips ] = useState({
@@ -292,6 +294,17 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     );
   }
 
+  function bonusTargetClickHandler() {
+    setBonusHits(bonusHits + 1);
+    
+    setBonusTargetShakeClass("shake");
+
+    clearTimeout(bonusTargetShakeTimeout);
+    bonusTargetShakeTimeout = setTimeout(() => {
+      setBonusTargetShakeClass("");
+    }, 200);
+  }
+
   const attackGridAttackHandler = event => {
     console.log('attack event detail', event.detail)
     attack(event.detail);
@@ -329,10 +342,12 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer__bonus__ship">
               <img src={ bonusShip }  alt="" />
             </div>
-            <img src={ target } className="ui-footer__bonus__target" alt="" />
+            <div className={ bonusTargetShakeClass }>
+              <img src={ target } className="ui-footer__bonus__target" alt="" />
+            </div>
             <div className="ui-footer__bonus__water"></div>
             <div className="ui-footer__bonus__points">+{ bonusHits }</div>
-            <a href="#" className="ui-footer__bonus__action" aria-label="fire" onClick={() => setBonusHits(bonusHits + 1)}></a>
+            <a href="#" className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></a>
           </footer>
         </div>
       </div>
