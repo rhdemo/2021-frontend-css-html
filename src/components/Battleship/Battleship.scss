@@ -548,4 +548,11 @@
     opacity: 0;
     z-index: -1;
   }
+
+  .ui-progress {
+    img {
+      height: 24px;
+      margin-bottom: 0.5rem;
+    }
+  }
 }
