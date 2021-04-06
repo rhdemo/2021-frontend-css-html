@@ -176,6 +176,12 @@ class ShipGrid extends Grid {
         return;
       }
 
+      // set a "destroyed" class on the wrapper if the ship
+      // has been sunk
+      if (ship.configuration.sunk) {
+        ship.element.classList.add("destroyed");
+      }
+
       ship.configuration.cells.forEach((cell, index) => {
         if (!cell.hit) {
           return;
@@ -184,8 +190,11 @@ class ShipGrid extends Grid {
         const shipPiece = this.element.querySelector(`.ship[type="${ship.type}"] .ship-piece[ship-piece="${index}"]`);
         const gridBox = this.element.querySelector(`.box[row="${cell.origin[1]}"][column="${cell.origin[0]}"]`);
         
-        // shipPiece.classList.add("hit");
-        // gridBox.classList.add("hit");
+        // add a "destoryed" class to the ship piece
+        // if the ship has been sunk
+        if (ship.configuration.sunk) {
+          shipPiece.classList.add("destroyed");
+        }
       });
     });
   }
@@ -512,6 +521,8 @@ class ShipGrid extends Grid {
 
       if (message.destroyed) {
         [...this.element.querySelectorAll(`.ship-piece[ship-id="${shipId}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
+        const parent = this.element.querySelector(`.ship-piece[ship-id="${shipId}"]`).parentElement;
+        parent.classList.add("destroyed");
         // alert(`Your ${message.type} has been destroyed`);
       }
     } else {
