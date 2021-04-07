@@ -1,4 +1,3 @@
-import { combineReducers } from "react-redux";
 import { boardLocked, attack, bonus, playAgain } from "./socket";
 
 const initialState = {
