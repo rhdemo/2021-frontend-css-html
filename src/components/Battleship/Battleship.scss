@@ -14,8 +14,8 @@
 }
 
 @keyframes scroll {
-  0%   {left: 0px;}
-  100% {left: -950px;}
+  0%   {transform: translateX(-10%);}
+  100% {transform: translateX(-100%);}
 }
 
 
@@ -419,20 +419,32 @@
     z-index: 10;
   }
 
-  .ship[type="carrier"]{
+  .ship[type="carrier"] {
     background: url("./images/carrier.svg") no-repeat;
+    &.destroyed {
+      background: url("./images/carrier-sunk.svg") no-repeat;
+    }
   }
 
   .ship[type="destroyer"] {
     background: url("./images/destroyer.svg") no-repeat;
+    &.destroyed {
+      background: url("./images/destroyer-sunk.svg") no-repeat;
+    }
   }
   
   .ship[type="submarine"] {
     background: url("./images/submarine.svg") no-repeat;
+    &.destroyed {
+      background: url("./images/submarine-sunk.svg") no-repeat;
+    }
   }
   
   .ship[type="battleship"] {
     background: url("./images/battleship.svg") no-repeat;
+    &.destroyed {
+      background: url("./images/battleship-sunk.svg") no-repeat;
+    }
   }
 
   
