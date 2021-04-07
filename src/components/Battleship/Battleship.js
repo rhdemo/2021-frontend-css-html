@@ -12,10 +12,10 @@ import battleship from "./images/4.svg";
 import battleshipHit from "./images/4-hit.svg";
 import carrier from "./images/5.svg";
 import carrierHit from "./images/5-hit.svg";
-import bonusDestroyer from "./images/ship-1.svg";
-import bonusSubmarine from "./images/ship-1.svg";
-import bonusBattleship from "./images/ship-1.svg";
-import bonusCarrier from "./images/ship-1.svg";
+import bonusDestroyer from "./images/bonus-destroyer.svg";
+import bonusSubmarine from "./images/bonus-sub.svg";
+import bonusBattleship from "./images/bonus-battleship.svg";
+import bonusCarrier from "./images/bonus-carrier.svg";
 import "./Battleship.scss";
 
 /*
@@ -373,7 +373,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
                 <span className="ui-footer__screen-text-scroll ui-screen-text">** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** </span>
               }
             </div>
-            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={ getActionButtonDisplay() }>Ready!</button>
+            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={ getActionButtonDisplay() }>Start playing</button>
           </footer>
         </div>
       </div>
