@@ -1,9 +1,10 @@
 .top-ten {
     background: url(/images/grid-new.png);
+    background-color: var(--grid-bg);
     left: 0;
     transition: left .25s linear;
     &::after {
-        background:url("/images/dashboard-left.svg") left 0 no-repeat, var(--grid-bg);  
+        background:url("/images/dashboard-left.svg") left 0 no-repeat;  
     }
     h1 {
         width: 90%;
