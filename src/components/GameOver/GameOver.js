@@ -4,19 +4,19 @@ import "./GameOver.scss";
 
 function GameOver({ player, opponent, match, playAgain }) {
   return (
-    <div className="GameOver screen">
-      <h1>Game Over</h1>
+    <div className="game-over screen">
+      <h1 className="game-over__title"> game over</h1>
       { match.winner === player.uuid
         ? <>
-            <h2>Congratulations, { player.username }!</h2>
-            <p>You beat { opponent.username }!</p>
+            <h2 className="game-over__sub-title">Congrats, { player.username }!<br />
+            You beat { opponent.username }!</h2>
           </>
         : <>
-            <h2>Oh no, { player.username }!</h2>
-            <p>You lost to { opponent.username }!</p>
+            <h2 className="game-over__sub-title">Oh no, { player.username }!<br />
+            You lost to { opponent.username }!</h2>
           </>
       }
-      <button onClick={ playAgain }>Play again?</button>
+      <button className="game-over__action" onClick={ playAgain }>Play again</button>
     </div>
   );
 }

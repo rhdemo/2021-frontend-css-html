@@ -343,6 +343,9 @@
             transform: translateX(-50%);
             height: 150px;
             z-index: 1000;
+            &.shake {
+                animation: shake .25s linear;
+            }
         }
         &__water {
             width:100%;
@@ -356,10 +359,9 @@
         &__ship {
             position: absolute;
             left: 50%;
-            top: 235px;
+            top: 32%;
             transform: translateX(-50%);
             z-index: -2;
-            width: 50%;
             &:after, &:before {
                 position: absolute;
                 z-index: 15;
@@ -377,6 +379,20 @@
                 top:20%;
                 right: 3%;
                 animation-delay: .2s;
+            }
+            img {
+                &[src*="battleship"]{
+                    max-width: 200px;
+                }
+                &[src*="sub"]{
+                    max-width: 170px;
+                }
+                &[src*="carrier"]{
+                    max-width: 200px;
+                }
+                &[src*="destroyer"]{
+                    max-width: 200px;
+                }
             }
         }
 

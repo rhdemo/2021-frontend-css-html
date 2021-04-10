@@ -343,8 +343,8 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer__bonus__ship">
               <img src={ bonusShip }  alt="" />
             </div>
-            <div className={ bonusTargetShakeClass }>
-              <img src={ target } className="ui-footer__bonus__target" alt="" />
+            <div className={ bonusTargetShakeClass + " ui-footer__bonus__target" }>
+              <img src={ target } alt="" />
             </div>
             <div className="ui-footer__bonus__water"></div>
             <div className="ui-footer__bonus__points">+{ bonusHits }</div>
