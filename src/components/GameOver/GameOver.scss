@@ -1,6 +1,70 @@
-.GameOver {
+@keyframes shark {
+    0%   {transform: translateX(500%);}
+    100% {transform: translateX(-100%);}
+  }
+
+.game-over {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  // justify-content: center;
+  // align-items: center;
+  text-align: center;
+  height: 100vh;
+  position: relative;
+
+  &:after, &:before {
+    content: '';
+    position: absolute;
+  }
+  &:after {
+    width: 100%;
+    height: 55vh;
+    background: url('./images/game-over-water.svg') center bottom no-repeat;
+    background-size: cover;
+    bottom: -5vh;
+    z-index: -1;
+    left: 0;
+  }
+  
+  &:before {
+    background: url('./images/game-over-shark.svg') no-repeat;
+    width: 260px;
+    height: 70px;
+    bottom: 20vh;
+    animation: shark 45s linear infinite;
+  }
+  &__title {
+    align-self: center;
+    margin:1vh 0 0 0;
+    width: 90vw;
+    @media screen AND (min-width:750px) {
+      height: 30vh; 
+    }
+    height: 20vh;
+    background: url('./images/game-over-text.svg') center no-repeat;
+    background-size: contain;
+    text-indent: -10000px;
+
+  }
+  &__sub-title {
+    line-height: 3rem;
+    @media screen AND (max-width:750px) {
+      font-size: 1rem;  
+    }
+  }
+  &__action {
+    background: url('./images/button-bg.svg') no-repeat;
+    background-size: contain;
+    height: 39px;
+    align-self: center;
+    cursor: pointer;
+    width: 300px;
+    border: none;
+    color: #fff;
+    font-family: 'dogica-bold', sans-serif;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
