@@ -1,0 +1,14 @@
+.ui-header {
+  .ui-header-main__points-animate {
+    color: white;
+    position: absolute;
+    
+    > div {
+      display: none;
+
+      &.show {
+        display: block;
+      }
+    }
+  }
+}
