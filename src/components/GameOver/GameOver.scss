@@ -1,13 +1,27 @@
 @keyframes shark {
-    0%   {transform: translateX(500%);}
-    100% {transform: translateX(-100%);}
+    // 0%   {transform: translateX(-25%);}
+    // 50% {transform: translateX(100%) }
+    // 51% {transform: scaleX(-1);}
+    // 100% {
+    //   transform: translateX(-100%);
+    // }
+    0% {
+      transform: translateX(0%) scaleX(1);
+    }
+    50% {
+      transform: translateX(100%) scaleX(1);
+    }
+    51% {
+      transform: translateX(100%) scaleX(-1);
+    }
+    100% {
+      transform: translateX(0%) scaleX(-1);
+    }
   }
 
 .game-over {
   display: flex;
   flex-direction: column;
-  // justify-content: center;
-  // align-items: center;
   text-align: center;
   height: 100vh;
   position: relative;
@@ -21,6 +35,7 @@
     height: 55vh;
     background: url('./images/game-over-water.svg') center bottom no-repeat;
     background-size: cover;
+
     bottom: -5vh;
     z-index: -1;
     left: 0;
@@ -31,7 +46,8 @@
     width: 260px;
     height: 70px;
     bottom: 20vh;
-    animation: shark 45s linear infinite;
+    transform: translateX(-25%);
+    animation: shark 5s ease-in-out infinite;
   }
   &__title {
     align-self: center;
