@@ -72,6 +72,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ bonusHits, setBonusHits ] = useState(0);
   const [ bonusShip, setBonusShip ] = useState();
+  const [ bonusShipClass, setBonusShipClass ] = useState("");
   const [ bonusTargetShakeClass, setBonusTargetShakeClass ] = useState("");
   const bonusHitsRef = useRef(bonusHits);
   bonusHitsRef.current = bonusHits;
@@ -201,6 +202,8 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     if (match.state.phase !== "bonus") {
       return;
     }
+
+    setBonusShipClass(result.type);
 
     switch (result.type) {
       case "Destroyer":
@@ -377,7 +380,9 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             </div>
             <div className="ui-footer__bonus__sky"></div>
             <div className="ui-footer__bonus__ship">
-              <img src={ bonusShip }  alt="" />
+              <div className={ bonusShipClass }>
+                <img src={ bonusShip }  alt="" />
+              </div>
             </div>
             <div className={ bonusTargetShakeClass + " ui-footer__bonus__target" }>
               <img src={ target } alt="" />
