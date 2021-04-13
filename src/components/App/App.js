@@ -24,6 +24,10 @@ function App({ game, match }) {
     view = <GameOver />;
   }
 
+  if (game.state === "stopped") {
+    view = <GameOver />;
+  }
+
   // this will change when we start controlling the game
   // from the admin panel
   // switch(game.state) {
