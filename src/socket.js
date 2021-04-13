@@ -12,8 +12,9 @@ function connect() {
   if (window.location.hostname.includes('localhost')) {
     socket = new WebSocket("ws://localhost:3000/game");
   } else {
-    const host = window.location.hostname.replace('game-frontend', 'game-server-frontend')
-    socket = new WebSocket(`ws://${host}/game`);
+    const host = window.location.hostname.replace('game-frontend', 'game-server-frontend');
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    socket = new WebSocket(`${protocol}//${host}/game`);
   }
 
   socket.onopen = event => {
