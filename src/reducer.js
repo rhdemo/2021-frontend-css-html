@@ -127,6 +127,11 @@ function appReducer(state = initialState, action) {
         theActiveBoard
       };
 
+    case "SCORE_UPDATE":
+      return {
+        ...state
+      };
+
     case "PLAY_AGAIN":
       clearLocalStorage();
       state = undefined;

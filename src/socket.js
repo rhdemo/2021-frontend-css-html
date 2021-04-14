@@ -55,6 +55,13 @@ function connect() {
         });
         break;
 
+      case "score-update":
+        store.dispatch({
+          type: "SCORE_UPDATE",
+          payload: data
+        });
+        break;
+
       case "invalid-payload":
         store.dispatch({
           type: "SHOW_ERROR_MESSAGE",
@@ -168,4 +175,4 @@ function playAgain() {
 connect();
 
 export default socket;
-export { boardLocked, attack,bonus, playAgain };
+export { boardLocked, attack, bonus, playAgain };
