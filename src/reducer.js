@@ -60,6 +60,15 @@ function appReducer(state = initialState, action) {
     case "GAME_STATE":
       game = action.payload.game;
 
+      // check to see if the game uuid has changed.
+      // if it's different, clear localStorage and
+      // reload the page
+      if (state.game.uuid && state.game.uuid !== game.uuid) {
+        localStorage.clear();
+        window.location.reload();
+        return;
+      }
+
       _activeBoard = determineBoard(game, state.match, state.player);
       theActiveBoard = _activeBoard
 
