@@ -15,7 +15,13 @@ function GameOver({ player, opponent, match, playAgain, game }) {
   }, [ game ]);
 
   async function checkForWinner() {
-    const response = await fetch("");
+    const response = await fetch("")
+      .catch(err => console.log(err));
+
+    if (!response) {
+      return;
+    }
+    
     const data = await response.json();
   }
 
