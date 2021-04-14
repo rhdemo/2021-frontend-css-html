@@ -62,13 +62,10 @@ const ships = {
 let attackGrid;
 let shipGrid;
 let bonusTargetShakeTimeout;
-let shipPositionInterval;
 
 function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
-  const shipPositionTimerMax = 30;
-  const [ shipPositionTimerValue, setShipPositionTimerValue] = useState(shipPositionTimerMax);
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ bonusHits, setBonusHits ] = useState(0);
   const [ bonusShip, setBonusShip ] = useState();
@@ -134,11 +131,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
 
     document.addEventListener("shipgrid:locked", boardLockedHandler);
     document.addEventListener("attackgrid:attack", attackGridAttackHandler);
-
-    if (shipPositionInterval) {
-      clearInterval(shipPositionInterval);
-      setShipPositionTimerValue(shipPositionTimerMax);
-    }
 
     // clean up when the component is unmounted
     return () => {
@@ -251,35 +243,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   function boardLockedHandler(event) {
     attackGrid.enabled = true;
     boardLocked(event.detail.ships);
-
-    // if the timer is still running, stop it
-    if (shipPositionInterval) {
-      clearInterval(shipPositionInterval);
-    }
   }
-
-  // timer for the player to set their ship positions
-  // player.board && !player.board.valid && match.state.phase === "not-ready"
-  useEffect(() => {
-    if (player.board && !player.board.valid && match.state.phase === "not-ready") {
-      if (shipPositionInterval) {
-        clearInterval(shipPositionInterval);
-      }
-
-      shipPositionInterval = setInterval(() => {
-        setShipPositionTimerValue(shipPositionTimerValue => shipPositionTimerValue - 1);
-      }, 1000);
-    }
-  }, [ player, match ]);
-
-  // once the timer hits 0, lock the board
-  useEffect(() => {
-    if (shipPositionTimerValue === 0) {
-      clearInterval(shipPositionInterval);
-      shipGrid.lockButton.click();
-      console.log("lock the board");
-    }
-  }, [ shipPositionTimerValue ]);
 
   function getFooterActionClasses() {
     let str = "ui-footer";
@@ -405,9 +369,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="bouy"></div>
             <div className="bouy"></div>
           </div>
-          { player.board && !player.board.valid && match.state.phase === "not-ready" &&
-            <div>{ shipPositionTimerValue }</div>
-          }
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">
