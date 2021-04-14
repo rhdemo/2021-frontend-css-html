@@ -131,12 +131,20 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         destroyed: false
       }
     });
+
     document.addEventListener("shipgrid:locked", boardLockedHandler);
     document.addEventListener("attackgrid:attack", attackGridAttackHandler);
 
     if (shipPositionInterval) {
       clearInterval(shipPositionInterval);
       setShipPositionTimerValue(shipPositionTimerMax);
+    }
+
+    // clean up when the component is unmounted
+    return () => {
+      attackGrid.removeListeners();
+      document.removeEventListener("shipgrid:locked", boardLockedHandler);
+      document.removeEventListener("attackgrid:attack", attackGridAttackHandler);
     }
   }, []);
 
@@ -236,7 +244,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
 
   useEffect(() => {
     if (badAttack) {
-      debugger;
       attackGrid.clearBadAttack();
     }
   }, [ badAttack ]);
@@ -345,7 +352,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   }
 
   const attackGridAttackHandler = event => {
-    console.log('attack event detail', event.detail)
+    console.log('attack event detail', event.detail);
     attack(event.detail);
   }
 
