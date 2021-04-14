@@ -36,6 +36,11 @@ function appReducer(state = initialState, action) {
       opponent = action.payload.opponent;
       match = action.payload.match;
 
+      // get the matchAttackResults from localStorage.
+      // any gameUUID that doesn't match the current game
+      // UUID should be deleted
+      cleanMatchAttackResults(game.uuid);
+
       _activeBoard = determineBoard(game, match, player);
       theActiveBoard = _activeBoard
 
@@ -95,7 +100,7 @@ function appReducer(state = initialState, action) {
       console.log('processing attack result', action);
       
       // store the attack result for replay
-      storeGameAttackResults(action);
+      storeMatchAttackResults(action);
       
       game = action.payload.game;
       match = action.payload.match;
@@ -169,50 +174,79 @@ function updateLocalStorage({ gameId, playerId, username }) {
   localStorage.setItem("username", username);
 }
 
-function getGameAttackResults() {
-  return JSON.parse(localStorage.getItem("gameAttackResults")) || [];
+function getMatchAttackResults() {
+  return JSON.parse(localStorage.getItem("matchAttackResults")) || {};
 }
 
-function storeGameAttackResults(attack) {
+function storeMatchAttackResults(attack) {
   /*
   record each attack result for replay 
   structure
-  [
-    {
-      "gameUUID": "soemthing",
-      "date": "fjkldas",
-      "attacks": []
-    }
-  ]
+  {
+    "gameUUID": "gameId",
+    "matches": [
+      {
+        "matchUUID": "soemthing",
+        "date": "fjkldas",
+        "attacks": []
+      }
+    ]
+  }
   */
   
-  const gameAttacks = getGameAttackResults();
+  const matchAttacks = getMatchAttackResults();
   const gameId = attack.payload.game.uuid;
+  const matchId = attack.payload.match.uuid;
 
-  // search for the game in the array
-  let game = gameAttacks.find(game => game.gameUUID === gameId);
+  // search for the game
+  let game = matchAttacks[gameId];
 
-  // if we don't have a game yet, create it and push it to the
-  // gameAttacks array
+  // if we don't have the game, create it
   if (!game) {
     game = {
       gameUUID: gameId,
-      date: attack.payload.game.date,
+      matches: []
+    }
+
+    matchAttacks[gameId] = game;
+  }
+
+  // search for the match in the array
+  let match = game.matches.find(match => match.matchUUID === matchId);
+  
+
+  // if we don't have a match yet, create it and push it to the
+  // matchAttacks array
+  if (!match) {
+    match = {
+      matchUUID: matchId,
       attacks: []
     }
 
-    gameAttacks.push(game);
+    game.matches.push(match);
   }
 
   // push the attack to the game
-  game.attacks.push(attack);
+  match.attacks.push(attack);
 
-  localStorage.setItem("gameAttackResults", JSON.stringify(gameAttacks));
+  localStorage.setItem("matchAttackResults", JSON.stringify(matchAttacks));
 }
 
 function clearLocalStorage() {
   localStorage.removeItem("gameId");
   // localStorage.clear();
+}
+
+function cleanMatchAttackResults(gameUUID) {
+  const matchAttackResults = getMatchAttackResults();
+
+  Object.keys(matchAttackResults).forEach(key => {
+    if (key !== gameUUID) {
+      delete matchAttackResults[key];
+    }
+  });
+
+  localStorage.setItem("matchAttackResults", JSON.stringify(matchAttackResults));
 }
 
 function determineBoard(game, match, player) {
