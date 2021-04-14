@@ -75,10 +75,8 @@ function Header({ theActiveBoard, player }) {
         <Badge className="ui-header-main__badge" title="Badge" />
         <span className="ui-header-main__title">{ player.username }</span>
         <span className="ui-header-main__points">{ playerPoints } { pointsText }</span>
-        <div className="ui-header-main__points-animate">
-          <div className={ playerPointDifferentialClasses }>
+        <div className={ playerPointDifferentialClasses + " ui-header-main__points-animate" }>
             +{ playerPointDifferential } points
-          </div>
         </div>
       </div>
       <div className="ui-header-sub">
