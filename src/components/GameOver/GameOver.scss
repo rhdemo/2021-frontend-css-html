@@ -82,6 +82,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-decoration: none;
   }
 
   &__email {
@@ -118,6 +119,7 @@
       border-left: none;
       color: #fff;
       cursor: pointer;
+      text-decoration: none;
       &:hover {
         background: var(--light-purple);
       }
