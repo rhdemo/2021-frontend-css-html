@@ -67,7 +67,7 @@ let shipPositionInterval;
 function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
-  const shipPositionTimerMax = 10;
+  const shipPositionTimerMax = 30;
   const [ shipPositionTimerValue, setShipPositionTimerValue] = useState(shipPositionTimerMax);
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ bonusHits, setBonusHits ] = useState(0);
