@@ -51,14 +51,10 @@ function GameOver({ player, opponent, match, playAgain, game }) {
       }
       { game.state === "stopped" &&
         <>
-          <h2 className="game-over__sub-title">I hope you had fun</h2>
-          <form onSubmit={ emailSubmitHandler }>
-            <div>
-              <input type="email" placeholder="Enter your email address" value={ email } onChange={ event => setEmail(event.target.value) } />
-            </div>
-            <div>
-              <button>Submit</button>
-            </div>
+          <h2 className="game-over__sub-title">I hope you had fun, See ya next year!</h2>
+          <form className="game-over__email" onSubmit={ emailSubmitHandler }>
+              <input className="game-over__email__input" type="email" placeholder="Enter your email" value={ email } onChange={ event => setEmail(event.target.value) } />
+              <button className="game-over__email__action">Submit</button>
           </form>
         </>
       }

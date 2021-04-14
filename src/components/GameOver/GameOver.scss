@@ -83,4 +83,44 @@
     justify-content: center;
     align-items: center;
   }
+
+  &__email {
+    display: flex;
+    justify-content: center;
+    & * {
+      font-family: 'dogica', sans-serif;
+      font-size: .8rem;
+      &:focus, &:active {
+        border-radius: none;
+        outline: none;
+      }
+    }
+    &__input {
+      padding: 8px; 
+      width:280px;
+      background: none;
+      border: 2px solid var(--light-purple);
+      border-right: none;
+      color: #fff;
+      
+      &::placeholder {
+        color:rgba(255,255,255,0.7);
+      }
+      &:after {
+        content:'enter your email';
+      }
+    }
+    &__action {
+      padding: 16px 24px;
+      text-transform: uppercase;
+      background: var(--dark-purple);
+      border: 2px solid var(--light-purple);
+      border-left: none;
+      color: #fff;
+      cursor: pointer;
+      &:hover {
+        background: var(--light-purple);
+      }
+    }
+  }
 }

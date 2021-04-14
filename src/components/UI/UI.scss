@@ -1,3 +1,25 @@
+@keyframes points-fade {
+    0% {
+        opacity: 1;
+        transform: translateY(180px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(160px);
+    }
+}
+
+@keyframes ship-sink {
+    0% {
+        transform: translate(-50%, 210px);
+    }
+
+    100% {
+        transform: translate(-50%, 350px);
+    }
+}
+
 .body-wrap {
     position: relative;
     height: 100vh;
@@ -190,11 +212,22 @@
           }
           &__title, &__points {
               color: #fff;
-              margin-inline-start: 16px;
-              
-              text-shadow: 2px 2px 0 var(--dark-green);
-              
+              margin-inline-start: 16px;     
+              text-shadow: 2px 2px 0 var(--dark-green);    
           }
+          &__points-animate {
+            position: absolute;
+            white-space: nowrap;
+            display: flex;
+            color: #fff;
+            width: 100%;
+            justify-content: center;
+            transform: translateY(190px);
+            opacity: 0;
+            &.show {
+                animation: points-fade 1s linear;
+            }
+        }
       }
 
       &-sub {
@@ -344,7 +377,7 @@
             height: 150px;
             z-index: 1000;
             &.shake {
-                animation: shake .25s linear;
+                animation: shake .25s linear infinite;
             }
         }
         &__water {
@@ -359,8 +392,6 @@
         &__ship {
             position: absolute;
             left: 50%;
-            top: 32%;
-            transform: translateX(-50%);
             z-index: -2;
             &:after, &:before {
                 position: absolute;
@@ -380,20 +411,34 @@
                 right: 3%;
                 animation-delay: .2s;
             }
-            img {
-                &[src*="battleship"]{
-                    max-width: 200px;
-                }
-                &[src*="sub"]{
-                    max-width: 170px;
-                }
-                &[src*="carrier"]{
-                    max-width: 200px;
-                }
-                &[src*="destroyer"]{
-                    max-width: 200px;
-                }
+
+             &.Submarine, &.Battleship, &.Carrier, &.Destroyer {
+                transform: translate(-50%, 350px);
+                height:100px;
+                animation: ship-sink 10s linear;
+             }
+
+             &:not(.submarine) {
+                width: 200px;
+             }
+             
+            &.Submarine {
+                width: 170px;
+                background: url('./images/bonus-sub.svg') center center / contain no-repeat;
             }
+
+            &.Battleship {
+                background: url('./images/bonus-battleship.svg') center center / contain no-repeat;
+            }
+
+            &.Destroyer {
+                background: url('./images/bonus-destroyer.svg') center center / contain no-repeat;
+            }
+
+            &.Carrier {
+                background: url('./images/bonus-carrier.svg') center center / contain no-repeat;  
+            }
+
         }
 
         &__points {
