@@ -6,7 +6,7 @@ function Lobby({ match, player }) {
   // from player vs. player.
   return (
     <div className="lobby screen">
-      <Logo className="lobby-logo" title="shipwars" />
+      <Logo className="lobby-logo" title="Ship Wars" />
       <h2 className="lobby-text">Game starting soon</h2>
       { match.state.phase==="not-ready" &&
         <p className="text-center">Waiting for another player to join</p>
