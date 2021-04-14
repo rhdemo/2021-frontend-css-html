@@ -415,7 +415,7 @@
              &.Submarine, &.Battleship, &.Carrier, &.Destroyer {
                 transform: translate(-50%, 350px);
                 height:100px;
-                animation: ship-sink 10s linear;
+                animation: ship-sink 15s linear;
              }
 
              &:not(.submarine) {
