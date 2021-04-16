@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
 import { playAgain } from "./actions";
 import "./GameOver.scss";
 
-function GameOver({ player, opponent, match, playAgain, game }) {
-  const [ email, setEmail ] = useState("");
-
+function GameOver({ player, match, playAgain, game }) {
   useEffect(() => {
     if (game.state !== "stopped") {
       return;
@@ -25,18 +23,6 @@ function GameOver({ player, opponent, match, playAgain, game }) {
     const data = await response.json();
   }
 
-  function emailSubmitHandler(event) {
-    event.preventDefault();
-    const data = {
-      email
-    };
-
-    fetch("", {
-      method: "POST",
-      body: JSON.stringify(data)
-    });
-  }
-
   return (
     <div className="game-over screen">
       <h1 className="game-over__title">Game Over</h1>
@@ -45,11 +31,11 @@ function GameOver({ player, opponent, match, playAgain, game }) {
         { match.winner === player.uuid
           ? <>
               <h2 className="game-over__sub-title">Congrats, { player.username }!<br />
-              You beat { opponent.username }!</h2>
+              You beat Captain "AI" Blackbeard!</h2>
             </>
           : <>
               <h2 className="game-over__sub-title">Oh no, { player.username }!<br />
-              You lost to { opponent.username }!</h2>
+              You lost to Captain "AI" Blackbeard!</h2>
             </>
         }
         <button className="game-over__action" onClick={ playAgain }>Play again</button>
