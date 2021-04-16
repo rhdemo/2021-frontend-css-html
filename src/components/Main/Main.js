@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
-import Leaderboard from "../Leaderboard";
 import UI from "../UI";
-import GameData from "../GameData";
 import { changeBoard } from "./actions";
 import "./Main.scss";
 import { useEffect, useState } from "react";
@@ -36,9 +34,7 @@ function Main({ _activeBoard, theActiveBoard, changeBoard, game }) {
 
   return (
     <div className={ bodyWrapClasses }>
-      <Leaderboard />
       <UI />
-      <GameData />
     </div>
   );
 }
