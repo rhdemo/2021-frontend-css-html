@@ -32,6 +32,7 @@ class AttackGrid extends Grid {
     if (bool) {
       console.log(`${this.constructor.name} - Attack grid enabled`);
       this.addListeners();
+      this.attacking = false;
     } else {
       console.log(`${this.constructor.name} - Attack grid disabled`);
       this.removeListeners();
@@ -185,7 +186,6 @@ class AttackGrid extends Grid {
     gridBox.classList.remove("attacking");
 
     this.attackOrigin = {};
-    this.attacking = false;
   }
 
   clearBadAttack() {
