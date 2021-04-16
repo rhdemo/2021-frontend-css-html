@@ -3,10 +3,10 @@ import { getLocalStorage } from "./reducer";
 
 let socket;
 
-// const MAX_RETRIES = 10;
-const RETRY_DELAY = 1000;
+const RETRY_DELAY = 5000;
+const MAX_RETRIES = 50;
 let numRetries = 0;
-let retryInterval;
+let retryTimeout;
 
 function connect() {
   if (window.location.hostname.includes('localhost')) {
@@ -19,6 +19,11 @@ function connect() {
 
   socket.onopen = event => {
     numRetries = 0;
+
+    if (retryTimeout) {
+      clearTimeout(retryTimeout);
+    }
+
     sendConfigurationFrame();
   }
 
@@ -88,10 +93,17 @@ function connect() {
   }
 
   socket.onclose = event => {
-    numRetries = 0;
+    console.log("socket closed");
+    numRetries++;
 
-    retryInterval = setInterval(() => {
+    if (numRetries === MAX_RETRIES) {
+      console.log(`reached max number of reconnect tries: ${MAX_RETRIES}. refresh the page to try again`);
+      return;
+    }
 
+    retryTimeout = setTimeout(() => {
+      console.log(`socket reconnect try: ${numRetries}`);
+      connect();
     }, RETRY_DELAY);
   }
 
