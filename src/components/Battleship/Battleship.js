@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
-import { boardLocked, attack, bonus } from "./actions";
+import { boardLocked, attack, bonus, showError } from "./actions";
 import target from "./images/target.svg";
 import destroyer from "./images/2.svg";
 import destroyerHit from "./images/2-hit.svg";
@@ -63,9 +63,10 @@ let attackGrid;
 let shipGrid;
 let bonusTargetShakeTimeout;
 
-function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack, showError }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
+  const [ lockingBoard, setLockingBoard ] = useState(false);
   const [ disableAttacks, setDisableAttacks ] = useState(false);
   const [ bonusHits, setBonusHits ] = useState(0);
   const [ bonusShip, setBonusShip ] = useState();
@@ -240,7 +241,22 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     }
   }, [ badAttack ]);
 
+  useEffect(() => {
+    if (!lockingBoard) {
+      return;
+    }
+
+    if (!player.board.valid) {
+      showError("Invalid ship placement");
+      shipGrid.unlockBoard();
+      return;
+    }
+
+    setLockingBoard(false);
+  }, [ player, showError ]);
+
   function boardLockedHandler(event) {
+    setLockingBoard(true);
     attackGrid.enabled = true;
     boardLocked(event.detail.ships);
   }
@@ -405,6 +421,9 @@ const mapDispatchToProps = dispatch => {
     bonus: data => {
       console.log('sending bonus', data)
       dispatch(bonus(data));
+    },
+    showError: message => {
+      dispatch(showError(message));
     }
   }
 };

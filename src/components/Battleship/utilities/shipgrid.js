@@ -52,7 +52,8 @@ class ShipGrid extends Grid {
     this.dragEnd = this.dragEnd.bind(this);
     this.shipRotateBeforeHandler = this.shipRotateBeforeHandler.bind(this);
     this.shipRotateHandler = this.shipRotateHandler.bind(this);
-    this.lockBoard = this.lockBoard.bind(this);
+    this.attemptToLockBoard = this.attemptToLockBoard.bind(this);
+    this.unlockBoard = this.unlockBoard.bind(this);
 
     this.state = configuration.initialState;
     this.rows = configuration.rows;
@@ -542,7 +543,7 @@ class ShipGrid extends Grid {
     this.element.addEventListener("ship:rotate-before", this.shipRotateBeforeHandler, false);
     this.element.addEventListener("ship:rotate", this.shipRotateHandler, false);
 
-    this.lockButton.addEventListener("click", this.lockBoard, false);
+    this.lockButton.addEventListener("click", this.attemptToLockBoard, false);
   }
 
   removeListeners() {
@@ -557,26 +558,18 @@ class ShipGrid extends Grid {
     this.element.removeEventListener("ship:rotate-before", this.shipRotateBeforeHandler, false);
     this.element.removeEventListener("ship:rotate", this.shipRotateHandler, false);
 
-    this.lockButton.removeEventListener("click", this.lockBoard, false);
+    this.lockButton.removeEventListener("click", this.attemptToLockBoard, false);
   }
 
-  lockBoard() {
-    if (!this.gridIsValid()) {
-      const message = "The configuration of ships is not valid";
-      alert(message);
-      console.log(`${this.constructor.name} - ${message}`);
-      return;
-    }
-
+  attemptToLockBoard() {
     const ships = {};
 
     Object.keys(this.state.ships).forEach(key => {
       const ship = this.state.ships[key];
-      const firstShipElement = this.element.querySelector(`.box[ship-ids="${ship.id}"]`);
+      const firstShipElement = this.element.querySelector(`.box[ship-ids*="${ship.id}"]`);
       const shipPosition = [parseInt(firstShipElement.getAttribute("column"), 10), parseInt(firstShipElement.getAttribute("row"), 10)];
       const shipElement = this.element.querySelector(`.ship[ship-id="${ship.id}"]`);
-      // ship.origin = shipPosition;
-      // ship.orientation = shipElement.getAttribute("orientation");
+
       ships[key] = {
         origin: shipPosition,
         orientation: shipElement.getAttribute("orientation")
@@ -587,60 +580,20 @@ class ShipGrid extends Grid {
     this.locked = true;
     this.removeListeners();
 
-    // build a representation of the board to send to
-    // the server
-    const board = [];
-    let currentRow;
-
-    [...this.element.querySelectorAll(".box")].forEach(box => {
-      const row = parseInt(box.getAttribute("row"), 10);
-      const column = parseInt(box.getAttribute("column"), 10);
-      const occupied = box.hasAttribute("occupied");
-      const shipId = box.getAttribute("ship-ids");
-
-      if (column === 0) {
-        currentRow = [];
-      }
-
-      if (occupied) {
-        const shipType = this.element.querySelector(`.ship[ship-id="${shipId}"]`).getAttribute("type");
-        const ship = this.state.ships[shipType];
-        ship.destroyed = false;
-        ship.state.push({
-          coordinates: {
-            x: column,
-            y: row
-          },
-          hit: false
-        });
-
-        currentRow.push({
-          ship: shipType,
-          hit: false,
-          position: ship.state.length - 1
-        });
-      } else {
-        currentRow.push(null);
-      }
-
-      // we're at the end, push the currentRow
-      // into the board
-      if (column === this.columns - 5) {
-        board.push(currentRow);
-      }
-    });
-
-    // send an event with the state of the board
+    // send an event with the state of the ships on the board
     const event = new CustomEvent("shipgrid:locked", {
       bubbles: true,
       detail: {
-        state: this.state,
-        board: board,
         ships: ships
       }
     });
 
     this.element.dispatchEvent(event);
+  }
+
+  unlockBoard() {
+    this.locked = false;
+    this.addListeners();
   }
 }
 
