@@ -10,13 +10,10 @@
   --grid-bg: #14281d;
   --sky: #64d8fa;
 }
-
 body {
-  font-family: 'dogica', sans-serif;
-  display: grid;
-  background: var(--ocean);
+    font-family: 'dogica', sans-serif;
 }
-
+ 
 .dashboard-section {  
    @media screen and (max-width:850px) {
        display: none;

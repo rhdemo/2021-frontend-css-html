@@ -1,10 +1,4 @@
 @keyframes shark {
-    // 0%   {transform: translateX(-25%);}
-    // 50% {transform: translateX(100%) }
-    // 51% {transform: scaleX(-1);}
-    // 100% {
-    //   transform: translateX(-100%);
-    // }
     0% {
       transform: translateX(0%) scaleX(1);
     }
@@ -25,6 +19,8 @@
   text-align: center;
   height: 100vh;
   position: relative;
+  overflow: hidden;
+  background: linear-gradient(0deg, rgba(108,223,251,1) 0%, rgba(108,223,251,1) 75%, rgba(172,222,234,1) 75%, rgba(172,222,234,1) 79%, rgba(108,223,251,1) 79%, rgba(108,223,251,1) 81%, rgba(172,222,234,1) 81%, rgba(172,222,234,1) 85%, rgba(108,223,251,1) 85%, rgba(109,223,251,1) 88%, rgba(172,222,234,1) 88%, rgba(172,222,234,1) 100%, rgba(108,223,251,1) 100%);
 
   &:after, &:before {
     content: '';
@@ -37,7 +33,7 @@
     background-size: cover;
 
     bottom: -5vh;
-    z-index: -1;
+    z-index: 0;
     left: 0;
   }
   
@@ -48,6 +44,7 @@
     bottom: 20vh;
     transform: translateX(-25%);
     animation: shark 5s ease-in-out infinite;
+    z-index: 1;
   }
   &__title {
     align-self: center;

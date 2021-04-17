@@ -20,7 +20,17 @@
     }
 }
 
+@keyframes water-xl {
+    0% { background-position:   10px 0px ; }
+    100% { background-position:   -10px 0px ; }
+  } 
+
 .body-wrap {
+    background: url('./images/water-bg.svg'), var(--ocean) repeat;
+    animation: water-xl 5s ease-in-out infinite alternate;
+    display: grid;
+    font-family: 'dogica', sans-serif;
+    will-change: background-position;
     position: relative;
     height: 100vh;
     overflow: hidden;
@@ -345,12 +355,12 @@
     }
 
     &__bonus {
-        height: 625px;
+        height: 675px;
         position: absolute;
         z-index: 2000;
         left: 50%;
-        bottom: 0;
-        transform: translateX( -50%);
+        top: 50%;
+        transform: translate( -50%,-50%);
     
         &__sky {
             width:95%;
@@ -373,6 +383,19 @@
             z-index: 1000;
             &.shake {
                 animation: shake .25s linear infinite;
+                &:after {
+                    content:'';
+                    background: url('./images/explosion.gif') no-repeat;
+                    background-size: contain;
+                    width: 100px;
+                    height: 100px;
+                    mix-blend-mode: multiply;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    z-index: -1;
+                    transform: translate(-50%,-50%);
+                }
             }
         }
         &__water {
