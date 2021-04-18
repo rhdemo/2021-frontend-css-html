@@ -27,7 +27,7 @@
 
 .body-wrap {
     background: url('./images/water-bg.svg'), var(--ocean) repeat;
-    animation: water-xl 5s ease-in-out infinite alternate;
+    // animation: water-xl 5s ease-in-out infinite alternate;
     display: grid;
     font-family: 'dogica', sans-serif;
     will-change: background-position;
