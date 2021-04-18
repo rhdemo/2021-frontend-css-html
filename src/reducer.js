@@ -128,8 +128,38 @@ function appReducer(state = initialState, action) {
       };
 
     case "SCORE_UPDATE":
+      if (state.attacker !== state.player.uuid) {
+        return {
+          ...state
+        };
+      }
+
+      const scoreDelta = action.payload.delta;
+      let score;
+      
+      // get the score from the current match in localStorage
+      // and increment it
+      const matchAttackResults = getMatchAttackResults();
+      const gameMatches = matchAttackResults[state.game.uuid].matches;
+
+      for (let i = 0; i < gameMatches.length; i++) {
+        if (gameMatches[i].matchUUID === state.match.uuid) {
+          const currentMatch = gameMatches[i];
+          currentMatch.score += scoreDelta;
+          score = {
+            current: currentMatch.score,
+            delta: scoreDelta
+          }
+          break;
+        }
+      }
+
+      // store everything again in localStorage
+      localStorage.setItem("matchAttackResults", JSON.stringify(matchAttackResults));
+
       return {
-        ...state
+        ...state,
+        score
       };
 
     case "PLAY_AGAIN":
@@ -225,7 +255,8 @@ function storeMatchAttackResults(attack) {
   if (!match) {
     match = {
       matchUUID: matchId,
-      attacks: []
+      attacks: [],
+      score: 0
     }
 
     game.matches.push(match);

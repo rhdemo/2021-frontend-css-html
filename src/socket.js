@@ -51,6 +51,14 @@ function connect() {
           type: "ATTACK_RESULT",
           payload: data
         });
+
+        // @TODO: remove once the score is integrated
+        setTimeout(() => {
+          store.dispatch({
+            type: "SCORE_UPDATE", 
+            payload: { delta: 5 }
+          });
+        }, 0);
         break;
 
       case "bonus-result":

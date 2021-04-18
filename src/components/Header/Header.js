@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import "./Header.scss";
 import { ReactComponent as Badge } from "./images/badges/badge-1.svg";
 
-function Header({ theActiveBoard, player }) {
+function Header({ theActiveBoard, player, score }) {
   const [ playerPoints, setPlayerPoints ] = useState(0);
   const [ playerPointDifferential, setPlayerPointDifferential ] = useState(0);
   const [ playerPointDifferentialClasses, setPlayerPointDifferentialClasses ] = useState("");
@@ -12,26 +12,6 @@ function Header({ theActiveBoard, player }) {
   const prevPlayerPointsRef = useRef();
 
   prevPlayerPointsRef.current = playerPoints;
-
-  function useInterval(callback, delay) {
-    const savedCallback = useRef();
-  
-    // Remember the latest callback.
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-  
-    // Set up the interval.
-    useEffect(() => {
-      function tick() {
-        savedCallback.current();
-      }
-      if (delay !== null) {
-        let id = setInterval(tick, delay);
-        return () => clearInterval(id);
-      }
-    }, [delay]);
-  }
 
   useEffect(() => {
     if (playerPoints === 1) {
@@ -62,12 +42,6 @@ function Header({ theActiveBoard, player }) {
       setScreenText("Your Board");
     }
   }, [ theActiveBoard ]);
-
-  useInterval(() => {
-    const randomPointValue = Math.floor(Math.random() * (25 - 5) + 5);
-    setPlayerPoints(playerPoints + randomPointValue);
-    prevPlayerPointsRef.current = playerPoints;
-  }, 5000);
 
   return (
     <header className="ui-header">
