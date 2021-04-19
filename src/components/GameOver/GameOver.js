@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { playAgain } from "./actions";
 import "./GameOver.scss";
 
-function GameOver({ player, match, playAgain, game }) {
+function GameOver({ player, opponent, match, playAgain, game }) {
   useEffect(() => {
     if (game.state !== "stopped") {
       return;
@@ -31,11 +31,11 @@ function GameOver({ player, match, playAgain, game }) {
         { match.winner === player.uuid
           ? <>
               <h2 className="game-over__sub-title">Congrats, { player.username }!<br />
-              You beat Captain "AI" Blackbeard!</h2>
+              You beat our artificial player - { opponent.username }!</h2>
             </>
           : <>
               <h2 className="game-over__sub-title">Oh no, { player.username }!<br />
-              You lost to Captain "AI" Blackbeard!</h2>
+              You lost to our artificial player -  { opponent.username }!</h2>
             </>
         }
         <button className="game-over__action" onClick={ playAgain }>Play again</button>
