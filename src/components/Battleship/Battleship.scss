@@ -1,3 +1,13 @@
+:root {
+  --slide-up: 4px; 
+}
+
+@media (min-width: 420px) {
+  :root {
+    --slide-up: 15px;
+  }
+}
+
 @keyframes bob {
   0%  {
       transform: rotate(10deg) translateY(2px);
@@ -62,7 +72,7 @@
 
 @keyframes peg {
   0%   { background-position: center 0px; } 
-  100% { background-position: center 15px; }
+  100% { background-position: center var(--slide-up); }
 }
 
 
@@ -183,7 +193,11 @@
   .grid {
     display: grid;
     margin: auto;
-    grid-template-columns: repeat(5, 80px);
+    grid-template-columns: repeat(5, 60px);
+
+    @media (min-width: 420px) {
+      grid-template-columns: repeat(5, 80px);
+    }
     
     position: relative;
     .box {
@@ -305,8 +319,14 @@
   }
 
   .box {
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
+
+    @media (min-width: 420px) {
+      height: 80px;
+      width: 80px;
+    }
+
     position: relative;
     &:after, &:before {
       content: "";
@@ -322,7 +342,11 @@
     &:before {
       transition: opacity .1s .2s linear;
       opacity: 0;
-      background: url("./images/shot-water.svg") 20px 23px no-repeat;
+      background: url("./images/shot-water.svg") 10px 11px no-repeat;
+
+      @media (min-width: 420px) {
+        background: url("./images/shot-water.svg") 20px 23px no-repeat;
+      }
     }
     &.miss, &.hit {
       &:before {
@@ -336,7 +360,11 @@
   
   
   .box.miss::after {
-    background: url("./images/miss-shot.svg") center 15px no-repeat;   
+    background: url("./images/miss-shot.svg") center 4px no-repeat;
+
+    @media (min-width: 420px) {
+      background: url("./images/miss-shot.svg") center 15px no-repeat;
+    }
   }
 
   .box.green,.box.red {
@@ -389,7 +417,11 @@
   }
 
   .box.hit:after,.box.hit.destroyed::after {
-    background: url("./images/hit-shot.svg") center 15px no-repeat;
+    background: url("./images/hit-shot.svg") center 4px no-repeat;
+
+    @media (min-width: 420px) {
+      background: url("./images/hit-shot.svg") center 15px no-repeat;
+    }
   }
   
 
@@ -477,8 +509,14 @@
   }
   
   .ship-piece {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+
+    @media (min-width: 420px) {
+      width: 80px;
+      height: 80px;
+    }
+
     position: relative;
     color: white;
     display: flex;
