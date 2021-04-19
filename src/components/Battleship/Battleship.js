@@ -63,7 +63,7 @@ let attackGrid;
 let shipGrid;
 let bonusTargetShakeTimeout;
 
-function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack, showError }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack, showError, replay }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ lockingBoard, setLockingBoard ] = useState(false);
@@ -204,6 +204,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       return;
     }
 
+    if (replay) {
+      return;
+    }
+
     setBonusShipClass(result.type);
 
     switch (result.type) {
@@ -233,7 +237,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         setBonusHits(0);
       }
     }, game.bonusDuration);
-  }, [ game, match, player, result ]);
+  }, [ game, match, player, result, replay ]);
 
   useEffect(() => {
     if (badAttack) {
@@ -255,6 +259,16 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     setLockingBoard(false);
   }, [ player, showError ]);
 
+  useEffect(() => {
+    if (game.state !== "replay") {
+      return;
+    }
+
+    console.log("REPLAY!!!");
+    shipGrid.resetBoard();
+    attackGrid.resetBoard();
+  }, [ game ]);
+
   function boardLockedHandler(event) {
     setLockingBoard(true);
     attackGrid.enabled = true;
@@ -272,7 +286,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       }
     }
 
-    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay) {
       return `${str} ui-footer__bonus`;
     }
 
@@ -361,7 +375,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
               { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
                 <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** </span>
               }
-              { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
+              { match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay &&
                 <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
               }
             </div>

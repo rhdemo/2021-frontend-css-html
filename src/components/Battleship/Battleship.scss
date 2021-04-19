@@ -93,6 +93,12 @@
       }
   }
 
+  &.paused {
+    .ship {
+      display: none;
+    }
+  }
+
   &.paused .attack-grid .cell{
       &:nth-child(1) {
           &:after {

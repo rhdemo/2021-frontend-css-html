@@ -595,6 +595,18 @@ class ShipGrid extends Grid {
     this.locked = false;
     this.addListeners();
   }
+
+  resetBoard() {
+    const boxes = [...this.element.querySelectorAll(".box")];
+    boxes.forEach(box => box.classList.remove("hit", "miss"));
+
+    const ships = [...this.element.querySelectorAll(".ship")];
+    ships.forEach(ship => {
+      ship.classList.remove("destroyed");
+      const shipPieces = [...ship.querySelectorAll(".ship-piece")];
+      shipPieces.forEach(shipPiece => shipPiece.classList.remove("hit"));
+    });
+  }
 }
 
 export default ShipGrid;

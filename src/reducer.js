@@ -1,4 +1,5 @@
 import { boardLocked, attack, bonus, playAgain } from "./socket";
+import store from "./store";
 
 const initialState = {
   board: {
@@ -18,6 +19,8 @@ const initialState = {
     message: null
   }
 };
+
+let replay = false;
 
 function appReducer(state = initialState, action) {
   let game;
@@ -63,6 +66,7 @@ function appReducer(state = initialState, action) {
       };
 
     case "GAME_STATE":
+      let interval;
       game = action.payload.game;
 
       // check to see if the game uuid has changed.
@@ -75,7 +79,34 @@ function appReducer(state = initialState, action) {
       }
 
       _activeBoard = determineBoard(game, state.match, state.player);
-      theActiveBoard = _activeBoard
+      theActiveBoard = _activeBoard;
+
+      if (game.state === "replay") {
+        replay = true;
+        const matchAttackResults = getMatchAttackResults();
+        const storedGame = matchAttackResults["f91977e156311f1c"];
+        const matches = storedGame.matches;
+        
+        let count = 0;
+
+        interval = setInterval(() => {
+          store.dispatch(matches[0].attacks[count]);
+          count++;
+
+          if (count === matches[0].attacks.length) {
+            replay = false;
+            console.log("replay over");
+            clearInterval(interval);
+          }
+        }, 500);
+
+        return {
+          ...state,
+          game
+        };
+      } else {
+        clearInterval(interval);
+      }
 
       return {
         ...state,
@@ -99,8 +130,11 @@ function appReducer(state = initialState, action) {
     case "ATTACK_RESULT":
       console.log('processing attack result', action);
       
-      // store the attack result for replay
-      storeMatchAttackResults(action);
+      // store the attack result for replay only if the game state
+      // is not in replay
+      if (!replay) {
+        storeMatchAttackResults(action);
+      }
       
       game = action.payload.game;
       match = action.payload.match;
@@ -108,16 +142,27 @@ function appReducer(state = initialState, action) {
       result = action.payload.result;
       attacker = action.payload.attacker;
 
-      _activeBoard = determineBoard(game, match, player);
+      _activeBoard = determineBoard(game, match, player, replay, attacker);
 
-      return {
+      if (replay) {
+        theActiveBoard = _activeBoard;
+      }
+
+      const returnData = {
         ...state,
         player,
         match,
         result,
         attacker,
         _activeBoard
-      };
+      }
+
+      if (replay) {
+        returnData.theActiveBoard = theActiveBoard;
+        returnData.replay = true;
+      }
+
+      return returnData;
 
     case "CHANGE_BOARD":
       theActiveBoard = determineBoard(state.game, state.match, state.player);
@@ -285,13 +330,23 @@ function cleanMatchAttackResults(gameUUID) {
   localStorage.setItem("matchAttackResults", JSON.stringify(matchAttackResults));
 }
 
-function determineBoard(game, match, player) {
+function determineBoard(game, match, player, replay, attacker) {
   if (!game || !match || !player) {
     return "ship";
   }
 
   if (game.state === "active" && match.state.phase === "not-ready") {
     return "ship";
+  }
+
+  if (replay) {
+    if (player.uuid === attacker) {
+      console.log("ATTACK BOARD");
+      return "attack";
+    } else {
+      console.log("SHIP BOARD");
+      return "ship";
+    }
   }
 
   if ((game.state === "active" || game.state === "paused") && (match.state.phase === "attack" || match.state.phase === "bonus")) {
@@ -301,16 +356,8 @@ function determineBoard(game, match, player) {
       return "ship";
     }
   }
-}
 
-// record each attack result for replay
-// structure
-// [
-//   {
-//     "gameUUID": "soemthing",
-//     "date": "fjkldas",
-//     "attacks": []
-//   }
-// ]
+  return "ship";
+}
 
 export { appReducer, getLocalStorage };

@@ -200,6 +200,11 @@ class AttackGrid extends Grid {
     this.attackOrigin = {};
     this.attacking = false;
   }
+
+  resetBoard() {
+    const boxes = [...this.element.querySelectorAll(`.box`)];
+    boxes.forEach(box => box.classList.remove("attacking", "miss", "hit"));
+  }
 }
 
 export default AttackGrid;
