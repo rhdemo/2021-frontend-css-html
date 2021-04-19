@@ -21,6 +21,7 @@ const initialState = {
 };
 
 let replay = false;
+let interval;
 
 function appReducer(state = initialState, action) {
   let game;
@@ -66,7 +67,6 @@ function appReducer(state = initialState, action) {
       };
 
     case "GAME_STATE":
-      let interval;
       game = action.payload.game;
 
       // check to see if the game uuid has changed.
@@ -87,13 +87,21 @@ function appReducer(state = initialState, action) {
         const storedGame = matchAttackResults[game.uuid];
         const matches = storedGame.matches;
         
+        let matchCount = 0;
         let count = 0;
+        const totalMatches = matches.length;
 
         interval = setInterval(() => {
-          store.dispatch(matches[0].attacks[count]);
+          store.dispatch(matches[matchCount].attacks[count]);
           count++;
 
-          if (count === matches[0].attacks.length) {
+          if (count === matches[matchCount].attacks.length) {
+            matchCount++;
+
+            if (matchCount !== totalMatches) {
+              return;
+            }
+
             replay = false;
             console.log("replay over");
             clearInterval(interval);
@@ -105,7 +113,9 @@ function appReducer(state = initialState, action) {
           game
         };
       } else {
-        clearInterval(interval);
+        if (interval) {
+          clearInterval(interval);
+        }
       }
 
       return {
