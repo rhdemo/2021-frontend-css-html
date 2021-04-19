@@ -84,7 +84,7 @@ function appReducer(state = initialState, action) {
       if (game.state === "replay") {
         replay = true;
         const matchAttackResults = getMatchAttackResults();
-        const storedGame = matchAttackResults["f91977e156311f1c"];
+        const storedGame = matchAttackResults[game.uuid];
         const matches = storedGame.matches;
         
         let count = 0;
