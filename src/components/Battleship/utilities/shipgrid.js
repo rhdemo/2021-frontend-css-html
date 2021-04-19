@@ -54,6 +54,7 @@ class ShipGrid extends Grid {
     this.shipRotateHandler = this.shipRotateHandler.bind(this);
     this.attemptToLockBoard = this.attemptToLockBoard.bind(this);
     this.unlockBoard = this.unlockBoard.bind(this);
+    this.mqlChange = this.mqlChange.bind(this);
 
     this.state = configuration.initialState;
     this.rows = configuration.rows;
@@ -71,6 +72,7 @@ class ShipGrid extends Grid {
     this.currentBoxes = null;
     this.locked = configuration.initialState.locked || false;
     this.initialAttacks = configuration.initialState.attacks;
+    this.mql = window.matchMedia("(min-width: 420px)");
 
     this.buildShips();
     this.setShipPositions();
@@ -80,6 +82,8 @@ class ShipGrid extends Grid {
     } else {
       this.setInitialIncomingAttacks();
     }
+
+    this.mql.addEventListener("change", this.mqlChange, false);
   }
 
   buildShips() {
@@ -150,6 +154,22 @@ class ShipGrid extends Grid {
         this.setBoxShipIds(gridBox, ship.id)
         gridBox.setAttribute("ship-piece", index);
       });
+    });
+  }
+
+  adjustShipPositions() {
+    Object.keys(this.ships).forEach(key => {
+      const ship = this.ships[key];
+      const position = ship.currentOrigin || ship.configuration.origin;
+
+      // position the ship on the grid
+      // find the grid position first
+      // position is an array with x first and y second [0 (x), 0 (y)]
+      const gridElement = this.element.querySelector(`.box[row="${position[1]}"][column="${position[0]}"]`);
+      ship.position = {
+        x: gridElement.offsetLeft,
+        y: gridElement.offsetTop
+      };
     });
   }
 
@@ -435,6 +455,11 @@ class ShipGrid extends Grid {
             x: startingGridElement.offsetLeft,
             y: startingGridElement.offsetTop
           };
+
+          this.activeItem.currentOrigin = [
+            startingGridElement.getAttribute("column"),
+            startingGridElement.getAttribute("row")
+          ];
         }
       }
 
@@ -594,6 +619,10 @@ class ShipGrid extends Grid {
   unlockBoard() {
     this.locked = false;
     this.addListeners();
+  }
+
+  mqlChange(event) {
+    this.adjustShipPositions();
   }
 }
 
