@@ -21,8 +21,8 @@
 }
 
 @keyframes water-xl {
-    0% { transform:translateX(10px); }
-    100% {  transform:translateX(-10px); }
+    0% { transform:translate(10px, 0); }
+    100% {  transform:translate(-10px, 0); }
   } 
 
 .body-wrap {
@@ -138,16 +138,23 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  &:after {
-      content:'';
-      background: url('./images/water-bg.svg'), var(--ocean) repeat;
-      animation: water-xl 5s ease-in-out infinite alternate;
-      width: 120vw;
-      height: 100vh;
-      position: absolute;
+    &:before, &:after {
+        content: '';
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        
+    }
+&:after {
+    z-index: -2;
+    background: var(--ocean);
+}
+  &:before {
       z-index: -1;
+      background: url('./images/water-bg.svg') repeat;
+      animation: water-xl 5s linear infinite alternate;
+      -webkit-transform:translate3d(0,0,0);
       
-
   }
   
   &-screen-text {
