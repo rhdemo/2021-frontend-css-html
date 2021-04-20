@@ -230,7 +230,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     setTimeout(() => {
       if (player.uuid === match.state.activePlayer) {
         bonus(bonusHitsRef.current);
-        setBonusHits(0);
+        
+        setTimeout(() => {
+          setBonusHits(0);
+        }, 100);
       }
     }, game.bonusDuration);
   }, [ game, match, player, result ]);
@@ -273,6 +276,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     }
 
     if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+      // setBonusHits(0);
       return `${str} ui-footer__bonus`;
     }
 
@@ -321,6 +325,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   }
 
   function bonusTargetClickHandler() {
+    if (match.state.phase !== "bonus") {
+      return;
+    }
+    
     setBonusHits(bonusHits + 1);
     
     setBonusTargetShakeClass("shake");
