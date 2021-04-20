@@ -131,6 +131,14 @@
       }
   }
 
+  &.paused {
+    #ship-grid.not-ready {
+      .ship {
+        display: none;
+      }
+    }
+  }
+
   &.game-over .attack-grid .cell {
       &:nth-child(6) {
           &:after {

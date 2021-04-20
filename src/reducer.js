@@ -301,6 +301,10 @@ function determineBoard(game, match, player) {
       return "ship";
     }
   }
+
+  if (game.state === "paused" && match.state.phase === "not-ready") {
+    return "ship";
+  }
 }
 
 // record each attack result for replay
