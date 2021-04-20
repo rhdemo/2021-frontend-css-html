@@ -75,18 +75,65 @@
   100% { background-position: center var(--slide-up); }
 }
 
+@keyframes pause {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .8;
+  }
+  
+}
+
 
 .body-wrap {
   &:not(.paused) {
-      .top-ten {
-          left: -370px;
-      }
-      .game-data {
-          right: -370px;
+      .pause-grid {
+        display: none;
       }
   }
 
-  &.paused, &.game-over {
+  &.paused {
+    .pause-grid {
+      display: grid;
+      color: #fff;
+      font-size: 2rem;
+      grid-template-columns: repeat(5, 80px);
+      grid-template-rows: repeat(5, 80px);
+      position: absolute;
+      z-index: 1000;
+      grid-template-areas:
+      "P . . . ."
+      ". A . . ."
+      ". . U . ."
+      ". . . S ."
+      ". . . . E"
+      ;
+      span {
+        animation: pause 2s linear infinite alternate;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--sky);
+        &:nth-child(1) {
+          grid-area: P;
+        }
+        &:nth-child(2) {
+          grid-area: A;
+        }
+        &:nth-child(3) {
+          grid-area: U;
+        }
+        &:nth-child(4) {
+          grid-area: S;
+        }
+        &:nth-child(5) {
+          grid-area: E;
+        }
+      }
+    }
       .attack-grid {
           .cell {
               position: relative;
@@ -103,83 +150,12 @@
       }
   }
 
-  &.paused .attack-grid .cell{
-      &:nth-child(1) {
-          &:after {
-              content: 'P';
-          }
-      }
-      &:nth-child(7) {
-          &:after {
-              content: 'A';
-          }
-      }
-      &:nth-child(13) {
-          &:after {
-              content: 'U';
-          }
-      }
-      &:nth-child(19) {
-          &:after {
-              content: 'S';
-          }
-      }
-      &:nth-child(25) {
-          &:after {
-              content: 'E';
-          }
-      }
-  }
-
   &.paused {
     #ship-grid.not-ready {
       .ship {
         display: none;
       }
     }
-  }
-
-  &.game-over .attack-grid .cell {
-      &:nth-child(6) {
-          &:after {
-              content: 'G';
-          }
-      }
-      &:nth-child(7) {
-          &:after {
-              content: 'A';
-          }
-      }
-      &:nth-child(8) {
-          &:after {
-              content: 'M';
-          }
-      }
-      &:nth-child(9) {
-          &:after {
-              content: 'E';
-          }
-      }
-      &:nth-child(12) {
-          &:after {
-              content: 'O';
-          }
-      }
-      &:nth-child(13) {
-          &:after {
-              content: 'V';
-          }
-      }
-      &:nth-child(14) {
-          &:after {
-              content: 'E';
-          }
-      }
-      &:nth-child(15) {
-          &:after {
-              content: 'R';
-          }
-      }
   }
 }
 
@@ -440,7 +416,7 @@
   
 
   .ship-grid.not-ready .box.peg-hole:after {
-    display: none;
+    opacity: 0;
   }
 
   .box.peg-hole:not(.hit):after {

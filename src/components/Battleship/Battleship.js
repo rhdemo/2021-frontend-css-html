@@ -17,6 +17,7 @@ import bonusSubmarine from "./images/bonus-sub.svg";
 import bonusBattleship from "./images/bonus-battleship.svg";
 import bonusCarrier from "./images/bonus-carrier.svg";
 import "./Battleship.scss";
+import Grid from "./utilities/grid";
 
 /*
  * Ships not positioned:
@@ -349,12 +350,18 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     <div className={ match.state.phase === "bonus" ? "Battleship bonus-round" : "Battleship"}>
       <div className={ theActiveBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
-          
           <div id="attack-grid" className="ship-grid" ref={ attackGridRef }>
             <div className="bouy"></div>
             <div className="bouy"></div>
             <div className="bouy"></div>
             <div className="bouy"></div>
+          </div>
+          <div className="pause-grid">
+            <span>p</span>
+            <span>a</span>
+            <span>u</span>
+            <span>s</span>
+            <span>e</span>
           </div>
           <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) =>
@@ -394,6 +401,13 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="bouy"></div>
             <div className="bouy"></div>
           </div>
+          <div className="pause-grid">
+            <span>p</span>
+            <span>a</span>
+            <span>u</span>
+            <span>s</span>
+            <span>e</span>
+          </div>
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">
@@ -412,6 +426,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
         </div>
       </div>
     </div>
+
   );
 }
 
