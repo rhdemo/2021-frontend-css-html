@@ -248,7 +248,7 @@
 
       &:after {
           content: '';
-          width:32px;
+          width:25px;
           height:10px;
           background-color: #2795f5ab;
           position: absolute;
@@ -343,6 +343,7 @@
       transition: opacity .1s .2s linear;
       opacity: 0;
       background: url("./images/shot-water.svg") 10px 11px no-repeat;
+      
 
       @media (min-width: 420px) {
         background: url("./images/shot-water.svg") 20px 23px no-repeat;
@@ -361,6 +362,7 @@
   
   .box.miss::after {
     background: url("./images/miss-shot.svg") center 4px no-repeat;
+    background-size: 38% auto;
 
     @media (min-width: 420px) {
       background: url("./images/miss-shot.svg") center 15px no-repeat;
@@ -414,10 +416,14 @@
 
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
     background: url("./images/ship-hit.svg") center center no-repeat;
+    @media screen AND (max-width: 420px) {
+    background-size: 38% auto;
+    }
   }
 
   .box.hit:after,.box.hit.destroyed::after {
     background: url("./images/hit-shot.svg") center 4px no-repeat;
+    background-size: 38% auto;
 
     @media (min-width: 420px) {
       background: url("./images/hit-shot.svg") center 15px no-repeat;
