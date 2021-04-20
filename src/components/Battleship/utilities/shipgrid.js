@@ -542,7 +542,10 @@ class ShipGrid extends Grid {
       const shipPieceIndex = gridBox.getAttribute("ship-piece");
       const shipPiece = this.element.querySelector(`.ship-piece[ship-id="${shipId}"][ship-piece="${shipPieceIndex}"]`);
 
-      shipPiece.classList.add("hit");
+      if (shipPiece) {
+        shipPiece.classList.add("hit");
+      }
+      
       gridBox.classList.add("hit");
 
       if (message.destroyed) {
