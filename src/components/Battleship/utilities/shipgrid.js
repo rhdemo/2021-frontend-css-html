@@ -531,7 +531,7 @@ class ShipGrid extends Grid {
   }
 
   incomingAttack(message) {
-    console.log(`${this.constructor.name} - Incoming attack`, message);
+    // console.log(`${this.constructor.name} - Incoming attack`, message);
     const position = message.position;
 
     // find the grid box
@@ -604,7 +604,7 @@ class ShipGrid extends Grid {
       }
     });
 
-    console.log(`${this.constructor.name} - Ship grid locked. Ready to play.`);
+    // console.log(`${this.constructor.name} - Ship grid locked. Ready to play.`);
     this.locked = true;
     this.removeListeners();
 
@@ -622,6 +622,18 @@ class ShipGrid extends Grid {
   unlockBoard() {
     this.locked = false;
     this.addListeners();
+  }
+
+  resetBoard() {
+    const boxes = [...this.element.querySelectorAll(".box")];
+    boxes.forEach(box => box.classList.remove("hit", "miss"));
+
+    const ships = [...this.element.querySelectorAll(".ship")];
+    ships.forEach(ship => {
+      ship.classList.remove("destroyed");
+      const shipPieces = [...ship.querySelectorAll(".ship-piece")];
+      shipPieces.forEach(shipPiece => shipPiece.classList.remove("hit"));
+    });
   }
 
   mqlChange(event) {

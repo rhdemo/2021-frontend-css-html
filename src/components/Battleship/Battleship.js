@@ -136,6 +136,8 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     // clean up when the component is unmounted
     return () => {
       attackGrid.removeListeners();
+      attackGrid.resetBoard();
+      shipGrid.resetBoard();
       document.removeEventListener("shipgrid:locked", boardLockedHandler);
       document.removeEventListener("attackgrid:attack", attackGridAttackHandler);
     }
@@ -276,7 +278,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     }
 
     if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
-      // setBonusHits(0);
       return `${str} ui-footer__bonus`;
     }
 
@@ -340,7 +341,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   }
 
   const attackGridAttackHandler = event => {
-    console.log('attack event detail', event.detail);
+    // console.log('attack event detail', event.detail);
     attack(event.detail);
   }
 
@@ -427,7 +428,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(attack(data));
     },
     bonus: data => {
-      console.log('sending bonus', data)
+      // console.log('sending bonus', data)
       dispatch(bonus(data));
     },
     showError: message => {
