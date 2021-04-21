@@ -41,7 +41,7 @@
         position: absolute;
         top: 50%;
         background: url('./images/handle-bg.svg') left center no-repeat;
-        @media screen AND (min-width:640px) {
+        @media screen AND (min-width:750px) {
             display: block;
         }
     }
@@ -75,7 +75,7 @@
 
 
     &.paused, &.game-over {
-        @media screen and (max-width:1350px) {
+        @media screen and (max-width:750px) {
             .ui-header, .ui-footer {
                 opacity: 0;
             }
@@ -95,39 +95,6 @@
             }
         }
     }
-
-    &.paused .grid .box {
-        &:nth-child(1), &:nth-child(7), &:nth-child(13), &:nth-child(19), &:nth-child(25) {
-            &:after {
-                background: rgba(132, 188, 252, 0.842);
-            }
-        }
-        &:nth-child(1) {
-            &:after {
-                content: 'P';
-            }
-        }
-        &:nth-child(7) {
-            &:after {
-                content: 'A';
-            }
-        }
-        &:nth-child(13) {
-            &:after {
-                content: 'U';
-            }
-        }
-        &:nth-child(19) {
-            &:after {
-                content: 'S';
-            }
-        }
-        &:nth-child(25) {
-            &:after {
-                content: 'E';
-            }
-        }
-    }
 }
 
 .ui {
@@ -142,8 +109,7 @@
         content: '';
         width: 100vw;
         height: 100vh;
-        position: absolute;
-        
+        position: absolute;       
     }
 &:after {
     z-index: -2;
@@ -163,8 +129,7 @@
       text-shadow: 2px 2px 0 var(--dark-green);
   }
 
-  &-header {
-      
+  &-header {      
       display: grid;
       grid-template-columns: 1fr;
       @media screen and (min-width:545px) {
@@ -338,7 +303,7 @@
             width: 422px;
             height: 70px;
             bottom: 0;
-            z-index: -100;
+            z-index: -1;
             position: absolute;
         }
         .ui-footer__btn {
