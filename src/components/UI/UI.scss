@@ -26,13 +26,9 @@
   } 
 
 .body-wrap {
-    // background-color:  var(--ocean);
-    display: grid;
     font-family: 'dogica', sans-serif;
-    will-change: background-position;
     position: relative;
     height: 100vh;
-    overflow: hidden;
     &:after, &:before {
         content:'';
         height: 100vh;
@@ -64,17 +60,8 @@
 }
 
 .body-wrap {
-    &:not(.paused) {
-        .top-ten {
-            left: -370px;
-        }
-        .game-data {
-            right: -370px;
-        }
-    }
 
-
-    &.paused, &.game-over {
+    &.paused {
         @media screen and (max-width:750px) {
             .ui-header, .ui-footer {
                 opacity: 0;
@@ -132,23 +119,23 @@
   &-header {      
       display: grid;
       grid-template-columns: 1fr;
-      @media screen and (min-width:545px) {
+      @media screen and (min-width:440px) {
         grid-template-rows: 3fr 1fr;
       } 
       position: relative;
       
      
       &-main {
-          background: url("/images/header-bg.svg") no-repeat;
-          width: 100vw;
-          @media screen and (min-width:540px) {
+          background: url("/images/header-bg.svg") center top no-repeat;
+             width: 400px;
+          @media screen and (min-width:440px) {
             width: 540px;
        }
-        height: 100vh;
+          height: 100vh;
           max-height: 87px;
-            @media screen and (min-width:400px) {
-                max-height: 125px;
-            }
+        @media screen and (min-width:400px) {
+            max-height: 125px;
+        }
           background-size: contain;
           display: grid;
           position: relative;
@@ -160,15 +147,17 @@
           "badge points";
 
           &__badge {
-              width:7.2vw;
-              max-width: 42px;
+              width: 30px;
+              @media screen and (min-width:440px) {
+                  width: 42px;
+              }
               margin-block-start: 3px;
               justify-self: end;
               grid-area: badge;
           }
           &__title {
               grid-area: title;   
-              @media screen and (min-width:540px) {
+              @media screen and (min-width:440px) {
                 margin-block-start: 24px;
            }
               margin-block-start: 16px;
@@ -182,7 +171,7 @@
               margin-inline-start: 16px;     
               text-shadow: 2px 2px 0 var(--dark-green);    
               font-size: .7rem;
-              @media screen and (min-width:490px) {
+              @media screen and (min-width:440px) {
                font-size: 1rem;
            }
               
@@ -211,7 +200,7 @@
           margin-inline-end: 24px;
           display: none;
           justify-content: center;
-          @media screen and (min-width:545px) {
+          @media screen and (min-width:440px) {
             display: flex;
           }        
           
@@ -481,7 +470,7 @@ border-color: transparent;
         }
         color: #fff;
         position: absolute;
-        bottom: 0;
+        bottom: 10px;
         text-transform: uppercase;
         font-family: "dogica", sans-serif;
         text-shadow: 2px 2px 0 var(--dark-green);

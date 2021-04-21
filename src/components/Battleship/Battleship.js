@@ -362,7 +362,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <span>u</span>
             <span>s</span>
             <span>e</span>
-          </div>
+      </div>
           <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) =>
             <li key={ index }>
@@ -407,7 +407,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <span>u</span>
             <span>s</span>
             <span>e</span>
-          </div>
+      </div>
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">

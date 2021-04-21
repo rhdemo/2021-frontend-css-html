@@ -80,7 +80,7 @@
     opacity: 1;
   }
   100% {
-    opacity: .8;
+    opacity: .6;
   }
   
 }
@@ -98,8 +98,12 @@
       display: grid;
       color: #fff;
       font-size: 2rem;
-      grid-template-columns: repeat(5, 80px);
-      grid-template-rows: repeat(5, 80px);
+      grid-template-columns: repeat(5, 60px);
+      grid-template-rows: repeat(5, 60px);
+      @media screen AND (min-width:440px) {
+        grid-template-columns: repeat(5, 80px);
+        grid-template-rows: repeat(5, 80px);
+      }
       position: absolute;
       z-index: 1000;
       grid-template-areas:
@@ -110,7 +114,7 @@
       ". . . . E"
       ;
       span {
-        animation: pause 2s linear infinite alternate;
+        animation: pause 1s linear infinite alternate;
         width: 100%;
         height: 100%;
         display: flex;
@@ -172,6 +176,7 @@
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: hidden;
   }
 
   .grid {
@@ -318,9 +323,6 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      // left: 50%;
-      // top: 50%;
-      // transform: translate(-50%, -50%);
     }
 
     &:before {
@@ -387,11 +389,6 @@
       animation: ship-hit-horiz .1s linear;
     }
   } 
-
-  // .box.hit:after,.box.hit.destroyed::after {
-  //   top: 50%;
-  //   transform: translate(-50%, -50%);
-  // }
   
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
     transform: translateX(-50%);
@@ -514,42 +511,7 @@
     align-items: center;
   }
   
-  // .ship-piece[type="destroyer"] {
-  //   background-color: purple;
-  // }
-  
-  // .ship-piece[type="submarine"] {
-  //   background-color: #0057a8;
-  // }
-  
-  // .ship-piece[type="battleship"] {
-  //   background-color: #a51759;
-  // }
-  
-  // .ship-piece[type="carrier"] {
-  //   background-color: green;
-  // }
-  
-  // .ship-piece.destroyed::after {
-  //   content: "x";
-  //   position: absolute;
-  //   width: 24px;
-  //   height: 24px;
-  //   color: white;
-  //   top: calc(50% - 12px);
-  //   left: calc(50% - 12px);
-  //   z-index: 1;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  // }
-
-  
-  
   #attack-grid {
-    // .attacking {
-    //   background: url(./images/miss-shot.svg) no-repeat;
-    // }
 
     .box {
       cursor: pointer;
@@ -565,12 +527,18 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    height: 100%;
     justify-content: space-between;
-    padding-top: 6vh;
+    padding-top: 3vh;
+    height: calc(94vh - 38px);
+    @media screen AND (min-width: 376px) {
+      height: calc(94vh - 73px);
+      padding-top: 6vh;
+    }
+    @media screen AND (min-width: 440px) {
+      height: calc(94vh - 115px);
+      
+    }
   }
-
-  
 
   .opponent-ships-list {
     display: flex;
@@ -579,14 +547,6 @@
       margin-right: 0.5rem;
     }
   }
-
-  // .push-top {
-  //   margin-top: 1rem;
-  // }
-
-  // .push-bottom {
-  //   margin-bottom: 1rem;
-  // }
 
   .hide {
     opacity: 0;
