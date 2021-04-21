@@ -137,8 +137,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     // clean up when the component is unmounted
     return () => {
       attackGrid.removeListeners();
-      attackGrid.resetBoard();
-      shipGrid.resetBoard();
       document.removeEventListener("shipgrid:locked", boardLockedHandler);
       document.removeEventListener("attackgrid:attack", attackGridAttackHandler);
     }
@@ -279,6 +277,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     }
 
     if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+      // setBonusHits(0);
       return `${str} ui-footer__bonus`;
     }
 
@@ -342,7 +341,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
   }
 
   const attackGridAttackHandler = event => {
-    // console.log('attack event detail', event.detail);
+    console.log('attack event detail', event.detail);
     attack(event.detail);
   }
 
@@ -362,7 +361,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <span>u</span>
             <span>s</span>
             <span>e</span>
-          </div>
+      </div>
           <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) =>
             <li key={ index }>
@@ -389,7 +388,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             </div>
             <div className="ui-footer__bonus__water"></div>
             <div className="ui-footer__bonus__points">+{ bonusHits }</div>
-            <button className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></button>
+            <a href="#" className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></a>
           </footer>
         </div>
       </div>
@@ -407,7 +406,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <span>u</span>
             <span>s</span>
             <span>e</span>
-          </div>
+      </div>
           <footer className={ getFooterActionClasses() }>
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">
@@ -443,7 +442,7 @@ const mapDispatchToProps = dispatch => {
       dispatch(attack(data));
     },
     bonus: data => {
-      // console.log('sending bonus', data)
+      console.log('sending bonus', data)
       dispatch(bonus(data));
     },
     showError: message => {
