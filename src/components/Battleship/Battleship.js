@@ -382,7 +382,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             </div>
             <div className="ui-footer__bonus__water"></div>
             <div className="ui-footer__bonus__points">+{ bonusHits }</div>
-            <a href="#" className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></a>
+            <button className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></button>
           </footer>
         </div>
       </div>
