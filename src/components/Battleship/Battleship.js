@@ -375,7 +375,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="ui-footer-overlay"></div>
             <div className="ui-footer__screen-text-wrap">
               { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** Bonus Round ** Take a shot ** </span>
+                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
               }
               { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
                 <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
