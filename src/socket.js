@@ -181,7 +181,16 @@ function bonus(payload) {
 }
 
 function playAgain() {
-  sendConfigurationFrame();
+  if (!socket) {
+    return;
+  }
+
+  const message = {
+    type: "new-match",
+    data: {}
+  };
+
+  socket.send(JSON.stringify(message));
 }
 
 connect();
