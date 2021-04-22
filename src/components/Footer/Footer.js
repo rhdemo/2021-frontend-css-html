@@ -10,7 +10,7 @@ import "./Footer.scss";
 
 let bonusTargetShakeTimeout;
 
-function Footer({ player, match, game, result, bonus, theActiveBoard }) {
+function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) {
   const [ bonusHits, setBonusHits ] = useState(0);
   const [ bonusShip, setBonusShip ] = useState();
   const [ bonusShipClass, setBonusShipClass ] = useState("");
@@ -21,6 +21,10 @@ function Footer({ player, match, game, result, bonus, theActiveBoard }) {
   // bonus round logic
   useEffect(() => {
     if (match.state.phase !== "bonus") {
+      return;
+    }
+
+    if (replay) {
       return;
     }
 
@@ -56,7 +60,7 @@ function Footer({ player, match, game, result, bonus, theActiveBoard }) {
         }, 100);
       }
     }, game.bonusDuration);
-  }, [ game, match, player, result ]);
+  }, [ game, match, player, result, replay ]);
 
   function bonusTargetClickHandler() {
     if (match.state.phase !== "bonus") {
@@ -84,7 +88,7 @@ function Footer({ player, match, game, result, bonus, theActiveBoard }) {
       }
     }
 
-    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay) {
       return `${str} ui-footer__bonus`;
     }
 
@@ -119,7 +123,7 @@ function Footer({ player, match, game, result, bonus, theActiveBoard }) {
         { match.state.phase === "attack" && theActiveBoard === "attack" && match.state.activePlayer === player.uuid &&
           <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
         }
-        { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
+        { match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay &&
           <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
         }
       </div>
