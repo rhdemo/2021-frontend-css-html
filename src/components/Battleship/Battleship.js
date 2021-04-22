@@ -213,7 +213,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
       return;
     }
 
-    console.log("REPLAY!!!");
+    // console.log("REPLAY!!!");
     shipGrid.resetBoard();
     attackGrid.resetBoard();
   }, [ game ]);

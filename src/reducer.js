@@ -357,10 +357,10 @@ function determineBoard(game, match, player, replay, attacker) {
 
   if (replay) {
     if (player.uuid === attacker) {
-      console.log("ATTACK BOARD");
+      // console.log("ATTACK BOARD");
       return "attack";
     } else {
-      console.log("SHIP BOARD");
+      // console.log("SHIP BOARD");
       return "ship";
     }
   }
