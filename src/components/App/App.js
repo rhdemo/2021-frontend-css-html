@@ -1,7 +1,5 @@
 import { connect } from "react-redux";
-import "../../socket";
 import './App.scss';
-import Splash from "../Splash";
 import Lobby from "../Lobby";
 import Main from "../Main";
 import GameOver from "../GameOver";
@@ -14,7 +12,7 @@ function App({ game, match }) {
     view = <Lobby />;
   }
 
-  if (game.state === "active" || game.state === "paused") {
+  if (game.state === "active" || game.state === "paused" || game.state === "replay") {
     view = <Main />;
   }
 
@@ -25,35 +23,6 @@ function App({ game, match }) {
   if (game.state === "stopped") {
     view = <GameOver />;
   }
-
-  // this will change when we start controlling the game
-  // from the admin panel
-  // switch(game.state) {
-  //   case "splash":
-  //     view = <Splash />
-  //     break;
-
-  //   case "lobby":
-  //     view = <Lobby />;
-  //     break;
-
-  //   case "active":
-  //     view = <Main />;
-  //     break;
-
-  //   case "gameover":
-  //     view = <GameOver />;
-  //     break;
-
-  //   default:
-  //     view = <Splash />;
-  // }
-
-  // if (match.ready) {
-  //   view = <Main />;
-  // }
-
-
 
   return (
     <>

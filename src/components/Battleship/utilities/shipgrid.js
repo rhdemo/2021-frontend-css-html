@@ -550,9 +550,13 @@ class ShipGrid extends Grid {
 
       if (message.destroyed) {
         [...this.element.querySelectorAll(`.ship-piece[ship-id="${shipId}"]`)].forEach(shipPiece => shipPiece.classList.add("destroyed"));
-        const parent = this.element.querySelector(`.ship-piece[ship-id="${shipId}"]`).parentElement;
-        parent.classList.add("destroyed");
-        // alert(`Your ${message.type} has been destroyed`);
+        try {
+          const parent = this.element.querySelector(`.ship-piece[ship-id="${shipId}"]`).parentElement;
+          parent.classList.add("destroyed");
+          // alert(`Your ${message.type} has been destroyed`);
+        } catch (error) {
+          
+        }
       }
     } else {
       gridBox.classList.add("miss");

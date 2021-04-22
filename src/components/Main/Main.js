@@ -5,17 +5,20 @@ import "./Main.scss";
 import { useEffect, useState } from "react";
 
 const BOARD_CHANGE_DELAY = 1000;
+const REPLAY_BOARD_CHANGE_DELAY = 200;
 
-function Main({ _activeBoard, theActiveBoard, changeBoard, game, match, player }) {
+function Main({ _activeBoard, theActiveBoard, changeBoard, game, match, player, replay }) {
   const [ bodyWrapClasses, setBodyWrapClasses ] = useState("body-wrap");
   useEffect(() => {
     if (_activeBoard === theActiveBoard) {
       return;
     }
 
+    const delay = replay ? REPLAY_BOARD_CHANGE_DELAY : BOARD_CHANGE_DELAY;
+
     setTimeout(() => {
       changeBoard();
-    }, BOARD_CHANGE_DELAY);
+    }, delay);
   }, [ _activeBoard, theActiveBoard, changeBoard ]);
 
   useEffect(() => {
