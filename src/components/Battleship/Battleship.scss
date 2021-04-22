@@ -529,15 +529,15 @@
     text-align: center;
     // justify-content: space-between;
     padding-top: 3vh;
-    height: calc(94vh - 38px);
-    @media screen AND (min-width: 376px) {
-      height: calc(94vh - 73px);
-      padding-top: 6vh;
-    }
-    @media screen AND (min-width: 440px) {
-      height: calc(94vh - 115px);
+    // height: calc(94vh - 38px);
+    // @media screen AND (min-width: 376px) {
+    //   height: calc(94vh - 73px);
+    //   padding-top: 6vh;
+    // }
+    // @media screen AND (min-width: 440px) {
+    //   height: calc(94vh - 115px);
       
-    }
+    // }
   }
 
   .opponent-ships-list {

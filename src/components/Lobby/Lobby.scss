@@ -9,22 +9,39 @@
   flex-direction: column;
   align-items: center;
   background: url("./images/lobby.svg") center bottom no-repeat, linear-gradient(0deg, rgba(108,223,251,1) 0%, rgba(108,223,251,1) 75%, rgba(172,222,234,1) 75%, rgba(172,222,234,1) 79%, rgba(108,223,251,1) 79%, rgba(108,223,251,1) 81%, rgba(172,222,234,1) 81%, rgba(172,222,234,1) 85%, rgba(108,223,251,1) 85%, rgba(109,223,251,1) 88%, rgba(172,222,234,1) 88%, rgba(172,222,234,1) 100%, rgba(108,223,251,1) 100%);
-  background-size: 200%;
+  background-size: 250%;
   @media screen and (min-width:750px) {
+    background-size: 150%;
+  }
+  @media screen and (min-width:950px) {
     background-size: contain;
   }
   height: 100vh;
   &-logo {
     width: 60vw;
     min-width: 360px;
-    @media screen and (max-width:750px) {
-      margin-block-start: 10vh;
+    // @media screen and (max-width:750px) {
+    //   margin-block-start: 10vh;
+    // }
+  }
+
+  p {
+    background: #fff;
+    padding: 8px;
+    font-size: .7rem;
+    @media screen AND (min-width: 700px) { 
+      font-size: 1.8vw;
     }
   }
 
   &-text {
     color: var(--light-purple);
-    font-size: 2vw;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    @media screen AND (min-width: 700px) { 
+      font-size: 2vw;
+    }
+    
     &:before, &:after {
       content: " ** ";
       opacity: 1;
