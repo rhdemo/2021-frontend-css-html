@@ -112,7 +112,7 @@ function appReducer(state = initialState, action) {
             }
 
             replay = false;
-            console.log("replay over");
+            // console.log("replay over");
             clearInterval(interval);
           }
         }, 500);
