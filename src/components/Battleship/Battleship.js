@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import AttackGrid from "./utilities/attackgrid";
 import ShipGrid from "./utilities/shipgrid";
-import { boardLocked, attack, bonus, showError } from "./actions";
-import target from "./images/target.svg";
+import { boardLocked, attack, showError } from "./actions";
 import destroyer from "./images/2.svg";
 import destroyerHit from "./images/2-hit.svg";
 import submarine from "./images/3.svg";
@@ -12,12 +11,7 @@ import battleship from "./images/4.svg";
 import battleshipHit from "./images/4-hit.svg";
 import carrier from "./images/5.svg";
 import carrierHit from "./images/5-hit.svg";
-import bonusDestroyer from "./images/bonus-destroyer.svg";
-import bonusSubmarine from "./images/bonus-sub.svg";
-import bonusBattleship from "./images/bonus-battleship.svg";
-import bonusCarrier from "./images/bonus-carrier.svg";
 import "./Battleship.scss";
-import Grid from "./utilities/grid";
 
 /*
  * Ships not positioned:
@@ -62,19 +56,12 @@ const ships = {
 
 let attackGrid;
 let shipGrid;
-let bonusTargetShakeTimeout;
 
-function Battleship({ game, board, player, opponent, boardLocked, attack, bonus, match, result, attacker, theActiveBoard, badAttack, showError }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, match, result, attacker, theActiveBoard, badAttack, showError }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ lockingBoard, setLockingBoard ] = useState(false);
   const [ disableAttacks, setDisableAttacks ] = useState(false);
-  const [ bonusHits, setBonusHits ] = useState(0);
-  const [ bonusShip, setBonusShip ] = useState();
-  const [ bonusShipClass, setBonusShipClass ] = useState("");
-  const [ bonusTargetShakeClass, setBonusTargetShakeClass ] = useState("");
-  const bonusHitsRef = useRef(bonusHits);
-  bonusHitsRef.current = bonusHits;
   const [ enemyShips, setEnemyShips ] = useState({
     "Submarine": {
       destroyed: false
@@ -201,46 +188,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     setEnemyShips({...enemyShips});
   }, [ opponent ]);
 
-  // bonus round logic
-  useEffect(() => {
-    if (match.state.phase !== "bonus") {
-      return;
-    }
-
-    setBonusShipClass(result.type);
-
-    switch (result.type) {
-      case "Destroyer":
-        setBonusShip(bonusDestroyer);
-        break;
-
-      case "Submarine":
-        setBonusShip(bonusSubmarine);
-        break;
-
-      case "Battleship":
-        setBonusShip(bonusBattleship);
-        break;
-
-      case "Carrier":
-        setBonusShip(bonusCarrier);
-        break;
-    
-      default:
-        break;
-    }
-
-    setTimeout(() => {
-      if (player.uuid === match.state.activePlayer) {
-        bonus(bonusHitsRef.current);
-        
-        setTimeout(() => {
-          setBonusHits(0);
-        }, 100);
-      }
-    }, game.bonusDuration);
-  }, [ game, match, player, result ]);
-
   useEffect(() => {
     if (badAttack) {
       attackGrid.clearBadAttack();
@@ -267,36 +214,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
     boardLocked(event.detail.ships);
   }
 
-  function getFooterActionClasses() {
-    let str = "ui-footer";
-
-    if (match.state.phase === "not-ready") {
-      if (!player.board.valid) {
-        return `${str} ui-footer__action`;
-      } else {
-        return `${str} ui-footer__min`;
-      }
-    }
-
-    if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
-      return `${str} ui-footer__bonus`;
-    }
-
-    return `${str} ui-footer__min`;
-  }
-
-  function getActionButtonDisplay() {
-    let display = "block";
-
-    if (match.state.phase !== "not-ready" || (match.state.phase === "not-ready" && player.board.valid)) {
-      display = "none";
-    }
-
-    return {
-      display: display
-    };
-  }
-
   function getShipTracker(enemyShipKey) {
     let ship;
     const destroyed = enemyShips[enemyShipKey].destroyed;
@@ -321,24 +238,10 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
       default:
         break;
     }
+
     return (
       <img src={ ship } />
     );
-  }
-
-  function bonusTargetClickHandler() {
-    if (match.state.phase !== "bonus") {
-      return;
-    }
-    
-    setBonusHits(bonusHits + 1);
-    
-    setBonusTargetShakeClass("shake");
-
-    clearTimeout(bonusTargetShakeTimeout);
-    bonusTargetShakeTimeout = setTimeout(() => {
-      setBonusTargetShakeClass("");
-    }, 200);
   }
 
   const attackGridAttackHandler = event => {
@@ -356,13 +259,6 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <div className="bouy"></div>
             <div className="bouy"></div>
           </div>
-          <div className="pause-grid">
-            <span>p</span>
-            <span>a</span>
-            <span>u</span>
-            <span>s</span>
-            <span>e</span>
-      </div>
           <ul className="ui-progress">
           { Object.keys(enemyShips).map((enemyShipKey, index) =>
             <li key={ index }>
@@ -371,26 +267,13 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             </li>
           )}
           </ul>
-          <footer className={ getFooterActionClasses() }>
-            <div className="ui-footer-overlay"></div>
-            <div className="ui-footer__screen-text-wrap">
-              { match.state.phase === "attack" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
-              }
-              { match.state.phase === "bonus" && match.state.activePlayer === player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
-              }
-            </div>
-            <div className="ui-footer__bonus__sky"></div>
-            <div className={ bonusShipClass + " ui-footer__bonus__ship"}>
-            </div>
-            <div className={ bonusTargetShakeClass + " ui-footer__bonus__target" }>
-              <img src={ target } alt="" />
-            </div>
-            <div className="ui-footer__bonus__water"></div>
-            <div className="ui-footer__bonus__points">+{ bonusHits }</div>
-            <button className="ui-footer__bonus__action" aria-label="fire" onClick={ bonusTargetClickHandler }></button>
-          </footer>
+          <div className="pause-grid">
+            <span>p</span>
+            <span>a</span>
+            <span>u</span>
+            <span>s</span>
+            <span>e</span>
+          </div>
         </div>
       </div>
       <div className={ theActiveBoard === "ship" ? "board-container" : "board-container hide" }>
@@ -407,22 +290,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, bonus,
             <span>u</span>
             <span>s</span>
             <span>e</span>
-      </div>
-          <footer className={ getFooterActionClasses() }>
-            <div className="ui-footer-overlay"></div>
-            <div className="ui-footer__screen-text-wrap">
-              { player.board && !player.board.valid && match.state.phase === "not-ready" &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** </span>
-              }
-              { player.board && player.board.valid && match.state.phase === "not-ready" &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** </span>
-              }
-              { match.state.phase === "attack" && match.state.activePlayer !== player.uuid &&
-                <span className="ui-footer__screen-text-scroll ui-screen-text">** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** </span>
-              }
-            </div>
-            <button className="ui-footer__btn unlock-message push-bottom" id="ship-grid-lock-btn" style={ getActionButtonDisplay() }>Click to Play</button>
-          </footer>
+          </div>
         </div>
       </div>
     </div>
@@ -441,10 +309,6 @@ const mapDispatchToProps = dispatch => {
     },
     attack: data => {
       dispatch(attack(data));
-    },
-    bonus: data => {
-      // console.log('sending bonus', data)
-      dispatch(bonus(data));
     },
     showError: message => {
       dispatch(showError(message));
