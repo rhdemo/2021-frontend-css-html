@@ -51,14 +51,6 @@ function connect() {
           type: "ATTACK_RESULT",
           payload: data
         });
-
-        // @TODO: remove once the score is integrated
-        setTimeout(() => {
-          store.dispatch({
-            type: "SCORE_UPDATE", 
-            payload: { delta: 5 }
-          });
-        }, 0);
         break;
 
       case "bonus-result":
@@ -101,16 +93,16 @@ function connect() {
   }
 
   socket.onclose = event => {
-    console.log("socket closed");
+    // console.log("socket closed");
     numRetries++;
 
     if (numRetries === MAX_RETRIES) {
-      console.log(`reached max number of reconnect tries: ${MAX_RETRIES}. refresh the page to try again`);
+      // console.log(`reached max number of reconnect tries: ${MAX_RETRIES}. refresh the page to try again`);
       return;
     }
 
     retryTimeout = setTimeout(() => {
-      console.log(`socket reconnect try: ${numRetries}`);
+      // console.log(`socket reconnect try: ${numRetries}`);
       connect();
     }, RETRY_DELAY);
   }
@@ -170,7 +162,7 @@ function attack(payload) {
     data: payload
   };
 
-  console.log("Socket-attack: sending attack frame");
+  // console.log("Socket-attack: sending attack frame");
   socket.send(JSON.stringify(message));
 }
 
@@ -184,12 +176,21 @@ function bonus(payload) {
     data: payload
   };
 
-  console.log("Socket-bonus: sending bonus frame");
+  // console.log("Socket-bonus: sending bonus frame");
   socket.send(JSON.stringify(message));
 }
 
 function playAgain() {
-  sendConfigurationFrame();
+  if (!socket) {
+    return;
+  }
+
+  const message = {
+    type: "new-match",
+    data: {}
+  };
+
+  socket.send(JSON.stringify(message));
 }
 
 connect();

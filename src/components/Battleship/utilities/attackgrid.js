@@ -30,11 +30,11 @@ class AttackGrid extends Grid {
 
   set enabled(bool) {
     if (bool) {
-      console.log(`${this.constructor.name} - Attack grid enabled`);
+      // console.log(`${this.constructor.name} - Attack grid enabled`);
       this.addListeners();
       this.attacking = false;
     } else {
-      console.log(`${this.constructor.name} - Attack grid disabled`);
+      // console.log(`${this.constructor.name} - Attack grid disabled`);
       this.removeListeners();
     }
   }
@@ -147,7 +147,7 @@ class AttackGrid extends Grid {
       }
     });
 
-    console.log(`${this.constructor.name} - Attacking: `, attackEvent.detail);
+    // console.log(`${this.constructor.name} - Attacking: `, attackEvent.detail);
     this.attacking = true;
     this.element.dispatchEvent(attackEvent);
   }

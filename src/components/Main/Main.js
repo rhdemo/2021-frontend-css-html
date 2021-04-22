@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const BOARD_CHANGE_DELAY = 1000;
 const REPLAY_BOARD_CHANGE_DELAY = 200;
 
-function Main({ _activeBoard, theActiveBoard, changeBoard, game, replay }) {
+function Main({ _activeBoard, theActiveBoard, changeBoard, game, match, player, replay }) {
   const [ bodyWrapClasses, setBodyWrapClasses ] = useState("body-wrap");
   useEffect(() => {
     if (_activeBoard === theActiveBoard) {
@@ -32,8 +32,12 @@ function Main({ _activeBoard, theActiveBoard, changeBoard, game, replay }) {
       default:
     }
 
+    if (match.state.phase === "bonus" && player.uuid === match.state.activePlayer) {
+      classes.push("bonus-round");
+    }
+
     setBodyWrapClasses(classes.join(" "));
-  }, [ game ]);
+  }, [ game, match, player ]);
 
   return (
     <div className={ bodyWrapClasses }>

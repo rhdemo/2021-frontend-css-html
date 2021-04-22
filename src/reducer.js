@@ -17,6 +17,10 @@ const initialState = {
   player: {},
   error: {
     message: null
+  },
+  score: {
+    total: 0,
+    delta: 0
   }
 };
 
@@ -32,6 +36,7 @@ function appReducer(state = initialState, action) {
   let attacker;
   let _activeBoard;
   let theActiveBoard;
+  let score;
 
   switch (action.type) {
     case "CONFIGURATION":
@@ -39,6 +44,8 @@ function appReducer(state = initialState, action) {
       player = action.payload.player;
       opponent = action.payload.opponent;
       match = action.payload.match;
+      score = getCurrentMatchScore(game, match);
+      score.delta = 0;
 
       // get the matchAttackResults from localStorage.
       // any gameUUID that doesn't match the current game
@@ -54,7 +61,7 @@ function appReducer(state = initialState, action) {
         username: player.username
       });
 
-      console.log('match phase', match.state.phase);
+      // console.log('match phase', match.state.phase);
 
       return {
         ...state,
@@ -62,6 +69,7 @@ function appReducer(state = initialState, action) {
         player,
         opponent,
         match,
+        score,
         _activeBoard,
         theActiveBoard
       };
@@ -89,7 +97,8 @@ function appReducer(state = initialState, action) {
         
         let matchCount = 0;
         let count = 0;
-        const totalMatches = matches.length;
+        // const totalMatches = matches.length;
+        const totalMatches = 1;
 
         interval = setInterval(() => {
           store.dispatch(matches[matchCount].attacks[count]);
@@ -138,7 +147,7 @@ function appReducer(state = initialState, action) {
       return state;
 
     case "ATTACK_RESULT":
-      console.log('processing attack result', action);
+      // console.log('processing attack result', action);
       
       // store the attack result for replay only if the game state
       // is not in replay
@@ -151,6 +160,7 @@ function appReducer(state = initialState, action) {
       player = action.payload.player;
       result = action.payload.result;
       attacker = action.payload.attacker;
+      opponent = action.payload.opponent;
 
       _activeBoard = determineBoard(game, match, player, replay, attacker);
 
@@ -164,6 +174,7 @@ function appReducer(state = initialState, action) {
         match,
         result,
         attacker,
+        opponent,
         _activeBoard
       }
 
@@ -183,28 +194,16 @@ function appReducer(state = initialState, action) {
       };
 
     case "SCORE_UPDATE":
-      if (state.attacker !== state.player.uuid) {
-        return {
-          ...state
-        };
-      }
+      score = action.payload;
 
-      const scoreDelta = action.payload.delta;
-      let score;
-      
-      // get the score from the current match in localStorage
-      // and increment it
+      // store the match score in localStorage
       const matchAttackResults = getMatchAttackResults();
       const gameMatches = matchAttackResults[state.game.uuid].matches;
 
       for (let i = 0; i < gameMatches.length; i++) {
         if (gameMatches[i].matchUUID === state.match.uuid) {
           const currentMatch = gameMatches[i];
-          currentMatch.score += scoreDelta;
-          score = {
-            current: currentMatch.score,
-            delta: scoreDelta
-          }
+          currentMatch.score = score;
           break;
         }
       }
@@ -278,7 +277,11 @@ function storeMatchAttackResults(attack) {
       {
         "matchUUID": "soemthing",
         "date": "fjkldas",
-        "attacks": []
+        "attacks": [],
+        "score": {
+          total: 0,
+          delta: 0
+        }
       }
     ]
   }
@@ -311,7 +314,10 @@ function storeMatchAttackResults(attack) {
     match = {
       matchUUID: matchId,
       attacks: [],
-      score: 0
+      score: {
+        total: 0,
+        delta: 0
+      }
     }
 
     game.matches.push(match);
@@ -367,7 +373,38 @@ function determineBoard(game, match, player, replay, attacker) {
     }
   }
 
-  return "ship";
+  if (game.state === "paused" && match.state.phase === "not-ready") {
+    return "ship";
+  }
+}
+
+function getCurrentMatchScore(gameObj, match) {
+  const matchAttackResults = getMatchAttackResults();
+  const game = matchAttackResults[gameObj.uuid];
+
+  if (!game) {
+    return {
+      total: 0,
+      delta: 0
+    };
+  }
+
+  const matches = game.matches;
+  let currentMatch = {
+    score: {
+      total: 0,
+      delta: 0
+    }
+  };
+  
+  for (let i = 0; i < matches.length; i++) {
+    if (matches[i].matchUUID === match.uuid) {
+      currentMatch = matches[i];
+      break;
+    }
+  }
+
+  return currentMatch.score;
 }
 
 export { appReducer, getLocalStorage };

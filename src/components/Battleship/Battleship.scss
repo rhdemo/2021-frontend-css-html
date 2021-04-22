@@ -1,3 +1,13 @@
+:root {
+  --slide-up: 4px; 
+}
+
+@media (min-width: 420px) {
+  :root {
+    --slide-up: 15px;
+  }
+}
+
 @keyframes bob {
   0%  {
       transform: rotate(10deg) translateY(2px);
@@ -62,21 +72,72 @@
 
 @keyframes peg {
   0%   { background-position: center 0px; } 
-  100% { background-position: center 15px; }
+  100% { background-position: center var(--slide-up); }
+}
+
+@keyframes pause {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: .6;
+  }
+  
 }
 
 
 .body-wrap {
   &:not(.paused) {
-      .top-ten {
-          left: -370px;
-      }
-      .game-data {
-          right: -370px;
+      .pause-grid {
+        display: none;
       }
   }
 
-  &.paused, &.game-over {
+  &.paused {
+    .pause-grid {
+      display: grid;
+      color: #fff;
+      font-size: 2rem;
+      grid-template-columns: repeat(5, 60px);
+      grid-template-rows: repeat(5, 60px);
+      @media screen AND (min-width:440px) {
+        grid-template-columns: repeat(5, 80px);
+        grid-template-rows: repeat(5, 80px);
+      }
+      position: absolute;
+      z-index: 1000;
+      grid-template-areas:
+      "P . . . ."
+      ". A . . ."
+      ". . U . ."
+      ". . . S ."
+      ". . . . E"
+      ;
+      span {
+        animation: pause 1s linear infinite alternate;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--sky);
+        &:nth-child(1) {
+          grid-area: P;
+        }
+        &:nth-child(2) {
+          grid-area: A;
+        }
+        &:nth-child(3) {
+          grid-area: U;
+        }
+        &:nth-child(4) {
+          grid-area: S;
+        }
+        &:nth-child(5) {
+          grid-area: E;
+        }
+      }
+    }
       .attack-grid {
           .cell {
               position: relative;
@@ -94,80 +155,11 @@
   }
 
   &.paused {
-    .ship {
-      display: none;
+    #ship-grid.not-ready {
+      .ship {
+        display: none;
+      }
     }
-  }
-
-  &.paused .attack-grid .cell{
-      &:nth-child(1) {
-          &:after {
-              content: 'P';
-          }
-      }
-      &:nth-child(7) {
-          &:after {
-              content: 'A';
-          }
-      }
-      &:nth-child(13) {
-          &:after {
-              content: 'U';
-          }
-      }
-      &:nth-child(19) {
-          &:after {
-              content: 'S';
-          }
-      }
-      &:nth-child(25) {
-          &:after {
-              content: 'E';
-          }
-      }
-  }
-
-  &.game-over .attack-grid .cell {
-      &:nth-child(6) {
-          &:after {
-              content: 'G';
-          }
-      }
-      &:nth-child(7) {
-          &:after {
-              content: 'A';
-          }
-      }
-      &:nth-child(8) {
-          &:after {
-              content: 'M';
-          }
-      }
-      &:nth-child(9) {
-          &:after {
-              content: 'E';
-          }
-      }
-      &:nth-child(12) {
-          &:after {
-              content: 'O';
-          }
-      }
-      &:nth-child(13) {
-          &:after {
-              content: 'V';
-          }
-      }
-      &:nth-child(14) {
-          &:after {
-              content: 'E';
-          }
-      }
-      &:nth-child(15) {
-          &:after {
-              content: 'R';
-          }
-      }
   }
 }
 
@@ -184,12 +176,17 @@
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: hidden;
   }
 
   .grid {
     display: grid;
     margin: auto;
-    grid-template-columns: repeat(5, 80px);
+    grid-template-columns: repeat(5, 60px);
+
+    @media (min-width: 420px) {
+      grid-template-columns: repeat(5, 80px);
+    }
     
     position: relative;
     .box {
@@ -240,7 +237,7 @@
 
       &:after {
           content: '';
-          width:32px;
+          width:25px;
           height:10px;
           background-color: #2795f5ab;
           position: absolute;
@@ -311,8 +308,14 @@
   }
 
   .box {
-    height: 80px;
-    width: 80px;
+    height: 60px;
+    width: 60px;
+
+    @media (min-width: 420px) {
+      height: 80px;
+      width: 80px;
+    }
+
     position: relative;
     &:after, &:before {
       content: "";
@@ -320,15 +323,17 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      // left: 50%;
-      // top: 50%;
-      // transform: translate(-50%, -50%);
     }
 
     &:before {
       transition: opacity .1s .2s linear;
       opacity: 0;
-      background: url("./images/shot-water.svg") 20px 23px no-repeat;
+      background: url("./images/shot-water.svg") 10px 11px no-repeat;
+      
+
+      @media (min-width: 420px) {
+        background: url("./images/shot-water.svg") 20px 23px no-repeat;
+      }
     }
     &.miss, &.hit {
       &:before {
@@ -342,7 +347,12 @@
   
   
   .box.miss::after {
-    background: url("./images/miss-shot.svg") center 15px no-repeat;   
+    background: url("./images/miss-shot.svg") center 4px no-repeat;
+    background-size: 38% auto;
+
+    @media (min-width: 420px) {
+      background: url("./images/miss-shot.svg") center 15px no-repeat;
+    }
   }
 
   .box.green,.box.red {
@@ -379,11 +389,6 @@
       animation: ship-hit-horiz .1s linear;
     }
   } 
-
-  // .box.hit:after,.box.hit.destroyed::after {
-  //   top: 50%;
-  //   transform: translate(-50%, -50%);
-  // }
   
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
     transform: translateX(-50%);
@@ -392,15 +397,23 @@
 
   .ship-piece.hit:after, .ship-piece.destroyed::after  {
     background: url("./images/ship-hit.svg") center center no-repeat;
+    @media screen AND (max-width: 420px) {
+    background-size: 38% auto;
+    }
   }
 
   .box.hit:after,.box.hit.destroyed::after {
-    background: url("./images/hit-shot.svg") center 15px no-repeat;
+    background: url("./images/hit-shot.svg") center 4px no-repeat;
+    background-size: 38% auto;
+
+    @media (min-width: 420px) {
+      background: url("./images/hit-shot.svg") center 15px no-repeat;
+    }
   }
   
 
   .ship-grid.not-ready .box.peg-hole:after {
-    display: none;
+    opacity: 0;
   }
 
   .box.peg-hole:not(.hit):after {
@@ -483,8 +496,14 @@
   }
   
   .ship-piece {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
+
+    @media (min-width: 420px) {
+      width: 80px;
+      height: 80px;
+    }
+
     position: relative;
     color: white;
     display: flex;
@@ -492,42 +511,7 @@
     align-items: center;
   }
   
-  // .ship-piece[type="destroyer"] {
-  //   background-color: purple;
-  // }
-  
-  // .ship-piece[type="submarine"] {
-  //   background-color: #0057a8;
-  // }
-  
-  // .ship-piece[type="battleship"] {
-  //   background-color: #a51759;
-  // }
-  
-  // .ship-piece[type="carrier"] {
-  //   background-color: green;
-  // }
-  
-  // .ship-piece.destroyed::after {
-  //   content: "x";
-  //   position: absolute;
-  //   width: 24px;
-  //   height: 24px;
-  //   color: white;
-  //   top: calc(50% - 12px);
-  //   left: calc(50% - 12px);
-  //   z-index: 1;
-  //   display: flex;
-  //   justify-content: center;
-  //   align-items: center;
-  // }
-
-  
-  
   #attack-grid {
-    // .attacking {
-    //   background: url(./images/miss-shot.svg) no-repeat;
-    // }
 
     .box {
       cursor: pointer;
@@ -543,12 +527,18 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    height: 100%;
-    justify-content: space-between;
-    padding-top: 6vh;
+    // justify-content: space-between;
+    padding-top: 3vh;
+    height: calc(94vh - 38px);
+    @media screen AND (min-width: 376px) {
+      height: calc(94vh - 73px);
+      padding-top: 6vh;
+    }
+    @media screen AND (min-width: 440px) {
+      height: calc(94vh - 115px);
+      
+    }
   }
-
-  
 
   .opponent-ships-list {
     display: flex;
@@ -557,14 +547,6 @@
       margin-right: 0.5rem;
     }
   }
-
-  // .push-top {
-  //   margin-top: 1rem;
-  // }
-
-  // .push-bottom {
-  //   margin-bottom: 1rem;
-  // }
 
   .hide {
     opacity: 0;

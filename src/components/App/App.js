@@ -6,8 +6,6 @@ import GameOver from "../GameOver";
 import ErrorMessage from "../ErrorMessage";
 
 function App({ game, match }) {
-  console.log('app component', { game, match });
-
   let view;
 
   if (game.state === "lobby") {

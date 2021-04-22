@@ -12,7 +12,7 @@
 
 @keyframes ship-sink {
     0% {
-        transform: translate(-50%, 210px);
+        transform: translate(-50%, 240px);
     }
 
     100% {
@@ -21,20 +21,37 @@
 }
 
 @keyframes water-xl {
-    0% { background-position:   10px 0px ; }
-    100% { background-position:   -10px 0px ; }
+    0% { transform:translate(10px, 0); }
+    100% {  transform:translate(-10px, 0); }
   } 
 
 .body-wrap {
-    background: url('./images/water-bg.svg'), var(--ocean) repeat;
-    // animation: water-xl 5s ease-in-out infinite alternate;
-    display: grid;
     font-family: 'dogica', sans-serif;
-    will-change: background-position;
     position: relative;
     height: 100vh;
-    overflow: hidden;
+    &:after, &:before {
+        content:'';
+        height: 100vh;
+        width: 43px;
+        display: none;
+        position: absolute;
+        top: 50%;
+        background: url('./images/handle-bg.svg') left center no-repeat;
+        @media screen AND (min-width:750px) {
+            display: block;
+        }
+    }
+    &:before {
+        left: 0;
+        transform: translateY(-50%);
+    }
+    
+    &:after {
+        right: 0;
+        transform: translateY(-50%) rotate(180deg);
+    }
 }
+
 
 .bonus-round {
     #attack-grid,  .ui-progress, .ui-header {
@@ -43,18 +60,9 @@
 }
 
 .body-wrap {
-    &:not(.paused) {
-        .top-ten {
-            left: -370px;
-        }
-        .game-data {
-            right: -370px;
-        }
-    }
 
-
-    &.paused, &.game-over {
-        @media screen and (max-width:1350px) {
+    &.paused {
+        @media screen and (max-width:750px) {
             .ui-header, .ui-footer {
                 opacity: 0;
             }
@@ -74,82 +82,6 @@
             }
         }
     }
-
-    &.paused .grid .box {
-        &:nth-child(1), &:nth-child(7), &:nth-child(13), &:nth-child(19), &:nth-child(25) {
-            &:after {
-                background: rgba(132, 188, 252, 0.842);
-            }
-        }
-        &:nth-child(1) {
-            &:after {
-                content: 'P';
-            }
-        }
-        &:nth-child(7) {
-            &:after {
-                content: 'A';
-            }
-        }
-        &:nth-child(13) {
-            &:after {
-                content: 'U';
-            }
-        }
-        &:nth-child(19) {
-            &:after {
-                content: 'S';
-            }
-        }
-        &:nth-child(25) {
-            &:after {
-                content: 'E';
-            }
-        }
-    }
-
-    &.game-over .grid .box {
-        &:nth-child(6) {
-            &:after {
-                content: 'G';
-            }
-        }
-        &:nth-child(7) {
-            &:after {
-                content: 'A';
-            }
-        }
-        &:nth-child(8) {
-            &:after {
-                content: 'M';
-            }
-        }
-        &:nth-child(9) {
-            &:after {
-                content: 'E';
-            }
-        }
-        &:nth-child(12) {
-            &:after {
-                content: 'O';
-            }
-        }
-        &:nth-child(13) {
-            &:after {
-                content: 'V';
-            }
-        }
-        &:nth-child(14) {
-            &:after {
-                content: 'E';
-            }
-        }
-        &:nth-child(15) {
-            &:after {
-                content: 'R';
-            }
-        }
-    }
 }
 
 .ui {
@@ -159,6 +91,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+    &:before, &:after {
+        content: '';
+        width: 100vw;
+        height: 100vh;
+        position: absolute;       
+    }
+&:after {
+    z-index: -2;
+    background: var(--ocean);
+}
+  &:before {
+      z-index: -1;
+      background: url('./images/water-bg.svg') repeat;
+      animation: water-xl 5s linear infinite alternate;
+      -webkit-transform:translate3d(0,0,0);
+      
+  }
   
   &-screen-text {
       color: var(--green);
@@ -166,27 +116,26 @@
       text-shadow: 2px 2px 0 var(--dark-green);
   }
 
-  &-header {
-      
+  &-header {      
       display: grid;
       grid-template-columns: 1fr;
-      @media screen and (min-width:545px) {
+      @media screen and (min-width:440px) {
         grid-template-rows: 3fr 1fr;
       } 
       position: relative;
       
      
       &-main {
-          background: url("/images/header-bg.svg") no-repeat;
-          width: 100vw;
-          @media screen and (min-width:540px) {
+          background: url("/images/header-bg.svg") center top no-repeat;
+             width: 400px;
+          @media screen and (min-width:440px) {
             width: 540px;
        }
-        height: 100vh;
+          height: 100vh;
           max-height: 87px;
-            @media screen and (min-width:400px) {
-                max-height: 125px;
-            }
+        @media screen and (min-width:400px) {
+            max-height: 125px;
+        }
           background-size: contain;
           display: grid;
           position: relative;
@@ -198,15 +147,17 @@
           "badge points";
 
           &__badge {
-              width:7.2vw;
-              max-width: 42px;
+              width: 30px;
+              @media screen and (min-width:440px) {
+                  width: 42px;
+              }
               margin-block-start: 3px;
               justify-self: end;
               grid-area: badge;
           }
           &__title {
-              grid-area: title;
-              @media screen and (min-width:540px) {
+              grid-area: title;   
+              @media screen and (min-width:440px) {
                 margin-block-start: 24px;
            }
               margin-block-start: 16px;
@@ -219,6 +170,11 @@
               color: #fff;
               margin-inline-start: 16px;     
               text-shadow: 2px 2px 0 var(--dark-green);    
+              font-size: .7rem;
+              @media screen and (min-width:440px) {
+               font-size: 1rem;
+           }
+              
           }
           &__points-animate {
             position: absolute;
@@ -244,7 +200,7 @@
           margin-inline-end: 24px;
           display: none;
           justify-content: center;
-          @media screen and (min-width:545px) {
+          @media screen and (min-width:440px) {
             display: flex;
           }        
           
@@ -332,11 +288,11 @@
         height: 120px;
         &:after {
             content: "";
-            background:var(--dark-purple);
+            background: var(--dark-purple);
             width: 422px;
             height: 70px;
             bottom: 0;
-            z-index: -100;
+            z-index: -1;
             position: absolute;
         }
         .ui-footer__btn {
@@ -377,8 +333,8 @@
             width: 150px;
             position: absolute;
             left:50%;
-            top: 190px;
             transform: translateX(-50%);
+            top: 190px;
             height: 150px;
             z-index: 1000;
             &.shake {
@@ -469,7 +425,7 @@
         &__action {
             position: absolute;
             width: 135px;
-            bottom: 18px;
+            bottom: 68px;
             left: 50%;
             transform: translateX(-50%);
             border: none;
@@ -503,14 +459,22 @@ border-color: transparent;
         background: url("/images/button-bg.svg") no-repeat;
         background-size: contain;
         border: none;
-        width: 405px;
-        height: 60px;
+        width: 300px;
+        height: 40px;
+        font-size: 1rem;
+        @media  (min-width: 700px) {
+            width: 405px;
+            height: 60px;   
+            font-size: 1.3rem; 
+            bottom: -5px;
+        }
         color: #fff;
         position: absolute;
-        bottom: -5px;
+        bottom: 10px;
+        text-transform: uppercase;
         font-family: "dogica", sans-serif;
         text-shadow: 2px 2px 0 var(--dark-green);
-        font-size: 1.3rem;
+        
         &:hover, &:focus {
             bottom: -7px;
         }

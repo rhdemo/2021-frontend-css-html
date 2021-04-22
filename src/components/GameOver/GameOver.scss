@@ -62,11 +62,14 @@
   &__sub-title {
     line-height: 3rem;
     @media screen AND (max-width:750px) {
-      font-size: 1rem;  
+      font-size: .9rem; 
+      line-height: 1.5rem; 
     }
   }
   &__action {
     background: url('./images/button-bg.svg') no-repeat;
+    position: relative;
+    z-index: 1000;
     background-size: contain;
     height: 39px;
     align-self: center;

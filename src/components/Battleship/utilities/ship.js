@@ -27,7 +27,7 @@ class Ship {
     this.element.setAttribute("orientation", orientationString);
 
     if (orientationString === "horizontal") {
-      this.element.style.transformOrigin = "40px 40px";
+      this.element.style.transformOrigin = this.mql.matches ? "40px 40px" : "30px 30px";
       this.element.style.transform = "rotate(-90deg)";
     } else {
       this.element.style.transformOrigin = null;
@@ -51,7 +51,9 @@ class Ship {
 
   constructor(configuration) {
     this.toggleRotation = this.toggleRotation.bind(this);
+    this.mqlChange = this.mqlChange.bind(this);
 
+    this.mql = window.matchMedia("(min-width: 420px)");
     this.configuration = configuration;
     this.id = configuration.id;
     this.type = configuration.type;
@@ -87,10 +89,12 @@ class Ship {
   }
 
   addEventListeners() {
+    this.mql.addEventListener("change", this.mqlChange, false);
     this.rotateElement.addEventListener("click", this.toggleRotation, false);
   }
 
   removeEventListeners() {
+    this.mql.removeEventListener("change", this.mqlChange, false);
     this.rotateElement.addEventListener("click", this.toggleRotation, false);
   }
 
@@ -114,6 +118,10 @@ class Ship {
     });
 
     this.element.dispatchEvent(event);
+  }
+
+  mqlChange() {
+    this.element.style.transformOrigin = this.mql.matches ? "40px 40px" : "30px 30px";
   }
 }
 
