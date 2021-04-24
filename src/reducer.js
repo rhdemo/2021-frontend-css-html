@@ -203,7 +203,13 @@ function appReducer(state = initialState, action) {
       for (let i = 0; i < gameMatches.length; i++) {
         if (gameMatches[i].matchUUID === state.match.uuid) {
           const currentMatch = gameMatches[i];
-          currentMatch.score = score;
+          const updatedScore = {
+            total: currentMatch.score.total += score.delta,
+            delta: score.delta
+          };
+
+          currentMatch.score = updatedScore;
+          score = updatedScore;
           break;
         }
       }
