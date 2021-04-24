@@ -102,6 +102,10 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
       display = "none";
     }
 
+    if (game.state === "paused" && match.state.phase === "not-ready") {
+      display = "none";
+    }
+
     return {
       display: display
     };
