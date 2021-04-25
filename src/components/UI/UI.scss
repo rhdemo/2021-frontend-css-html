@@ -31,7 +31,7 @@
     height: 100%;
     &:after, &:before {
         content:'';
-        height: 100vh;
+        height: 100%;
         width: 43px;
         display: none;
         position: absolute;
@@ -92,11 +92,13 @@
   flex-direction: column;
   align-items: center;
   position: relative;
+  overflow: hidden;
     &:before, &:after {
         content: '';
         width: 100vw;
         height: 100vh;
-        position: absolute;       
+        position: absolute;   
+        overflow: hidden;    
     }
 &:after {
     z-index: -2;
