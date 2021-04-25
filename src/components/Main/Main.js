@@ -32,7 +32,7 @@ function Main({ _activeBoard, theActiveBoard, changeBoard, game, match, player, 
       default:
     }
 
-    if (match.state.phase === "bonus" && player.uuid === match.state.activePlayer) {
+    if (game.state !== "paused" && match.state.phase === "bonus" && player.uuid === match.state.activePlayer) {
       classes.push("bonus-round");
     }
 

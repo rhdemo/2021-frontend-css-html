@@ -15,6 +15,8 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
   const [ bonusShip, setBonusShip ] = useState();
   const [ bonusShipClass, setBonusShipClass ] = useState("");
   const [ bonusTargetShakeClass, setBonusTargetShakeClass ] = useState("");
+  const gameRef = useRef(game);
+  gameRef.current = game;
   const bonusHitsRef = useRef(bonusHits);
   bonusHitsRef.current = bonusHits;
 
@@ -25,6 +27,10 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
     }
 
     if (replay) {
+      return;
+    }
+
+    if (!result) {
       return;
     }
 
@@ -52,7 +58,7 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
     }
 
     setTimeout(() => {
-      if (player.uuid === match.state.activePlayer) {
+      if (player.uuid === match.state.activePlayer && gameRef.current.state !== "paused") {
         bonus(bonusHitsRef.current);
         
         setTimeout(() => {
@@ -79,6 +85,10 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
 
   function getFooterActionClasses() {
     let str = "ui-footer";
+
+    if (game.state === "paused") {
+      return `${str} ui-footer__min`;
+    }
 
     if (match.state.phase === "not-ready") {
       if (!player.board.valid) {

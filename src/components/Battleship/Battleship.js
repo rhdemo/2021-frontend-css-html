@@ -259,8 +259,20 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
     attack(event.detail);
   }
 
+  function getBattleshipWrapperClasses() {
+    if (game.state === "paused") {
+      return "Battleship";
+    }
+
+    if (match.state.phase === "bonus") {
+      return "Battleship bonus-round";
+    }
+
+    return "Battleship";
+  }
+
   return (
-    <div className={ match.state.phase === "bonus" ? "Battleship bonus-round" : "Battleship"}>
+    <div className={ getBattleshipWrapperClasses() }>
       <div className={ theActiveBoard === "attack" ? "board-container" : "board-container hide" }>
         <div className="board push-bottom">
           <div id="attack-grid" className="ship-grid" ref={ attackGridRef }>
