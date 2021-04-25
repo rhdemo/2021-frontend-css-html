@@ -28,7 +28,7 @@
 .body-wrap {
     font-family: 'dogica', sans-serif;
     position: relative;
-    height: 100vh;
+    height: 100%;
     &:after, &:before {
         content:'';
         height: 100vh;
@@ -87,7 +87,7 @@
 .ui {
   max-width: 500px;
   margin: 0 auto;
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
