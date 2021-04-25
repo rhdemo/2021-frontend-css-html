@@ -213,10 +213,7 @@
   }
 
   &-progress {
-    @media screen and (min-height:800px) {
-        display: flex;
-      }
-      display: none;
+      display: flex;
       list-style: none;
       justify-content: space-around;
       width: 100%;
@@ -226,22 +223,17 @@
 
       li {
           height: 25px;
-          font-size: 0.5rem;
-      }
-     .five {
-         width: 130px;
-     }
-     .four {
-         width: 110px;
-     }
-     .three {
-         width: 90px;
-     }
-     .two {
-         width: 60px;
-     }
-     .one {
-         width: 70px;
+          font-size: 0;
+          @media screen and (min-width:400px) {
+            font-size: 0.5rem;
+          }
+        }
+     img {
+         height: 18px;
+         margin-bottom: 8px;
+         @media screen and (min-width:400px) {
+            height: 24px;
+          }
      }
   }
 
