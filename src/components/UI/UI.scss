@@ -92,7 +92,9 @@
   flex-direction: column;
   align-items: center;
   position: relative;
-  overflow: hidden;
+  @media screen AND (max-width:500px) {
+    overflow: hidden;
+  }
     &:before, &:after {
         content: '';
         width: 100vw;
@@ -460,7 +462,7 @@ border-color: transparent;
             width: 405px;
             height: 60px;   
             font-size: 1.3rem; 
-            bottom: -5px;
+            bottom: 0px;
         }
         color: #fff;
         position: absolute;
