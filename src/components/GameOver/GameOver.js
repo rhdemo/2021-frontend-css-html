@@ -4,7 +4,7 @@ import { playAgain } from "./actions";
 import "./GameOver.scss";
 
 function GameOver({ player, opponent, match, playAgain, game, score }) {
-  const [ isLoading, setIsLoading ] = useState(true);
+  const [ isLoading, setIsLoading ] = useState(false);
   const [ isTop10, setIsTop10 ] = useState(false);
   
   useEffect(() => {
