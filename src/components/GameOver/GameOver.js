@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { playAgain } from "./actions";
 import "./GameOver.scss";
 
-function GameOver({ player, opponent, match, playAgain, game }) {
+function GameOver({ player, opponent, match, playAgain, game, score }) {
   useEffect(() => {
     if (game.state !== "stopped") {
       return;
@@ -13,7 +13,7 @@ function GameOver({ player, opponent, match, playAgain, game }) {
   }, [ game ]);
 
   async function checkForWinner() {
-    const response = await fetch("")
+    const response = await fetch(`https://scoring-service-battleships-scoring.apps.summit-gcp.eior.p2.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`)
       .catch(err => console.log(err));
 
     if (!response) {
@@ -38,6 +38,7 @@ function GameOver({ player, opponent, match, playAgain, game }) {
               You lost to our artificial player -  { opponent.username }!</h2>
             </>
         }
+        <p>Score: { score.total }</p>
         <button className="game-over__action" onClick={ playAgain }>Play again</button>
         </>
       }
