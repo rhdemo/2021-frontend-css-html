@@ -9,7 +9,7 @@ function Lobby({ match, player }) {
       <Logo className="lobby-logo" title="Ship Wars" />
       <h2 className="lobby-text">Game starting soon</h2>
       { match.state.phase==="not-ready" &&
-        <p className="text-center">Waiting for another player to join</p>
+        <p className="text-center">Waiting for another player</p>
       }
     </div>
   );

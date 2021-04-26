@@ -36,8 +36,8 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
   return (
     <div className="game-over screen">
       { isLoading && 
-        <div className="loading">
-          <p>Loading...</p>
+        <div className="game-over__text-box game-over__loading">
+          <h2 className="game-over__sub-title game-over__loading__title">Loading</h2>
         </div>
       }
       { !isLoading &&
@@ -46,34 +46,50 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
             <>
             { match.winner === player.uuid
               ? <>
-                  <h1 className="game-over__title">Congrats</h1>
-                  <h2 className="game-over__sub-title">Congratulations, { player.username }!<br />
-                  You beat our artificial player - { opponent.username }!</h2>
+                  <h1 className="game-over__title game-over__winner">Congrats</h1>
+                  <div className="game-over__text-box">
+                  <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                    <h2 className="game-over__sub-title">{ player.username }</h2>
+                    <p className="game-over__text">You beat our artificial player</p>
+                    <h2 className="game-over__sub-title">{ opponent.username }</h2>
+                    <button className="game-over__action" onClick={ playAgain }>Play again</button>
+                  </div>
+                  
                 </>
               : <>
                   <h1 className="game-over__title">Game Over</h1>
-                  <h2 className="game-over__sub-title">Oh no, { player.username }!<br />
-                  You lost to our artificial player -  { opponent.username }!</h2>
+                  <div className="game-over__text-box">
+                  <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                  <h2 className="game-over__sub-title">{ player.username } You lost to our artificial player { opponent.username }</h2>
+                  <button className="game-over__action" onClick={ playAgain }>Play again</button>
+                  </div>
+                  
                 </>
             }
-            <p>Score: { score.total }</p>
-            <button className="game-over__action" onClick={ playAgain }>Play again</button>
+           
+            
             </>
           }
           { game.state === "stopped" &&
             <>
               { isTop10 &&
                 <>
-                  <h1 className="game-over__title">Congrats</h1>
-                  <h2 className="game-over__sub-title">Congratulations, { player.username }!</h2>
-                  <h3>You've made into the Top 10. Click the button below to claim your prize.</h3>
+                <h1 className="game-over__title game-over__winner">Congrats</h1>
+                <div className="game-over__text-box">
+                  <p className="game-over__score"><span>high score </span><span>{ score.total }</span></p>
+                  <h2 className="game-over__sub-title">{ player.username }</h2>
+                  <h3>You've made into the Top 10.</h3>
                   <a href={ "https://docs.google.com/forms/d/e/1FAIpQLSdIxGRaccPn73DiqbD7Df_4hNm1xhiD8r1KNn-mqFBl1wEg9g/viewform?usp=pp_url&entry.651719787=" + player.uuid + "&entry.1100509786=" + player.username } className="game-over__action">Claim your prize</a>
+                </div>
+                  
                 </>
               }
               { !isTop10 && 
                 <>
+                <div className="game-over__text-box">
                   <h1 className="game-over__title">Game Over</h1>
                   <h2 className="game-over__sub-title">I hope you had fun. See ya next year!</h2>
+                </div>    
                 </>
               }           
             </>
