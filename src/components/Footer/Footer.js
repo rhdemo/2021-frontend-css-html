@@ -125,20 +125,27 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
     <footer className={ getFooterActionClasses() }>
       <div className="ui-footer-overlay"></div>
       <div className="ui-footer__screen-text-wrap">
-        { player.board && !player.board.valid && match.state.phase === "not-ready" &&
-          <span className="ui-footer__screen-text-scroll ui-screen-text">** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** </span>
+        { !replay && 
+          <>
+            { player.board && !player.board.valid && match.state.phase === "not-ready" &&
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** ** Position your ships ** </span>
+            }
+            { player.board && player.board.valid && match.state.phase === "not-ready" &&
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** </span>
+            }
+            { match.state.phase === "attack" && theActiveBoard === "ship" && match.state.activePlayer !== player.uuid &&
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** </span>
+            }
+            { match.state.phase === "attack" && theActiveBoard === "attack" && match.state.activePlayer === player.uuid &&
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
+            }
+            { match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay &&
+              <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
+            }
+          </>
         }
-        { player.board && player.board.valid && match.state.phase === "not-ready" &&
-          <span className="ui-footer__screen-text-scroll ui-screen-text">** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** ** Waiting for enemy ** </span>
-        }
-        { match.state.phase === "attack" && theActiveBoard === "ship" && match.state.activePlayer !== player.uuid &&
-          <span className="ui-footer__screen-text-scroll ui-screen-text">** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** ** Incoming enemy attack ** </span>
-        }
-        { match.state.phase === "attack" && theActiveBoard === "attack" && match.state.activePlayer === player.uuid &&
-          <span className="ui-footer__screen-text-scroll ui-screen-text">** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** Take a shot ** </span>
-        }
-        { match.state.phase === "bonus" && match.state.activePlayer === player.uuid && !replay &&
-          <span className="ui-footer__screen-text-scroll ui-screen-text">** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** Bonus round ** Fire ** </span>
+        { replay &&
+          <span className="ui-footer__screen-text-scroll ui-screen-text">** Replay ** ** Replay ** ** Replay ** ** Replay ** ** Replay ** ** Replay ** ** Replay ** ** Replay ** ** Replay **</span>
         }
       </div>
       <div className="ui-footer__bonus__sky"></div>

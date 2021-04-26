@@ -99,6 +99,7 @@ function appReducer(state = initialState, action) {
         let count = 0;
         // const totalMatches = matches.length;
         const totalMatches = 1;
+        const initialReplayShipGridConfiguration = matches[matchCount].attacks[0].payload.player.board.positions;
 
         interval = setInterval(() => {
           store.dispatch(matches[matchCount].attacks[count]);
@@ -119,7 +120,8 @@ function appReducer(state = initialState, action) {
 
         return {
           ...state,
-          game
+          game,
+          initialReplayShipGridConfiguration
         };
       } else {
         if (interval) {
@@ -329,8 +331,19 @@ function storeMatchAttackResults(attack) {
     game.matches.push(match);
   }
 
+  // make sure that the match.state.phase is attack so
+  // we don't show bonus rounds on replay
+  const attackCopy = JSON.parse(JSON.stringify(attack));
+  attackCopy.payload.match.state.phase = "attack";
+
+  // if there is a winner, delete it so we don't show the
+  // game over screen during replay
+  if (attackCopy.payload.match.winner) {
+    delete attackCopy.payload.match.winner;
+  }
+
   // push the attack to the game
-  match.attacks.push(attack);
+  match.attacks.push(attackCopy);
 
   localStorage.setItem("matchAttackResults", JSON.stringify(matchAttacks));
 }

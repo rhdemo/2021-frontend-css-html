@@ -630,14 +630,15 @@ class ShipGrid extends Grid {
 
   resetBoard() {
     const boxes = [...this.element.querySelectorAll(".box")];
-    boxes.forEach(box => box.classList.remove("hit", "miss"));
+    boxes.forEach(box => {
+      box.classList.remove("hit", "miss", "peg-hole");
+      box.removeAttribute("occupied");
+      box.removeAttribute("ship-ids");
+      box.removeAttribute("ship-piece");
+    });
 
     const ships = [...this.element.querySelectorAll(".ship")];
-    ships.forEach(ship => {
-      ship.classList.remove("destroyed");
-      const shipPieces = [...ship.querySelectorAll(".ship-piece")];
-      shipPieces.forEach(shipPiece => shipPiece.classList.remove("hit"));
-    });
+    ships.forEach(ship => ship.remove());
   }
 
   mqlChange(event) {

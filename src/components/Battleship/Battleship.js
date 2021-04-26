@@ -57,7 +57,7 @@ const ships = {
 let attackGrid;
 let shipGrid;
 
-function Battleship({ game, board, player, opponent, boardLocked, attack, match, result, attacker, theActiveBoard, badAttack, showError, replay }) {
+function Battleship({ game, board, player, opponent, boardLocked, attack, match, result, attacker, theActiveBoard, badAttack, showError, replay, initialReplayShipGridConfiguration }) {
   const attackGridRef = useRef();
   const shipGridRef = useRef();
   const [ lockingBoard, setLockingBoard ] = useState(false);
@@ -213,10 +213,17 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
       return;
     }
 
+    if (!initialReplayShipGridConfiguration) {
+      return;
+    }
+
     // console.log("REPLAY!!!");
     shipGrid.resetBoard();
+    shipGrid.state.ships = initialReplayShipGridConfiguration;
+    shipGrid.buildShips();
+    shipGrid.setShipPositions();
     attackGrid.resetBoard();
-  }, [ game ]);
+  }, [ game, initialReplayShipGridConfiguration ]);
 
   function boardLockedHandler(event) {
     setLockingBoard(true);
