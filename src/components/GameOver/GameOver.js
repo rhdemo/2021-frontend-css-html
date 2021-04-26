@@ -18,7 +18,7 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
   async function checkForWinner() {
     setIsLoading(true);
     
-    const response = await fetch(`https://scoring-service-battleships-scoring.apps.summit-gcp.eior.p2.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`)
+    const response = await fetch(`http://scoring-service-battleships-scoring.apps.summit-gcp.eior.p2.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`)
       .catch(err => {
         console.log(err);
         setIsLoading(false);
