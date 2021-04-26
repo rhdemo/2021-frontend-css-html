@@ -205,6 +205,11 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
       return;
     }
 
+    // make sure the ship grid is in the correct state
+    shipGrid.resetBoard();
+    shipGrid.state.ships = player.board.positions;
+    shipGrid.buildShips();
+    shipGrid.setShipPositions();
     setLockingBoard(false);
   }, [ player, showError ]);
 
