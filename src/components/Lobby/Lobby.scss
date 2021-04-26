@@ -43,7 +43,7 @@
     }
     
     &:before, &:after {
-      content: " ** ";
+      content: "*";
       opacity: 1;
       animation: fade 3s infinite linear;
     }

@@ -67,18 +67,18 @@
                 opacity: 0;
             }
         }
-        .grid {
-            .box {
-                position: relative;
-                &:after {
-                    display: flex;
-                    align-items: center;
-                    z-index: 1000;
-                    justify-content: center;
-                    color: #fff;
-                    font-size: 2rem;
-                    line-height: 0;
-                }
+    }
+    .grid {
+        .box {
+            position: relative;
+            &:after {
+                display: flex;
+                align-items: center;
+                z-index: 1000;
+                justify-content: center;
+                color: #fff;
+                font-size: 2rem;
+                line-height: 0;
             }
         }
     }
@@ -473,7 +473,11 @@ border-color: transparent;
         
         &:hover, &:focus {
             bottom: 8px;
+            @media screen AND (min-width:700px) {
+                bottom: -1px;
+            }
         }
+
         
     }
 }
