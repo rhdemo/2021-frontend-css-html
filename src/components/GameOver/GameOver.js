@@ -33,6 +33,14 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
     setIsTop10(true);
   }
 
+  function playAgainHandler() {
+    if (game.state === "paused") {
+      return;
+    }
+
+    playAgain();
+  }
+
   return (
     <div className="game-over screen">
       { isLoading && 
@@ -44,30 +52,37 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
         <>
           { game.state !== "stopped" && 
             <>
-            { match.winner === player.uuid
-              ? <>
-                  <h1 className="game-over__title game-over__winner">Congrats</h1>
-                  <div className="game-over__text-box">
-                  <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
-                    <h2 className="game-over__sub-title">{ player.username }</h2>
-                    <p className="game-over__text">You beat our artificial player</p>
-                    <h2 className="game-over__sub-title">{ opponent.username }</h2>
-                    <button className="game-over__action" onClick={ playAgain }>Play again</button>
-                  </div>
-                  
+              { game.state === "paused" &&
+                <div className="game-over__text-box game-over__loading">
+                  <h2 className="game-over__sub-title game-over__loading__title">Paused</h2>
+                </div>
+              }
+              <>
+              { game.state !== "paused" &&
+                <>
+                  { match.winner === player.uuid
+                    ? <>
+                        <h1 className="game-over__title game-over__winner">Congrats</h1>
+                        <div className="game-over__text-box">
+                          <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                          <h2 className="game-over__sub-title">{ player.username }</h2>
+                          <p className="game-over__text">You beat our artificial player</p>
+                          <h2 className="game-over__sub-title">{ opponent.username }</h2>
+                          <button className="game-over__action" onClick={ playAgainHandler }>Play again</button>
+                        </div>      
+                      </>
+                    : <>
+                        <h1 className="game-over__title">Game Over</h1>
+                        <div className="game-over__text-box">
+                          <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                          <h2 className="game-over__sub-title">{ player.username } You lost to our artificial player { opponent.username }</h2>
+                          <button className="game-over__action" onClick={ playAgainHandler }>Play again</button>
+                        </div> 
+                      </>
+                  }
                 </>
-              : <>
-                  <h1 className="game-over__title">Game Over</h1>
-                  <div className="game-over__text-box">
-                  <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
-                  <h2 className="game-over__sub-title">{ player.username } You lost to our artificial player { opponent.username }</h2>
-                  <button className="game-over__action" onClick={ playAgain }>Play again</button>
-                  </div>
-                  
-                </>
-            }
-           
-            
+              }
+              </>
             </>
           }
           { game.state === "stopped" &&
