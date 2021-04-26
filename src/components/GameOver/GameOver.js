@@ -28,9 +28,15 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
       return;
     }
     
-    const data = await response.json();
+    const leaders = await response.json();
+    for (let i = 0; i < leaders.length; i++) {
+      if (player.uuid === leaders[i].userId) {
+        setIsTop10(true);
+        break;
+      }
+    }
+
     setIsLoading(false);
-    setIsTop10(true);
   }
 
   function playAgainHandler() {
