@@ -355,22 +355,7 @@
     }
   }
 
-  .box.green,.box.red {
-    &:after {
-      content: "";
-      width:100%;
-      height:100%;
-      display:block;
-    }
-  }
-
-  .box.green:after {
-    background-color: rgba(60, 179, 114, 0.658);
-  }
   
-  .box.red:after {
-    background-color: rgba(255, 0, 0, 0.616);
-  }
   
   .ship-piece.hit::after {
     content: "";
@@ -416,6 +401,29 @@
 
   .ship-grid.not-ready .box.peg-hole:after {
     opacity: 0;
+  }
+  .ship-grid.not-ready {
+    .box.green,.box.red {
+      &:after {
+        content: "";
+        position: relative;
+        width:100%;
+        height:100%;
+        display:block;
+        opacity: 1;
+        z-index: 99;
+      }
+    }
+  
+    .box.green:after {
+      background-color: rgba(60, 179, 114, 0.658)!important;
+      background-image: none!important;
+    }
+    
+    .box.red:after {
+      background-color: rgba(255, 0, 0, 0.616)!important;
+      background-image: none!important;
+    }
   }
 
   .box.peg-hole:not(.hit):after {
