@@ -209,7 +209,6 @@ function appReducer(state = initialState, action) {
         result,
         attacker,
         opponent,
-        score,
         _activeBoard
       }
 
