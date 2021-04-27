@@ -227,6 +227,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
     shipGrid.state.ships = initialReplayShipGridConfiguration;
     shipGrid.buildShips();
     shipGrid.setShipPositions();
+    shipGrid.locked = true;
     attackGrid.resetBoard();
   }, [ game, initialReplayShipGridConfiguration ]);
 
