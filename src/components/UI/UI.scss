@@ -471,11 +471,8 @@ border-color: transparent;
         font-family: "dogica", sans-serif;
         text-shadow: 2px 2px 0 var(--dark-green);
         
-        &:hover, &:focus {
-            bottom: 8px;
-            @media screen AND (min-width:700px) {
-                bottom: -1px;
-            }
+        &:hover, &:focus {     
+               opacity: .5;
         }
 
         

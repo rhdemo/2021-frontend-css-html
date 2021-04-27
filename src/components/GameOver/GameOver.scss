@@ -166,6 +166,11 @@
     padding: 8px 16px;
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
+    @media screen AND (max-width:500px) {
+      flex-direction: column;
+      line-height: 2rem;
+    }
     width: 90%;
     max-width: 500px;
     margin: 0 0 24px;
