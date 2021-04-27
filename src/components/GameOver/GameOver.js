@@ -17,8 +17,28 @@ function GameOver({ player, opponent, match, playAgain, game, score, highScore }
 
   async function checkForWinner() {
     setIsLoading(true);
+
+    let scoringUrl;
+
+    switch (game.cluster) {
+      case "AZURE":
+        scoringUrl = `https://scoring-service-battleships-scoring.apps.g9dkpkud.centralus.aroapp.io/scoring/${game.uuid}/ranking?max=10`;
+        break;
+      
+      case "AWS":
+        scoringUrl = `https://scoring-service-battleships-scoring.apps.summit-aws.28ts.p1.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`;
+        break;
+
+      case "GCP":
+        scoringUrl = `https://scoring-service-battleships-scoring.apps.summit-gcp.eior.p2.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`;
+        break;
     
-    const response = await fetch(`http://scoring-service-battleships-scoring.apps.summit-gcp.eior.p2.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`)
+      default:
+        scoringUrl = `https://scoring-service-battleships-scoring.apps.summit-aws.28ts.p1.openshiftapps.com/scoring/${game.uuid}/ranking?max=10`;
+        break;
+    }
+    
+    const response = await fetch(scoringUrl)
       .catch(err => {
         console.log(err);
         setIsLoading(false);
