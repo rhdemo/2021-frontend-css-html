@@ -170,6 +170,7 @@ function appReducer(state = initialState, action) {
       result = action.payload.result;
       attacker = action.payload.attacker;
       opponent = action.payload.opponent;
+      score = getCurrentMatchScore(game, match);
 
       _activeBoard = determineBoard(game, match, player, replay, attacker);
 
@@ -184,6 +185,7 @@ function appReducer(state = initialState, action) {
         result,
         attacker,
         opponent,
+        score,
         _activeBoard
       }
 
@@ -343,9 +345,12 @@ function storeMatchAttackResults(attack) {
   const attackCopy = JSON.parse(JSON.stringify(attack));
   attackCopy.payload.match.state.phase = "attack";
 
-  // if there is a winner, delete it so we don't show the
+  // if there is a winner, add 200 points
+  // to the total score and then delete
+  // the winner property so we don't show the
   // game over screen during replay
   if (attackCopy.payload.match.winner) {
+    match.score.total += 200;
     delete attackCopy.payload.match.winner;
   }
 
