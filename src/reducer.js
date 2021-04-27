@@ -350,7 +350,10 @@ function storeMatchAttackResults(attack) {
   // the winner property so we don't show the
   // game over screen during replay
   if (attackCopy.payload.match.winner) {
-    match.score.total += 200;
+    if (attackCopy.payload.match.winner === attackCopy.payload.player.uuid) {
+      match.score.total += 200;
+    }
+
     delete attackCopy.payload.match.winner;
   }
 
