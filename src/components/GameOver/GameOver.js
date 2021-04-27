@@ -129,8 +129,8 @@ function GameOver({ player, opponent, match, playAgain, game, score, highScore }
               }
               { !isTop10 && 
                 <>
+                <h1 className="game-over__title">Game Over</h1>
                 <div className="game-over__text-box">
-                  <h1 className="game-over__title">Game Over</h1>
                   <p className="game-over__score"><span>Your high score: </span><span>{ highScore }</span></p>
                   <h2 className="game-over__sub-title">I hope you had fun</h2>
                   <h3>See ya next year!</h3>
