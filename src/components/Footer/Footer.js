@@ -9,6 +9,7 @@ import bonusCarrier from "./images/bonus-carrier.svg";
 import "./Footer.scss";
 
 let bonusTargetShakeTimeout;
+let bonusTimeout;
 
 function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) {
   const [ bonusHits, setBonusHits ] = useState(0);
@@ -34,6 +35,10 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
       return;
     }
 
+    if (bonusTimeout) {
+      clearTimeout(bonusTimeout);
+    }
+
     setBonusShipClass(result.type);
 
     switch (result.type) {
@@ -57,7 +62,7 @@ function Footer({ player, match, game, result, bonus, theActiveBoard, replay }) 
         break;
     }
 
-    setTimeout(() => {
+    bonusTimeout = setTimeout(() => {
       if (player.uuid === match.state.activePlayer && gameRef.current.state !== "paused") {
         bonus(bonusHitsRef.current);
         

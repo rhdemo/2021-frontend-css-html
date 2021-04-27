@@ -145,7 +145,7 @@ function Battleship({ game, board, player, opponent, boardLocked, attack, match,
 
   // record the result of an attack
   useEffect(() => {
-    if (!result) {
+    if (!result || !attacker) {
       return;
     }
 

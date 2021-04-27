@@ -66,6 +66,17 @@ function appReducer(state = initialState, action) {
 
       // console.log('match phase', match.state.phase);
 
+      // if match is in the phase of bonus and the active player
+      // is the current player, get the last attack result from
+      // the player and send a result object
+      if (match.state.phase === "bonus" && match.state.activePlayer === player.uuid) {
+        const lastAttack = player.attacks[player.attacks.length - 1];
+        
+        if (lastAttack.result) {
+          result = lastAttack.result;
+        }
+      }
+
       return {
         ...state,
         game,
@@ -73,6 +84,7 @@ function appReducer(state = initialState, action) {
         opponent,
         match,
         score,
+        result,
         highScore,
         _activeBoard,
         theActiveBoard
@@ -135,9 +147,21 @@ function appReducer(state = initialState, action) {
 
       highScore = getHighScore(game);
 
+      // if match is in the phase of bonus and the active player
+      // is the current player, get the last attack result from
+      // the player and send a result object
+      if (state.match.state.phase === "bonus" && state.match.state.activePlayer === state.player.uuid) {
+        const lastAttack = state.player.attacks[state.player.attacks.length - 1];
+        
+        if (lastAttack.result) {
+          result = lastAttack.result;
+        }
+      }
+
       return {
         ...state,
         game,
+        result,
         highScore,
         _activeBoard,
         theActiveBoard 
