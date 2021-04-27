@@ -21,7 +21,8 @@ const initialState = {
   score: {
     total: 0,
     delta: 0
-  }
+  },
+  highScore: 0
 };
 
 let replay = false;
@@ -37,6 +38,7 @@ function appReducer(state = initialState, action) {
   let _activeBoard;
   let theActiveBoard;
   let score;
+  let highScore;
 
   switch (action.type) {
     case "CONFIGURATION":
@@ -46,6 +48,7 @@ function appReducer(state = initialState, action) {
       match = action.payload.match;
       score = getCurrentMatchScore(game, match);
       score.delta = 0;
+      highScore = getHighScore(game);
 
       // get the matchAttackResults from localStorage.
       // any gameUUID that doesn't match the current game
@@ -70,6 +73,7 @@ function appReducer(state = initialState, action) {
         opponent,
         match,
         score,
+        highScore,
         _activeBoard,
         theActiveBoard
       };
@@ -129,9 +133,12 @@ function appReducer(state = initialState, action) {
         }
       }
 
+      highScore = getHighScore(game);
+
       return {
         ...state,
         game,
+        highScore,
         _activeBoard,
         theActiveBoard 
       };
@@ -424,6 +431,28 @@ function getCurrentMatchScore(gameObj, match) {
   }
 
   return currentMatch.score;
+}
+
+function getHighScore(gameObj) {
+  const matchAttackResults = getMatchAttackResults();
+  const game = matchAttackResults[gameObj.uuid];
+
+  if (!game) {
+    return 0;
+  }
+
+  const matches = game.matches;
+  let highScore = 0;
+
+  for (let i = 0; i < matches.length; i++) {
+    let score = matches[i].score.total;
+
+    if (score > highScore) {
+      highScore = score;
+    }
+  }
+
+  return highScore;
 }
 
 export { appReducer, getLocalStorage };

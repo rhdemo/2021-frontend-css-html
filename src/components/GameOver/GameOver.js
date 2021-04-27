@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { playAgain } from "./actions";
 import "./GameOver.scss";
 
-function GameOver({ player, opponent, match, playAgain, game, score }) {
+function GameOver({ player, opponent, match, playAgain, game, score, highScore }) {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ isTop10, setIsTop10 ] = useState(false);
   
@@ -70,7 +70,7 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
                     ? <>
                         <h1 className="game-over__title game-over__winner">Congrats</h1>
                         <div className="game-over__text-box">
-                          <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                          <p className="game-over__score"><span>Your score: </span><span>{ score.total }</span></p>
                           <h2 className="game-over__sub-title">{ player.username }</h2>
                           <p className="game-over__text">You beat our artificial player</p>
                           <h2 className="game-over__sub-title">{ opponent.username }</h2>
@@ -80,7 +80,7 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
                     : <>
                         <h1 className="game-over__title">Game Over</h1>
                         <div className="game-over__text-box">
-                          <p className="game-over__score"><span>Your score </span><span>{ score.total }</span></p>
+                          <p className="game-over__score"><span>Your score: </span><span>{ score.total }</span></p>
                           <h2 className="game-over__sub-title">{ player.username }</h2> 
                           <p className="game-over__text">You lost to our artificial player</p> 
                           <h2 className="game-over__sub-title">{ opponent.username }</h2>
@@ -99,7 +99,7 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
                 <>
                 <h1 className="game-over__title game-over__winner">Congrats</h1>
                 <div className="game-over__text-box">
-                  <p className="game-over__score"><span>high score </span><span>{ score.total }</span></p>
+                  <p className="game-over__score"><span>Your high score: </span><span>{ highScore }</span></p>
                   <h2 className="game-over__sub-title">{ player.username }</h2>
                   <h3>You've made into the Top 10.</h3>
                   <a href={ "https://docs.google.com/forms/d/e/1FAIpQLSdIxGRaccPn73DiqbD7Df_4hNm1xhiD8r1KNn-mqFBl1wEg9g/viewform?usp=pp_url&entry.651719787=" + player.uuid + "&entry.1100509786=" + player.username } className="game-over__action">Claim your prize</a>
@@ -111,6 +111,7 @@ function GameOver({ player, opponent, match, playAgain, game, score }) {
                 <>
                 <div className="game-over__text-box">
                   <h1 className="game-over__title">Game Over</h1>
+                  <p className="game-over__score"><span>Your high score: </span><span>{ highScore }</span></p>
                   <h2 className="game-over__sub-title">I hope you had fun</h2>
                   <h3>See ya next year!</h3>
                 </div>    
