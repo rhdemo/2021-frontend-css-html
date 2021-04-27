@@ -108,6 +108,9 @@ class AttackGrid extends Grid {
     }
 
     const box = event.target;
+    if (!box.classList.contains("box")) {
+      return;
+    }
 
     if (box.classList.contains("miss") || box.classList.contains("hit")) {
       return;
